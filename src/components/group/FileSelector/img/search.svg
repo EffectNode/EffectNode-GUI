@@ -1,0 +1,16 @@
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Editors" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Effect-Node-Editors" transform="translate(-636.000000, -128.000000)" fill-rule="nonzero" fill="#838383">
+            <g id="File-Box" transform="translate(30.000000, 96.000000)">
+                <g id="Search-Box" transform="translate(384.000000, 23.000000)">
+                    <g id="iconmonstr-magnifier-6-(1)" transform="translate(222.000000, 9.000000)">
+                        <path d="M21.172,24 L13.785,16.613 C12.397,17.487 10.761,18 9,18 C4.029,18 0,13.971 0,9 C0,4.029 4.029,0 9,0 C13.971,0 18,4.029 18,9 C18,10.761 17.486,12.398 16.613,13.785 L24,21.172 L21.172,24 Z M9,15 C12.3077143,15 15,12.3085714 15,9 C15,5.69142857 12.3077143,3 9,3 C5.69228571,3 3,5.69142857 3,9 C3,12.3085714 5.69228571,15 9,15 Z" id="Shape"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

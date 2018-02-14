@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EffectNode - Play with Pain Free GLSL.</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/favicon-16x16.png">
+    <!--[if IE]><link rel="shortcut icon" href="/static/img/icons/favicon.ico"><![endif]-->
+    <!-- Add to home screen for Android and modern mobile browsers -->
+    <link rel="manifest" href="<%= htmlWebpackPlugin.files.publicPath %>static/manifest.json">
+    <meta name="theme-color" content="#4DBA87">
+    <!-- Pinterest domain verifty -->
+    <meta name="p:domain_verify" content="9ec925a9e8c04afea813358bfbf21898"/>
+
+    <!-- Add to home screen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="effect-node">
+    <link rel="apple-touch-icon" href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/apple-touch-icon-152x152.png">
+    <link rel="mask-icon" href="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/safari-pinned-tab.svg" color="#4DBA87">
+    <!-- Add to home screen for Windows -->
+    <meta name="msapplication-TileImage" content="<%= htmlWebpackPlugin.files.publicPath %>static/img/icons/msapplication-icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    <% for (var chunk of webpack.chunks) {
+        for (var file of chunk.files) {
+          if (file.match(/\.(js|css)$/)) { %>
+    <link rel="<%= chunk.initial?'preload':'prefetch' %>" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':'script' %>"><% }}} %>
+    <style>
+      html, body, #app, #aapp,
+      .logo-container{
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+        height: 100%;
+      }
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .logo-container svg {
+        max-width: 80vw;
+        max-height: 50vh;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      Please enable JavaScript.
+    </noscript>
+    <div id="app">
+
+      <div class="logo-container">
+
+        <svg width="581px" height="361px" viewBox="0 0 581 361" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+          <desc>Created with Sketch.</desc>
+          <defs></defs>
+          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Final-Outline" transform="translate(-205.000000, -332.000000)">
+                  <g id="Group" transform="translate(205.000000, 335.000000)">
+                      <polygon id="E" fill="#000000" points="178.979545 291.75 173.439772 323 0.712499619 323 51.138636 32.0909091 221.735227 32.0909091 216.195454 63.3409091 80.2579542 63.3409091 63.0704542 161.636364 184.945454 161.636364 179.547727 192.886364 57.8147723 192.886364 40.6272723 291.75"></polygon>
+                      <circle id="Oval-Copy-3" stroke="#000000" stroke-width="5" cx="211" cy="45" r="45"></circle>
+                      <circle id="Oval-Copy-5" stroke="#000000" stroke-width="5" cx="170" cy="310" r="45"></circle>
+                      <polygon id="N" fill="#000000" points="551.985227 32.0909091 501.417045 323 469.314772 323 360.65 95.1590909 357.667045 95.0170455 317.326136 323 282.951136 323 333.377272 32.0909091 365.621591 32.0909091 474.570454 261.068182 477.695454 261.210227 518.036363 32.0909091"></polygon>
+                      <circle id="Oval-Copy" stroke="#000000" stroke-width="5" cx="303" cy="310" r="45"></circle>
+                      <circle id="Oval-Copy-2" stroke="#000000" stroke-width="5" cx="533" cy="45" r="45"></circle>
+                  </g>
+              </g>
+          </g>
+        </svg>
+
+      </div>
+
+    </div>
+    <!-- Todo: only include in production -->
+    <%= htmlWebpackPlugin.options.serviceWorkerLoader %>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

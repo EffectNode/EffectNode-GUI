@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <title>FUNdamentals</title>
+
+    <meta name="author" content="loklok">
+    <meta name="description" content="WebGL Art">
+    <meta name="keywords" content="WebGL, Art">
+
+    <style type="text/css">
+
+    </style>
+
+  </head>
+  <body>
+    <div id="app-attach-point"></div>
+
+    <script require="true" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.min.js"></script>
+    <script require="true" src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.0.1/vue-router.min.js"></script>
+    <script require="true" src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
+    <script require="true" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js" integrity="sha256-6fhm481uY9c152qGWIVgE7KbzaCj5WjCi3BGIpZef2E=" crossorigin="anonymous"></script>
+    <script require="true" src="https://threejs.org/examples/js/GPUComputationRenderer.js"></script>
+
+  </body>
+</html>

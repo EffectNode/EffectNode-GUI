@@ -1,0 +1,50 @@
+<svg width="890px" height="404px" viewBox="0 0 890 404" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <defs>
+              <polygon id="path-1" points="21.35 131.8 21.35 346 171.65 346 171.65 318.1 53.75 318.1 53.75 131.8"></polygon>
+              <filter x="-29.6%" y="-19.8%" width="159.2%" height="141.5%" filterUnits="objectBoundingBox" id="filter-2">
+                  <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                  <feGaussianBlur stdDeviation="14.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                  <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+                  <feColorMatrix values="0 0 0 0 0.182823129   0 0 0 0 0.182823129   0 0 0 0 0.182823129  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+              </filter>
+              <polygon id="path-3" points="21.3 103.8 21.3 318 54 318 54 165 55.2 165 120.9 318 149.1 318 214.8 165 216 165 216 318 248.7 318 248.7 103.8 210 103.8 135.6 275.4 134.7 275.4 60 103.8"></polygon>
+              <filter x="-19.6%" y="-19.8%" width="139.1%" height="141.5%" filterUnits="objectBoundingBox" id="filter-4">
+                  <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                  <feGaussianBlur stdDeviation="14.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                  <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+                  <feColorMatrix values="0 0 0 0 0.182823129   0 0 0 0 0.182823129   0 0 0 0 0.182823129  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+              </filter>
+              <path d="M48.95,103.8 L146.75,103.8 C167.75,103.8 183.95,108.6 195.95,118.8 C207.35,128.4 213.05,141.3 213.05,157.8 C213.05,169.8 210.05,180 204.05,188.4 C198.05,196.2 189.95,202.2 179.15,206.1 C193.25,208.8 204.05,214.5 211.25,223.2 C218.45,231.9 222.05,243.6 222.05,258 C222.05,279.6 214.55,295.2 199.85,305.4 C187.25,313.8 169.55,318 146.75,318 L48.95,318 L48.95,103.8 Z M81.65,130.8 L81.65,194.7 L138.05,194.7 C153.05,194.7 163.85,192 170.45,186.9 C177.05,181.5 180.35,173.1 180.35,161.7 C180.35,150.9 177.05,143.1 170.45,138.3 C163.85,133.2 153.05,130.8 138.65,130.8 L81.65,130.8 Z M81.65,221.4 L81.65,291 L142.25,291 C156.05,291 166.85,288.6 174.65,284.4 C184.25,278.7 189.35,269.7 189.35,257.4 C189.35,244.8 185.45,235.5 177.95,229.8 C170.45,224.1 158.75,221.4 143.15,221.4 L81.65,221.4 Z" id="path-5"></path>
+              <filter x="-25.7%" y="-19.8%" width="151.4%" height="141.5%" filterUnits="objectBoundingBox" id="filter-6">
+                  <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                  <feGaussianBlur stdDeviation="14.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+                  <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+                  <feColorMatrix values="0 0 0 0 0.182823129   0 0 0 0 0.182823129   0 0 0 0 0.182823129  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+              </filter>
+          </defs>
+          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Outline" transform="translate(-260.000000, -239.000000)">
+                  <g id="Group" transform="translate(390.556704, 362.869003) rotate(-14.000000) translate(-390.556704, -362.869003) translate(285.056704, 138.869003)">
+                      <polygon id="L" fill="#000000" points="54.35 103.8 54.35 318 204.65 318 204.65 290.1 86.75 290.1 86.75 103.8"></polygon>
+                      <g id="L-Copy">
+                          <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                          <use fill-opacity="0.802875906" fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                      </g>
+                  </g>
+                  <g id="Group-Copy" transform="translate(695.465618, 485.892025) rotate(-345.000000) translate(-695.465618, -485.892025) translate(544.465618, 274.892025)">
+                      <polygon id="M" fill="#000000" points="53.3 105.8 53.3 320 86 320 86 167 87.2 167 152.9 320 181.1 320 246.8 167 248 167 248 320 280.7 320 280.7 105.8 242 105.8 167.6 277.4 166.7 277.4 92 105.8"></polygon>
+                      <g id="M">
+                          <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                          <use fill-opacity="0.802875906" fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-3"></use>
+                      </g>
+                  </g>
+                  <g id="Group-Copy-2" transform="translate(1015.351631, 392.523386) rotate(10.000000) translate(-1015.351631, -392.523386) translate(897.851631, 170.023386)">
+                      <path d="M21.95,128.8 L119.75,128.8 C140.75,128.8 156.95,133.6 168.95,143.8 C180.35,153.4 186.05,166.3 186.05,182.8 C186.05,194.8 183.05,205 177.05,213.4 C171.05,221.2 162.95,227.2 152.15,231.1 C166.25,233.8 177.05,239.5 184.25,248.2 C191.45,256.9 195.05,268.6 195.05,283 C195.05,304.6 187.55,320.2 172.85,330.4 C160.25,338.8 142.55,343 119.75,343 L21.95,343 L21.95,128.8 Z M54.65,155.8 L54.65,219.7 L111.05,219.7 C126.05,219.7 136.85,217 143.45,211.9 C150.05,206.5 153.35,198.1 153.35,186.7 C153.35,175.9 150.05,168.1 143.45,163.3 C136.85,158.2 126.05,155.8 111.65,155.8 L54.65,155.8 Z M54.65,246.4 L54.65,316 L115.25,316 C129.05,316 139.85,313.6 147.65,309.4 C157.25,303.7 162.35,294.7 162.35,282.4 C162.35,269.8 158.45,260.5 150.95,254.8 C143.45,249.1 131.75,246.4 116.15,246.4 L54.65,246.4 Z" id="B" fill="#000000"></path>
+                      <g id="B">
+                          <use fill="black" fill-opacity="1" filter="url(#filter-6)" xlink:href="#path-5"></use>
+                          <use fill-opacity="0.802875906" fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-5"></use>
+                      </g>
+                  </g>
+              </g>
+          </g>
+        </svg>
