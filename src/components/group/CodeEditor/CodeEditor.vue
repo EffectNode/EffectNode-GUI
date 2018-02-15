@@ -4,43 +4,50 @@
       <div class="tab" :class="{ 'using': mode === 'browse' }" @click="toggleMode">Browse</div>
       <div class="tab" :class="{ 'active': isTabActive(tab.path) }" @click="selectFile(tab.path)" :key="tab.path + iTab" v-for="(tab, iTab) in openedFiles">{{ tab.path }} <img class="cross" src="./img/cross.svg" @click="removeTab(tab, iTab, openedFiles)" /></div>
     </div>
-    <Previewer :output="output" />
-    <div class="file-selector">
-      <keep-alive>
-        <FileSelector
-          v-if="mode === 'browse'"
-          :doc="doc"
-          @remove-file="removeFile"
-          @close-file="closeFile"
-          @select-file="selectFile"
-          @open-file="openFile"
-          @save="() => { needsCompile = true; }"
-        >
-        </FileSelector>
-      </keep-alive>
-    </div>
-    <div
-      class="code-editor"
-    >
-      <keep-alive
-        v-for="(openFile) in openedFiles"
-        :key="openFile.path"
+    <div class="content-row">
+      <div class="file-selector">
+        <keep-alive>
+          <FileSelector
+            v-if="mode === 'browse'"
+            :doc="doc"
+            @remove-file="removeFile"
+            @close-file="closeFile"
+            @select-file="selectFile"
+            @open-file="openFile"
+            @save="() => { needsCompile = true; }"
+          >
+          </FileSelector>
+        </keep-alive>
+      </div>
+      <div
+        class="code-editor"
       >
-        <Component
-          :is="'ACE'"
-          v-if="mode === 'edit' && currentFile && openFile.path === currentFilePath"
-          v-model="currentFile.src"
-          :filepath="openFile.path"
-
-          @save="() => { $emit('compile') }"
-          @input="() => { needsCompile = true; }"
-          theme="chrome"
-          width="100%"
-          :height="height + 'px'"
+        <keep-alive
+          v-for="(openFile) in openedFiles"
+          :key="openFile.path"
         >
-        </Component>
-      </keep-alive>
+          <Component
+            :is="'ACE'"
+            v-if="mode === 'edit' && currentFile && openFile.path === currentFilePath"
+            v-model="currentFile.src"
+            :filepath="openFile.path"
+
+            @save="() => { $emit('compile') }"
+            @input="() => { needsCompile = true; }"
+            theme="chrome"
+            width="100%"
+            :height="height + 'px'"
+          >
+          </Component>
+        </keep-alive>
+      </div>
+      <div class="previewer">
+        <Previewer :output="output" />
+      </div>
     </div>
+
+
+
   </div>
 </template>
 
@@ -103,6 +110,9 @@ export default {
     }
   },
   methods: {
+    tabMenu () {
+      console.log('123')
+    },
     toggleMode () {
       if (this.mode === 'browse' && this.openedFiles.length > 0) {
         this.mode = 'edit'
@@ -127,7 +137,7 @@ export default {
     },
     openFile (path) {
       if (!this.openedFiles.find(f => f.path === path)) {
-        this.openedFiles.push({
+        this.openedFiles.unshift({
           path: path
         })
       }
@@ -140,9 +150,11 @@ export default {
       array.splice(key, 1)
       this.$nextTick(() => {
         if (array.length >= 1) {
-          let lastItem = array[array.length - 1]
-          if (lastItem) {
-            let path = lastItem.path
+          if (array[key]) {
+            let path = array[key].path
+            this.$emit('select-file', path)
+          } else if (array[key - 1]) {
+            let path = array[key - 1].path
             this.$emit('select-file', path)
           } else {
             this.mode = 'browse'
@@ -154,6 +166,11 @@ export default {
     }
   },
   mounted () {
+    var statusbar = document.querySelector('.statusbar')
+    if (statusbar) {
+      this.height = window.innerHeight - statusbar.getBoundingClientRect().height
+    }
+
     this.dirtyCheckerTimer = setInterval(() => {
       if (this.needsCompile) {
         this.needsCompile = false
@@ -168,9 +185,9 @@ export default {
 </script>
 
 <style scoped>
-
-.opened-files{
-  /* height: 50px; */
+.content-row{
+  width: 100%;
+  position: relative;
 }
 
 .tab {
@@ -180,7 +197,7 @@ export default {
 
   display: inline-block;
   padding: 3px 15px;
-  margin: 13px 5px;
+  margin: 10px 8px 0px 5px;
   background-color: rgba(255,255,255,0.8);
   transform: translate3d(0,0,0.1px);
 }
@@ -197,10 +214,20 @@ export default {
 
 .tab .cross{
   margin-left: 4px;
+  transition: transform 1s;
+}
+.tab .cross:hover{
+  transform: scale(1.4);
 }
 
 .file-selector{
   margin: 8px;
+}
+
+.previewer{
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
 
 </style>

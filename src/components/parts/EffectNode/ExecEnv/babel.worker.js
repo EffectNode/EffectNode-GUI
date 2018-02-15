@@ -4,7 +4,11 @@ import requirejsSrc from './str/requirejs.str.txt'
 
 var uglify = require('uglifyjs-browser')
 
-console.trace = v => console.log(v)
+console.trace = v => {
+  if (v !== 'The node type SpreadProperty has been renamed to SpreadElement') {
+    console.log(v)
+  }
+}
 
 var dynamicSpread = require('babel-plugin-transform-object-rest-spread')
 Babel.registerPlugin('transform-object-rest-spread', dynamicSpread)
@@ -235,12 +239,14 @@ function integrateIntoHTML (output) {
   (function RunRunUnicorn(){
     var app = ${JSON.stringify(output.js)};
 
+
     function addBlobScript(js) {
       var url = URL.createObjectURL(new Blob([js], { type: 'script/javascript' }));
       var newJS = document.createElement('script');
       newJS.src = url;
       document.body.appendChild(newJS);
     }
+
     addBlobScript(app);
 
   }());
@@ -250,6 +256,7 @@ function integrateIntoHTML (output) {
   } else {
     output.html = output.html.replace('</body>', `${insertion}</body>`)
   }
+
   return output
 }
 
@@ -266,6 +273,7 @@ function makeid () {
 
 self.onmessage = ({ data }) => {
   files = data.files || files
+  let deps = data.deps || []
 
   Promise.all(files.map((file) => {
     return compile(file)
@@ -275,7 +283,11 @@ self.onmessage = ({ data }) => {
     }, '')
     var rand = makeid()
 
-    var reqJS = minify({ js: requirejsSrc })
+    var reqJS = requirejsSrc
+
+    if (data.shouldMinify) {
+      reqJS = minify({ js: requirejsSrc })
+    }
 
     var result = `
 (function(){
@@ -283,11 +295,33 @@ self.onmessage = ({ data }) => {
   function OMG_${rand} () {
     var self = this;
     ${entry}
-    requireJSRequire(['@/main.js'], function () {
-      setTimeout(() => {
-        (window.opener || window.top).postMessage({ type: 'requirejs-ready' }, window.location.origin);
-      }, 10);
-    });
+
+    var deps = ${JSON.stringify(deps.map(e => e.src))};
+
+    function preload (deps, done) {
+      if (deps[0]) {
+        var script = document.createElement('script');
+        script.onload = function () {
+          deps.shift();
+          preload(deps, done);
+        };
+        script.src = deps[0]
+        document.body.appendChild(script);
+      } else {
+        done();
+      }
+    }
+
+    preload(deps, function() {
+      console.log('done')
+
+      requireJSRequire(['@/main.js'], function () {
+        setTimeout(() => {
+          (window.opener || window.top).postMessage({ type: 'requirejs-ready' }, window.location.origin);
+        }, 10);
+      });
+
+    })
   }
   new OMG_${rand}();
 }());
@@ -298,7 +332,7 @@ self.onmessage = ({ data }) => {
       js: result
     }
 
-    output = integrateIntoHTML(output)
+    output = integrateIntoHTML(output, deps)
 
     postMessage({ ...output })
   })

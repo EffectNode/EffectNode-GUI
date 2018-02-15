@@ -21,12 +21,14 @@
 
     <Draggable
       v-model="files" :options="{group:'people'}" @start="drag = true" @end="drag = false; $emit('save', files);" @change="() => {  }"
+      :move="checkMove"
     >
     <div
       class="file"
       :key="iFile"
       v-for="(file, iFile) in files"
       v-show="isInQuery(file)"
+      :isDraggable="!checkProtectedItem(file.path)"
     >
       <div
         class="file-btn"
@@ -46,7 +48,7 @@
       >
         Remove
       </div>
-      <input class="file-input" v-model="file.path" />
+      <input class="file-input" :disabled="checkProtectedItem(file.path)" v-model="file.path" />
     </div>
     </Draggable>
 
@@ -85,6 +87,9 @@ export default {
     }
   },
   methods: {
+    checkMove (evt) {
+      return !this.checkProtectedItem(evt.draggedContext.element.path)
+    },
     confirmRemoveFile (path) {
       if (window.confirm('delete?\n\n' + path)) {
         this.$emit('close-file', path)
@@ -223,7 +228,7 @@ input:focus{
   transition: border-left-color 0.3s, text-decoration 0.3s;
   border-left: #838383 solid 5px;
   padding-left: 10px;
-  font-size: 25px;
+  font-size: 20px;
   color: #939393;
 }
 .file:hover{
@@ -245,13 +250,13 @@ input:focus{
   background-color: transparent;
   padding: 3px;
   border: none;
-  width: 100%;
-  font-size: 25px;
+  width: 80%;
+  font-size: 20px;
   font-family: 'InterUI', Arial, Helvetica, sans-serif;
 }
 
 .file{
-  margin-top: 10px;
+  margin-top: 6.5px;
   display: flex;
   justify-content: flex-start;
 }
@@ -262,9 +267,11 @@ input:focus{
   margin-right: 10px;
 }
 
+.file-btn:hover{
+  color: black;
+}
 
 .file.new-file .file-btn{
-  width: 105px;
   color: blue;
   text-decoration: underline;
 }

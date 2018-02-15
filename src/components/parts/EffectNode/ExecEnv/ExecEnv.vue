@@ -48,8 +48,33 @@ export default {
     }
   },
   methods: {
+    getHTML () {
+      return (this.files.find(f => f.path === '@/index.html') || {}).src || false
+    },
+    getDeps () {
+      var tagToDetect = 'required'
+      var html = this.getHTML()
+      if (html) {
+        var el = document.createElement('html')
+        el.innerHTML = html
+        var query = el.querySelectorAll('script[' + tagToDetect + ']')
+
+        var bucket = []
+        for (var i = 0; i < query.length; i++) {
+          bucket.push({
+            global: query[i].getAttribute(tagToDetect),
+            src: query[i].getAttribute('src')
+          })
+        }
+        console.log(bucket)
+        return bucket
+      } else {
+        return []
+      }
+    },
     compile () {
       ExecAPI.compile({
+        deps: this.getDeps(this.files),
         files: this.files
       })
     }

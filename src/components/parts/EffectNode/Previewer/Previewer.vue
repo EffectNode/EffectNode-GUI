@@ -1,6 +1,6 @@
 <template>
   <div>
-    <iframe v-if="useFrame" :src="iframeURL" frameborder="0"></iframe>
+    <iframe class="iframe" v-if="useFrame" :src="iframeURL" frameborder="0" width="600" height="350"></iframe>
   </div>
 </template>
 
@@ -43,6 +43,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.iframe{
+  outline: #939393 solid 1px;
+}
 </style>

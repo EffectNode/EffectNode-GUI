@@ -4,6 +4,7 @@
       <div slot="left">
       </div>
       <div slot="right">
+        <TimeMachine :rootDoc="root" @travel="(v) => { $nextTick(() => { doc = v }) }" />
         <button @click="state.mode = 'SceneEditor'">SceneEditor</button>
         <button @click="state.mode = 'CodeEditor'">CodeEditor</button>
       </div>
@@ -33,6 +34,7 @@
 </template>
 
 <script>
+import TimeMachine from '@/components/parts/EffectNode/TimeMachine/TimeMachine.vue'
 import ExecEnv from '@/components/parts/EffectNode/ExecEnv/ExecEnv.vue'
 import StatusBar from '@/components/parts/EffectNode/StatusBar/StatusBar.vue'
 import SceneEditor from '@/components/group/SceneEditor/SceneEditor.vue'
@@ -43,14 +45,15 @@ export default {
     ExecEnv,
     StatusBar,
     SceneEditor,
-    CodeEditor
+    CodeEditor,
+    TimeMachine
   },
   data () {
     return {
       state: {
         mode: 'CodeEditor'
       },
-      document: {
+      root: {
         output: {
           html: '',
           js: ''
@@ -82,20 +85,28 @@ export default {
     useMarginBox () {
       return this.state.mode === 'SceneEditor' || this.state.mode === 'FileSelector'
     },
-    doc: {
+    files: {
       get () {
-        return this.document.now
+        return this.doc.files
       },
       set (v) {
-        this.document.now = JSON.parse(JSON.stringify(v))
+        this.doc.files = v
+      }
+    },
+    doc: {
+      get () {
+        return this.root.now
+      },
+      set (v) {
+        this.root.now = JSON.parse(JSON.stringify(v))
       }
     },
     output: {
       get () {
-        return this.document.output
+        return this.root.output
       },
       set (v) {
-        this.document.output = v
+        this.root.output = v
         return v
       }
     }
@@ -104,16 +115,32 @@ export default {
     this.setup()
     this.hydrate()
   },
+  watch: {
+    files () {
+      this.$emit('compile')
+    }
+  },
   methods: {
     updatePreview (src) {
       this.output = src
     },
     hydrate () {
-      this.doc.files = require('./sample/animation.json')
+      setTimeout(() => {
+        var localRoot = window.localStorage.getItem('alpha-root')
+        if (localRoot) {
+          this.root = JSON.parse(localRoot)
+        } else {
+          window.localStorage.setItem('alpha-root', JSON.stringify(this.root))
+        }
+      }, 500)
+    },
+    saveToDisk () {
+      window.localStorage.setItem('alpha-root', JSON.stringify(this.root))
     },
     setup () {
       this.$on('compile', () => {
         if (this.$refs['exec']) {
+          this.saveToDisk()
           this.$refs['exec'].compile()
         }
       })

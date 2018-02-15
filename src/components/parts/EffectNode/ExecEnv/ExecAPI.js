@@ -58,8 +58,8 @@ setInterval(() => {
 // 60 seconds clean mempool
 
 export default {
-  compile ({ files }) {
-    worker.postMessage({ files })
+  compile ({ files, deps }) {
+    worker.postMessage({ files, deps })
   },
   setUp ({ onWorkerDone }) {
     buzz.on('worker', onWorkerDone)
