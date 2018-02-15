@@ -5,6 +5,7 @@
   "author": "LMB",
   "private": true,
   "scripts": {
+    "fast-deploy": "cd functions; npm i; cd ..; npm run build; firebase deploy --only hosting;",
     "deploy": "cd functions; npm i; cd ..; npm run build; firebase deploy;",
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",

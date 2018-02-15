@@ -305,7 +305,7 @@ self.onmessage = ({ data }) => {
           deps.shift();
           preload(deps, done);
         };
-        script.src = deps[0]
+        script.src = deps[0];
         document.body.appendChild(script);
       } else {
         done();
@@ -313,14 +313,11 @@ self.onmessage = ({ data }) => {
     }
 
     preload(deps, function() {
-      console.log('done')
-
       requireJSRequire(['@/main.js'], function () {
         setTimeout(() => {
           (window.opener || window.top).postMessage({ type: 'requirejs-ready' }, window.location.origin);
         }, 10);
       });
-
     })
   }
   new OMG_${rand}();

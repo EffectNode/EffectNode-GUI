@@ -4,7 +4,7 @@
       <div slot="left">
       </div>
       <div slot="right">
-        <TimeMachine :rootDoc="root" @travel="(v) => { $nextTick(() => { doc = v }) }" />
+        <TimeMachine :rootDoc="root" @travel="travel" @load-root="loadRoot" />
         <button @click="state.mode = 'SceneEditor'">SceneEditor</button>
         <button @click="state.mode = 'CodeEditor'">CodeEditor</button>
       </div>
@@ -116,11 +116,22 @@ export default {
     this.hydrate()
   },
   watch: {
-    files () {
-      this.$emit('compile')
-    }
+    // files () {
+    //   this.$emit('compile')
+    // }
   },
   methods: {
+    loadRoot (root) {
+      console.log('load-root')
+      this.root = root
+      // console.log(root)
+    },
+    travel (v) {
+      this.$nextTick(() => {
+        this.doc = v
+        this.saveToDisk()
+      })
+    },
     updatePreview (src) {
       this.output = src
     },
