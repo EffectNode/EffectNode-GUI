@@ -43,9 +43,9 @@ export default {
     }
   },
   watch: {
-    files () {
-      this.compile()
-    }
+    // files () {
+    //   this.compile()
+    // }
   },
   methods: {
     getHTML () {
@@ -66,7 +66,7 @@ export default {
             src: query[i].getAttribute('src')
           })
         }
-        console.log(bucket)
+        // console.log(bucket)
         return bucket
       } else {
         return []

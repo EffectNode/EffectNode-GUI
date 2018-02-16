@@ -4,7 +4,14 @@
       <div slot="left">
       </div>
       <div slot="right">
-        <TimeMachine :rootDoc="root" @travel="travel" @load-root="loadRoot" />
+        <TimeMachine
+          ref="timemachine"
+          :rootDoc="root"
+          @travel="travel"
+          @load-root="loadRoot"
+          @compile="$emit('compile')"
+          @just-save="saveProject"
+        />
         <button @click="state.mode = 'SceneEditor'">SceneEditor</button>
         <button @click="state.mode = 'CodeEditor'">CodeEditor</button>
       </div>
@@ -20,6 +27,8 @@
             :doc="doc"
             :output="output"
             :currentFilePath="doc.currentFilePath"
+            @just-save="saveProject"
+            @compile-now="actualCompile"
             @compile="$emit('compile')"
             @select-file="(v) => { doc.currentFilePath = v }"
             @change-mode="(v) => { state.mode = v }"
@@ -29,7 +38,7 @@
       </div>
     </div>
 
-    <ExecEnv ref="exec" :files="doc.files" @src="updatePreview" :init="true" />
+    <ExecEnv ref="exec" :files="doc.files" @src="updatePreview" />
   </div>
 </template>
 
@@ -50,6 +59,8 @@ export default {
   },
   data () {
     return {
+      dirtyTimer: 0,
+      needsCompile: false,
       state: {
         mode: 'CodeEditor'
       },
@@ -114,6 +125,7 @@ export default {
   mounted () {
     this.setup()
     this.hydrate()
+    this.autoRun()
   },
   watch: {
     // files () {
@@ -129,33 +141,49 @@ export default {
     travel (v) {
       this.$nextTick(() => {
         this.doc = v
-        this.saveToDisk()
+        this.saveProject()
       })
     },
     updatePreview (src) {
       this.output = src
+      this.saveProject()
     },
     hydrate () {
       setTimeout(() => {
         var localRoot = window.localStorage.getItem('alpha-root')
         if (localRoot) {
           this.root = JSON.parse(localRoot)
+          this.$forceUpdate()
         } else {
           window.localStorage.setItem('alpha-root', JSON.stringify(this.root))
         }
-      }, 500)
+      }, 100)
     },
-    saveToDisk () {
+    saveProject () {
       window.localStorage.setItem('alpha-root', JSON.stringify(this.root))
     },
     setup () {
       this.$on('compile', () => {
-        if (this.$refs['exec']) {
-          this.saveToDisk()
-          this.$refs['exec'].compile()
-        }
+        this.needsCompile = true
       })
+    },
+    actualCompile () {
+      if (this.$refs['exec']) {
+        this.$refs['exec'].compile()
+      }
+    },
+    autoRun () {
+      this.dirtyTimer = setInterval(() => {
+        if (this.needsCompile) {
+          this.needsCompile = false
+          this.saveProject()
+          this.actualCompile()
+        }
+      }, 1000)
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.dirtyTimer)
   }
 }
 </script>

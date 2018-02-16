@@ -8,7 +8,7 @@
       </div>
       <div class="right-title">
         <div class="files-search">
-          <input class="search-input" v-model="query" />
+          <input class="search-input" autofocus v-model="query" />
           <img class="search-icon" src="./img/search.svg" />
         </div>
       </div>
@@ -20,7 +20,6 @@
     </div>
 
     <Draggable
-
       v-model="files" :options="{group:'people', handle: '.handle'}" @start="drag = true" @end="drag = false; $emit('save', files);" @change="() => {  }"
       :move="checkMove"
     >
@@ -172,8 +171,6 @@ export default {
 </script>
 
 <style scoped>
-
-
 .title-row{
   width: 100%;
   display: flex;
@@ -230,7 +227,7 @@ input:focus{
   width: 30px;
   height: 30px;
   background-color: rgba(185, 185, 185, 0.521);
-  transition: background-color 0.25s;
+  transition: background-color 1.0s;
   margin-right: 5px;
 }
 .file:hover .handle{
@@ -238,10 +235,8 @@ input:focus{
   background-image: linear-gradient(45deg, transparent, hotpink);
 }
 
-
 .file{
   transition: border-left-color 0.3s, text-decoration 0.3s;
-  /*  */
   font-size: 20px;
   color: #939393;
 }

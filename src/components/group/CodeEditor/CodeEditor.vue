@@ -1,8 +1,10 @@
 <template>
   <div>
-    <div class="opened-files">
-      <div class="tab" :class="{ 'using': mode === 'browse' }" @click="toggleMode">Browse</div>
-      <div class="tab" :class="{ 'active': isTabActive(tab.path) }" @click="selectFile(tab.path)" :key="tab.path + iTab" v-for="(tab, iTab) in openedFiles">{{ tab.path }} <img class="cross" src="./img/cross.svg" @click="removeTab(tab, iTab, openedFiles)" /></div>
+    <div class="tabs-row" ref="tabs-row">
+      <div class="browse-btn" :class="{ 'using': mode === 'browse' }" @click="toggleMode">Browse</div>
+      <Draggable class="opened-files" v-model="openedFiles" :move="onDragTabs">
+        <div class="tab" :class="{ 'active': isTabActive(tab.path) }" @click="selectFile(tab.path)" :key="tab.path + iTab" v-for="(tab, iTab) in openedFiles">{{ tab.path }} <img class="cross" src="./img/cross.svg" @click="removeTab(tab, iTab, openedFiles)" /></div>
+      </Draggable>
     </div>
     <div class="content-row">
       <div class="file-selector">
@@ -32,7 +34,7 @@
             v-model="currentFile.src"
             :filepath="openFile.path"
 
-            @save="() => { $emit('compile') }"
+            @save="() => { $emit('just-save'); $emit('compile-now') }"
             @input="() => { needsCompile = true; }"
             theme="chrome"
             width="100%"
@@ -46,8 +48,6 @@
       </div>
     </div>
 
-
-
   </div>
 </template>
 
@@ -55,9 +55,11 @@
 import ACE from '@/components/parts/EffectNode/ACE/ACE.vue'
 import Previewer from '@/components/parts/EffectNode/Previewer/Previewer.vue'
 import FileSelector from '@/components/group/FileSelector/FileSelector.vue'
+import Draggable from 'vuedraggable'
 
 export default {
   components: {
+    Draggable,
     ACE,
     FileSelector,
     Previewer
@@ -95,12 +97,14 @@ export default {
     },
     openedFiles: {
       get () {
-        this.doc.openedFiles = this.doc.openedFiles || [
+        return this.doc.openedFiles || [
           {
-            path: this.currentFilePath + ''
+            path: '@/index.html'
           }
         ]
-        return this.doc.openedFiles
+      },
+      set (v) {
+        this.doc.openedFiles = v
       }
     },
     files: {
@@ -110,8 +114,11 @@ export default {
     }
   },
   methods: {
-    tabMenu () {
-      console.log('123')
+    onDragTabs (evt) {
+      if (evt.draggedContext.element.path) {
+        this.selectFile(evt.draggedContext.element.path)
+        this.$emit('just-save')
+      }
     },
     toggleMode () {
       if (this.mode === 'browse' && this.openedFiles.length > 0) {
@@ -163,14 +170,17 @@ export default {
           this.mode = 'browse'
         }
       })
+    },
+    adjustHeight () {
+      var statusbar = document.querySelector('.statusbar')
+      var tabs = this.$refs['tabs-row']
+      if (statusbar) {
+        this.height = window.innerHeight - statusbar.getBoundingClientRect().height - tabs.getBoundingClientRect().height
+      }
     }
   },
   mounted () {
-    var statusbar = document.querySelector('.statusbar')
-    if (statusbar) {
-      this.height = window.innerHeight - statusbar.getBoundingClientRect().height
-    }
-
+    this.adjustHeight()
     this.dirtyCheckerTimer = setInterval(() => {
       if (this.needsCompile) {
         this.needsCompile = false
@@ -190,8 +200,28 @@ export default {
   position: relative;
 }
 
+.browse-btn{
+  color: #2e2e2e;
+  border-radius: 26px;
+  border: 1px solid #979797;
+
+  display: inline-block;
+  padding: 3px 15px;
+  margin: 10px 0px 0px 5px;
+  background-color: rgba(255,255,255,0.8);
+  transform: translate3d(0,0,0.1px);
+}
+.browse-btn.using{
+  color: blue;
+  border-color: blue;
+}
+
+.opened-files{
+  display: inline;
+}
+
 .tab {
-  color: #979797;
+  color: #636363;
   border-radius: 26px;
   border: 1px solid #979797;
 
@@ -202,11 +232,8 @@ export default {
   transform: translate3d(0,0,0.1px);
 }
 .tab.active{
+  color: black;
   border-color: lime;
-}
-.tab.using{
-  color: blue;
-  border-color: blue;
 }
 .tab:first-child {
   margin-left: 8px;

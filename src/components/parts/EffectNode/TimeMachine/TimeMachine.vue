@@ -3,17 +3,18 @@
     <input v-show="false" ref="time-machine-loader" type="file" @change="loadTimeMachine" />
     <button @click="format">Rest All</button>
 
-    <button @click="restoreTimeMachine">Restore Time Machine</button>
-    <button @click="backupTimeMachine">Backup Time Machine</button>
-    <input type='range' v-model="timetravel" @change="travel" :min="0" :max="backups.length - 1" v-if="backups.length > 0" />
-    <button @click="clickSnapShot">Take Snapshot</button>
-    <select @input="travel" v-model="timetravel">
-      <option :key="backup.date" :value="iBackup" v-for="(backup, iBackup) in backups">{{ backup.date }}</option>
+    <button @click="restoreTimeMachine">Restore All Snapshot</button>
+    <button @click="backupTimeMachine">Backup All Snapshot</button>
+    <input type='range' v-model="timetravel" @change="() => {}" :min="0" :max="backups.length - 1" v-if="backups.length > 0" />
+    <button @click="clickSnapShot">Take 1 Snapshot</button>
+    <select @input="() => {}" v-model="timetravel">
+      <option :key="backup.date" :value="iBackup" v-for="(backup, iBackup) in backups">{{ fromNow(backup.date) }}</option>
     </select>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   props: {
     rootDoc: {
@@ -27,25 +28,47 @@ export default {
   },
   data () {
     return {
-      timetravel: (this.rootDoc.backups).length - 1
+      timetravel: 0 // this.rootDoc.backups.length - 1
     }
   },
   watch: {
+    timetravel (newVal, oldVal) {
+      this.travel({ takeSnapshot: oldVal === 0 })
+    },
     rootDoc () {
-      this.timetravel = (this.rootDoc.backups).length - 1
+      this.timetravel = 0 // this.rootDoc.backups.length - 1
     }
   },
   computed: {
+    // timetravel: {
+    //   get () {
+    //     return this.rootDoc.timetravel || 0
+    //   },
+    //   set (v) {
+    //     this.rootDoc.timetravel = v
+    //   }
+    // },
     backups: {
       get () {
-        return this.rootDoc.backups
+        return this.rootDoc.backups.sort((a, b) => {
+          return new Date(b.date) - new Date(a.date)
+        })
       },
       set (v) {
         this.rootDoc.backups = v
       }
     }
   },
+  mounted () {
+    // make the moments from now (how long ago) live.
+    setInterval(() => {
+      this.$forceUpdate()
+    }, 1000 * 60)
+  },
   methods: {
+    fromNow (date) {
+      return moment(new Date(date)).fromNow() + ' ' + moment(new Date(date)).format('MMM Do YYYY, h:mm:ss a')
+    },
     format () {
       if (window.confirm('format?') && window.confirm('are you sure?')) {
         this.$emit('load-root', require('./samples/animation.json'))
@@ -71,7 +94,7 @@ export default {
     backupTimeMachine () {
       this.takeSnapshot()
       this.$nextTick(() => {
-        this.timetravel = this.rootDoc.backups.length - 1
+        this.timetravel = 0 // this.rootDoc.backups.length - 1
 
         var json = JSON.stringify(this.rootDoc)
         var url = URL.createObjectURL(new Blob([json]), { type: 'application/json' })
@@ -84,14 +107,21 @@ export default {
     clickSnapShot () {
       this.takeSnapshot()
       this.$nextTick(() => {
-        this.timetravel = this.rootDoc.backups.length - 1
+        this.timetravel = 0 // this.rootDoc.backups.length - 1
+        this.$emit('compile')
       })
     },
     takeSnapshot () {
       this.rootDoc.now.date = new Date().toString()
-      this.rootDoc.backups.push(JSON.parse(JSON.stringify(this.rootDoc.now)))
+      this.rootDoc.backups.unshift(JSON.parse(JSON.stringify(this.rootDoc.now)))
+      this.$nextTick(() => {
+        this.$emit('just-save')
+      })
     },
-    travel () {
+    travel ({ takeSnapshot }) {
+      if (takeSnapshot) {
+        this.takeSnapshot()
+      }
       var backup = this.backups[this.timetravel]
       if (backup) {
         this.$nextTick(() => {
