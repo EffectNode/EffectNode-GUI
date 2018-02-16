@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     format () {
-      if (window.confirm('format?')) {
+      if (window.confirm('format?') && window.confirm('are you sure?')) {
         this.$emit('load-root', require('./samples/animation.json'))
       }
     },

@@ -20,7 +20,8 @@
     </div>
 
     <Draggable
-      v-model="files" :options="{group:'people'}" @start="drag = true" @end="drag = false; $emit('save', files);" @change="() => {  }"
+
+      v-model="files" :options="{group:'people', handle: '.handle'}" @start="drag = true" @end="drag = false; $emit('save', files);" @change="() => {  }"
       :move="checkMove"
     >
     <div
@@ -30,6 +31,7 @@
       v-show="isInQuery(file)"
       :isDraggable="!checkProtectedItem(file.path)"
     >
+      <div class="handle"></div>
       <div
         class="file-btn"
         @click="
@@ -171,6 +173,7 @@ export default {
 
 <style scoped>
 
+
 .title-row{
   width: 100%;
   display: flex;
@@ -223,16 +226,30 @@ export default {
 input:focus{
   outline: none;
 }
+.handle{
+  width: 30px;
+  height: 30px;
+  background-color: rgba(185, 185, 185, 0.521);
+  transition: background-color 0.25s;
+  margin-right: 5px;
+}
+.file:hover .handle{
+  background-color: cyan;
+  background-image: linear-gradient(45deg, transparent, hotpink);
+}
+
 
 .file{
   transition: border-left-color 0.3s, text-decoration 0.3s;
-  border-left: #838383 solid 5px;
-  padding-left: 10px;
+  /*  */
   font-size: 20px;
   color: #939393;
 }
 .file:hover{
-  border-left-color: lime;
+  /* border-left-color: lime; */
+}
+.file.new-file{
+  padding-left: 10px;
 }
 .file.new-file:hover{
   border-left-color: cyan;

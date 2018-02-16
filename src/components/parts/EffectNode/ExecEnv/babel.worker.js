@@ -1,6 +1,8 @@
+// npm i @babel/standalone@7.0.0-beta.32 --save
 import * as Babel from '@babel/standalone/babel.js'
 import * as VueCompo from './vue.processor.js'
 import requirejsSrc from './str/requirejs.str.txt'
+import polyfill from './str/babelpolyfill.str.txt'
 
 var uglify = require('uglifyjs-browser')
 
@@ -10,6 +12,9 @@ console.trace = v => {
   }
 }
 
+// var dynamicImport = require('babel-plugin-syntax-dynamic-import')
+// Babel.registerPlugin('syntax-dynamic-import', dynamicImport)
+
 var dynamicSpread = require('babel-plugin-transform-object-rest-spread')
 Babel.registerPlugin('transform-object-rest-spread', dynamicSpread)
 
@@ -17,7 +22,7 @@ var umd = require('babel-plugin-transform-es2015-modules-umd')
 Babel.registerPlugin('transform-es2015-modules-umd', umd)
 
 var es6 = [
-  [ 'transform-object-rest-spread', { 'useBuiltIns': false } ],
+  [ 'transform-object-rest-spread', { 'useBuiltIns': true } ],
   [
     'transform-es2015-modules-umd',
     {
@@ -284,14 +289,17 @@ self.onmessage = ({ data }) => {
     var rand = makeid()
 
     var reqJS = requirejsSrc
+    reqJS = minify({ js: requirejsSrc })
+    // if (data.shouldMinify) {
 
-    if (data.shouldMinify) {
-      reqJS = minify({ js: requirejsSrc })
-    }
+    // }
 
     var result = `
+
 (function(){
+  ${polyfill}
   ${reqJS}
+
   function OMG_${rand} () {
     var self = this;
     ${entry}
