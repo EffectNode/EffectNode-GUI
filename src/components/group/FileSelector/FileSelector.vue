@@ -8,7 +8,7 @@
       </div>
       <div class="right-title">
         <div class="files-search">
-          <input class="search-input" autofocus v-model="query" />
+          <input class="search-input" autofocus v-model="query" @keydown.enter="() => { $emit('select-file', qFiles[0].path); $emit('open-file', qFiles[0].path); }" />
           <img class="search-icon" src="./img/search.svg" />
         </div>
       </div>
@@ -84,7 +84,14 @@ export default {
       }
     },
     qFiles () {
-      return this.files.filter(e => e.path.indexOf(this.query) !== -1)
+      var files = this.files
+      var queries = this.query.split(' ')
+
+      queries.forEach((q) => {
+        files = files.filter(e => e.path.toUpperCase().indexOf(q.toUpperCase()) !== -1)
+      })
+
+      return files
     }
   },
   methods: {

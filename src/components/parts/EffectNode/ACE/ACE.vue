@@ -88,6 +88,15 @@ export default {
 
       var commands = [
         {
+          name: 'open-files',
+          bindKey: {win: 'Ctrl-O', mac: 'Command-O'},
+          exec: (editor) => {
+            // var val = editor.getValue()
+            this.$emit('open')
+          },
+          readOnly: true // false if this command should not apply in readOnly mode
+        },
+        {
           name: 'save',
           bindKey: {win: 'Ctrl-S', mac: 'Command-S'},
           exec: (editor) => {

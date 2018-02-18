@@ -18,7 +18,7 @@
               <slot name="right"></slot>
             </span>
             <span class="clock">{{ clockWords }}</span>
-            <img class="logo" src="./img/user.svg" />
+            <img class="logo" src="./img/user.svg" @click="$emit('user-profile-click')" />
           </div>
         </div>
       </div>

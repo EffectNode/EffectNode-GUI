@@ -33,7 +33,7 @@
             v-if="mode === 'edit' && currentFile && openFile.path === currentFilePath"
             v-model="currentFile.src"
             :filepath="openFile.path"
-
+            @open="() => { mode = 'browse' }"
             @save="() => { $emit('just-save'); $emit('compile-now') }"
             @input="() => { needsCompile = true; }"
             theme="chrome"

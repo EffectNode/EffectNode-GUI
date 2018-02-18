@@ -7,13 +7,15 @@
         <TimeMachine
           ref="timemachine"
           :rootDoc="root"
+          :output="output"
           @travel="travel"
           @load-root="loadRoot"
           @compile="$emit('compile')"
           @just-save="saveProject"
         />
-        <button @click="state.mode = 'SceneEditor'">SceneEditor</button>
-        <button @click="state.mode = 'CodeEditor'">CodeEditor</button>
+
+        <!-- <button @click="state.mode = 'SceneEditor'">SceneEditor</button>
+        <button @click="state.mode = 'CodeEditor'">CodeEditor</button> -->
       </div>
     </StatusBar>
 

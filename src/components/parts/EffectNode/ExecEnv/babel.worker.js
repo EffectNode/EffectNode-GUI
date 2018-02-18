@@ -241,9 +241,10 @@ function minify ({ js }) {
 function integrateIntoHTML (output) {
   // `<script id="scriptme" type="text/template">` + `${output.js}` + '<' + '/' + `script>` +
   var insertion = `<script>
+  ${polyfill}
   (function RunRunUnicorn(){
-    var app = ${JSON.stringify(output.js)};
 
+    var app = ${JSON.stringify(output.js)};
 
     function addBlobScript(js) {
       var url = URL.createObjectURL(new Blob([js], { type: 'script/javascript' }));
@@ -290,18 +291,16 @@ self.onmessage = ({ data }) => {
 
     var reqJS = requirejsSrc
     reqJS = minify({ js: requirejsSrc })
-    // if (data.shouldMinify) {
-
-    // }
+    entry = minify({ js: entry })
 
     var result = `
 
 (function(){
-  ${polyfill}
   ${reqJS}
 
   function OMG_${rand} () {
     var self = this;
+
     ${entry}
 
     var deps = ${JSON.stringify(deps.map(e => e.src))};
@@ -319,7 +318,6 @@ self.onmessage = ({ data }) => {
         done();
       }
     }
-
     preload(deps, function() {
       requireJSRequire(['@/main.js'], function () {
         setTimeout(() => {
