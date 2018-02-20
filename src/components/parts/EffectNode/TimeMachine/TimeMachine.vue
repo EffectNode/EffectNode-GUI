@@ -1,23 +1,23 @@
 <template>
   <div class="time-machine">
 
-    <div v-if="!useTimeMachine" class="label" @mouseover="useTimeMachine = true">
+    <div v-if="!enableTimeMachine" class="label" @mouseover="enableTimeMachine = true">
       <div class="v-center">
         <img src="./img/time.svg" class="icon-img" />
         Time Machine (Pro)
       </div>
     </div>
 
-    <div v-if="useTimeMachine" class="timebar">
+    <div v-if="enableTimeMachine" class="timebar">
       <div class="label">
         <div class="v-center">
-          <img @click="exportJS" src="./img/export.svg" class="icon-img hover-magnify" />
-          <img @click="backupTimeMachine" src="./img/download.svg" class="icon-img hover-magnify" />
-          <img @click="restoreTimeMachine" src="./img/upload.svg" class="icon-img hover-magnify" />
-          <input type="range" class="timerange" v-model="timetravel" @change="() => {}" :min="0" :max="backups.length - 1" v-if="backups.length > 0" />
-          <img @click="clickSnapShot" src="./img/floppy.svg" class="icon-img hover-magnify" />
-          <img src="./img/time.svg" class="icon-img" />
-          <select class="select" @input="() => {}" v-model="timetravel">
+          <img @mouseover="$emit('tooltip', { name: 'Export JavaScript Code' })" @mouseout="$emit('tooltip', false)" @click="exportJS" src="./img/export.svg" alt="code stuff" class="icon-img hover-magnify" />
+          <img @mouseover="$emit('tooltip', { name: 'Backup All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="backupTimeMachine" src="./img/download.svg" class="icon-img hover-magnify" />
+          <img @mouseover="$emit('tooltip', { name: 'Restore All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="restoreTimeMachine" src="./img/upload.svg" class="icon-img hover-magnify" />
+          <input @mouseover="$emit('tooltip', { name: 'Version Timeline' })" @mouseout="$emit('tooltip', false)"  type="range" class="timerange" v-model="timeTravelIndex" @change="() => {}" :min="0" :max="backups.length - 1" v-if="backups.length > 0" />
+          <img @mouseover="$emit('tooltip', { name: 'Take Project Snapshot' })" @mouseout="$emit('tooltip', false)" @click="clickSnapShot" src="./img/floppy.svg" class="icon-img hover-magnify" />
+          <!-- <img @mouseover="$emit('tooltip', { name: 'Project Version' })" @mouseout="$emit('tooltip', false)" src="./img/time.svg" class="icon-img version" /> -->
+          <select @mouseover="$emit('tooltip', { name: 'TimeStamp' })" @mouseout="$emit('tooltip', false)" ref="version-select" class="select" @input="() => {}" v-model="timeTravelIndex">
             <option :key="backup.date" :value="iBackup" v-for="(backup, iBackup) in backups">
               {{ fromNow(backup.date) }}
             </option>
@@ -25,15 +25,13 @@
           <input v-show="false" ref="time-machine-loader" type="file" @change="loadTimeMachine" />
         </div>
       </div>
-
     </div>
+
     <div class="label">
       <div class="v-center">
-        <img @click="format" src="./img/nuke.svg" class="icon-img hover-magnify" />
+        <img @mouseover="$emit('tooltip', { name: 'Reset All?', reverseX: -100 })" @mouseout="$emit('tooltip', false)" @click="format" src="./img/nuke.svg" class="icon-img hover-magnify" />
       </div>
     </div>
-
-
 
   </div>
 </template>
@@ -55,17 +53,18 @@ export default {
   },
   data () {
     return {
+      clean () {},
       downloadJS: false,
-      useTimeMachine: true,
-      timetravel: 0 // this.rootDoc.backups.length - 1
+      enableTimeMachine: true,
+      timeTravelIndex: 0 // this.rootDoc.backups.length - 1
     }
   },
   watch: {
-    timetravel (newVal, oldVal) {
+    timeTravelIndex (newVal, oldVal) {
       this.travel({ takeSnapshot: oldVal === 0 })
     },
     rootDoc () {
-      this.timetravel = 0 // this.rootDoc.backups.length - 1
+      this.timeTravelIndex = 0 // this.rootDoc.backups.length - 1
     },
     output () {
       if (this.downloadJS) {
@@ -74,18 +73,18 @@ export default {
         var url = URL.createObjectURL(new Blob([value]))
         var anchor = document.createElement('a')
         anchor.href = url
-        anchor.download = 'runnable@' + new Date().getTime() + '.js'
+        anchor.download = 'exported-javascript-code@' + new Date().getTime() + '.js'
         anchor.click()
       }
     }
   },
   computed: {
-    // timetravel: {
+    // timeTravelIndex: {
     //   get () {
-    //     return this.rootDoc.timetravel || 0
+    //     return this.rootDoc.timeTravelIndex || 0
     //   },
     //   set (v) {
-    //     this.rootDoc.timetravel = v
+    //     this.rootDoc.timeTravelIndex = v
     //   }
     // },
     backups: {
@@ -99,7 +98,20 @@ export default {
       }
     }
   },
+  beforeDestroy () {
+    this.clean()
+  },
   mounted () {
+    var autosaveTimer = 0
+    autosaveTimer = setInterval(() => {
+      if (this.enableTimeMachine) {
+        this.takeSnapshot()
+      }
+    }, 1000 * 60 * 10)
+    this.clean = () => {
+      clearInterval(autosaveTimer)
+    }
+
     // make the moments from now (how long ago) live.
     setInterval(() => {
       this.$forceUpdate()
@@ -138,7 +150,7 @@ export default {
     backupTimeMachine () {
       this.takeSnapshot()
       this.$nextTick(() => {
-        this.timetravel = 0 // this.rootDoc.backups.length - 1
+        this.timeTravelIndex = 0 // this.rootDoc.backups.length - 1
 
         var json = JSON.stringify(this.rootDoc)
         var url = URL.createObjectURL(new Blob([json]), { type: 'application/json' })
@@ -151,13 +163,16 @@ export default {
     clickSnapShot () {
       this.takeSnapshot()
       this.$nextTick(() => {
-        this.timetravel = 0 // this.rootDoc.backups.length - 1
+        this.timeTravelIndex = 0 // this.rootDoc.backups.length - 1
         this.$emit('compile')
       })
     },
     takeSnapshot () {
-      this.rootDoc.now.date = new Date().toString()
-      this.rootDoc.backups.unshift(JSON.parse(JSON.stringify(this.rootDoc.now)))
+      var date = new Date().toString()
+      var clonedNow = JSON.parse(JSON.stringify(this.rootDoc.now))
+      clonedNow.date = date
+
+      this.rootDoc.backups.unshift(clonedNow)
       this.$nextTick(() => {
         this.$emit('just-save')
       })
@@ -166,7 +181,7 @@ export default {
       if (takeSnapshot) {
         this.takeSnapshot()
       }
-      var backup = this.backups[this.timetravel]
+      var backup = this.backups[this.timeTravelIndex]
       if (backup) {
         this.$nextTick(() => {
           this.$emit('travel', backup)

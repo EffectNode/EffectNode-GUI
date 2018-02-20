@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="tabs-row" ref="tabs-row">
-      <div class="browse-btn" :class="{ 'using': mode === 'browse' }" @click="toggleMode">Browse</div>
+      <div
+      @mouseover="$emit('tooltip', { name: 'Open File' })" @mouseout="$emit('tooltip', false)"
+      class="browse-btn" :class="{ 'using': mode === 'browse' }" @click="toggleMode">Browse</div>
       <Draggable class="opened-files" v-model="openedFiles" :move="onDragTabs">
         <div class="tab" :class="{ 'active': isTabActive(tab.path) }" @click="selectFile(tab.path)" :key="tab.path + iTab" v-for="(tab, iTab) in openedFiles">{{ tab.path }} <img class="cross" src="./img/cross.svg" @click="removeTab(tab, iTab, openedFiles)" /></div>
       </Draggable>
@@ -21,6 +23,7 @@
           </FileSelector>
         </keep-alive>
       </div>
+
       <div
         class="code-editor"
       >
@@ -255,6 +258,9 @@ export default {
   position: absolute;
   top: 0px;
   right: 0px;
+
+  width: 650px;
+  height: 300px;
 }
 
 </style>

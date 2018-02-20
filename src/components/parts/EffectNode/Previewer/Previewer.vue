@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <iframe class="iframe" v-if="useFrame" :src="iframeURL" frameborder="0" width="600" height="350"></iframe>
+  <div class="box">
+    <span v-if="iframeURL === 'about:blank'">Loading...</span>
+    <iframe class="iframe" v-if="useFrame" :src="iframeURL" frameborder="0" ></iframe>
   </div>
 </template>
 
@@ -44,7 +45,13 @@ export default {
 </script>
 
 <style scoped>
-.iframe{
+.box{
+  width: 100%;
+  height: 100%;
   outline: #939393 solid 1px;
+}
+.iframe{
+  width: 100%;
+  height: 100%;
 }
 </style>

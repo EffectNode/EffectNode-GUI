@@ -1,21 +1,21 @@
 <template>
   <div>
+
     <StatusBar class="statusbar-top">
       <div slot="left">
+        <button @click="state.mode = 'SceneEditor'">SceneEditor</button>
+        <button @click="state.mode = 'CodeEditor'">CodeEditor</button>
       </div>
       <div slot="right">
         <TimeMachine
-          ref="timemachine"
           :rootDoc="root"
           :output="output"
           @travel="travel"
           @load-root="loadRoot"
           @compile="$emit('compile')"
           @just-save="saveProject"
+          @tooltip="(v) => { tooltip = v }"
         />
-
-        <!-- <button @click="state.mode = 'SceneEditor'">SceneEditor</button>
-        <button @click="state.mode = 'CodeEditor'">CodeEditor</button> -->
       </div>
     </StatusBar>
 
@@ -30,17 +30,20 @@
             :output="output"
             :currentFilePath="doc.currentFilePath"
             @just-save="saveProject"
-            @compile-now="actualCompile"
+            @compile-now="compileNow"
             @compile="$emit('compile')"
             @select-file="(v) => { doc.currentFilePath = v }"
             @change-mode="(v) => { state.mode = v }"
+            @tooltip="(v) => { tooltip = v }"
           >
           </Component>
         </keep-alive>
       </div>
     </div>
 
-    <ExecEnv ref="exec" :files="doc.files" @src="updatePreview" />
+    <Tooltip v-show="tooltip" :tooltip="tooltip" />
+
+    <ExecEnv ref="exec" :files="doc.files" @src="updatePreview"/>
   </div>
 </template>
 
@@ -48,6 +51,8 @@
 import TimeMachine from '@/components/parts/EffectNode/TimeMachine/TimeMachine.vue'
 import ExecEnv from '@/components/parts/EffectNode/ExecEnv/ExecEnv.vue'
 import StatusBar from '@/components/parts/EffectNode/StatusBar/StatusBar.vue'
+import Tooltip from '@/components/parts/EffectNode/Tooltip/Tooltip.vue'
+
 import SceneEditor from '@/components/group/SceneEditor/SceneEditor.vue'
 import CodeEditor from '@/components/group/CodeEditor/CodeEditor.vue'
 
@@ -57,16 +62,20 @@ export default {
     StatusBar,
     SceneEditor,
     CodeEditor,
-    TimeMachine
+    TimeMachine,
+    Tooltip
   },
   data () {
     return {
+      tooltip: false,
+
       dirtyTimer: 0,
       needsCompile: false,
       state: {
-        mode: 'CodeEditor'
+        mode: 'SceneEditor' // CodeEditor / SceneEditor
       },
       root: {
+        // basic data structure
         output: {
           html: '',
           js: ''
@@ -138,7 +147,6 @@ export default {
     loadRoot (root) {
       console.log('load-root')
       this.root = root
-      // console.log(root)
     },
     travel (v) {
       this.$nextTick(() => {
@@ -159,6 +167,7 @@ export default {
         } else {
           window.localStorage.setItem('alpha-root', JSON.stringify(this.root))
         }
+        this.$emit('compile')
       }, 100)
     },
     saveProject () {
@@ -169,7 +178,7 @@ export default {
         this.needsCompile = true
       })
     },
-    actualCompile () {
+    compileNow () {
       if (this.$refs['exec']) {
         this.$refs['exec'].compile()
       }
@@ -179,7 +188,7 @@ export default {
         if (this.needsCompile) {
           this.needsCompile = false
           this.saveProject()
-          this.actualCompile()
+          this.compileNow()
         }
       }, 1000)
     }

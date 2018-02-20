@@ -8,7 +8,7 @@
       </div>
       <div class="right-title">
         <div class="files-search">
-          <input class="search-input" autofocus v-model="query" @keydown.enter="() => { $emit('select-file', qFiles[0].path); $emit('open-file', qFiles[0].path); }" />
+          <input class="search-input" autofocus v-model="query" ref="query-input" @keydown.enter="() => { $emit('select-file', qFiles[0].path); $emit('open-file', qFiles[0].path); }" />
           <img class="search-icon" src="./img/search.svg" />
         </div>
       </div>
@@ -72,6 +72,12 @@ export default {
       drag: false,
       viewAdder: false,
       newFileName: '@/src/new-file.vue'
+    }
+  },
+  activated () {
+    var input = this.$refs['query-input']
+    if (input) {
+      input.focus()
     }
   },
   computed: {
