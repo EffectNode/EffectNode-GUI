@@ -43,7 +43,8 @@
 
     <Tooltip v-show="tooltip" :tooltip="tooltip" />
 
-    <ExecEnv ref="exec" :files="doc.files" @src="updatePreview"/>
+    <ExecEnv ref="exec" :files="doc.files" @src="onCompileComplete"/>
+
   </div>
 </template>
 
@@ -55,6 +56,8 @@ import Tooltip from '@/components/parts/EffectNode/Tooltip/Tooltip.vue'
 
 import SceneEditor from '@/components/group/SceneEditor/SceneEditor.vue'
 import CodeEditor from '@/components/group/CodeEditor/CodeEditor.vue'
+
+import debounce from 'debounce'
 
 export default {
   components: {
@@ -69,8 +72,8 @@ export default {
     return {
       tooltip: false,
 
-      dirtyTimer: 0,
-      needsCompile: false,
+      // dirtyTimer: 0,
+      // needsCompile: false,
       state: {
         mode: 'SceneEditor' // CodeEditor / SceneEditor
       },
@@ -151,10 +154,13 @@ export default {
     travel (v) {
       this.$nextTick(() => {
         this.doc = v
-        this.saveProject()
+        this.$nextTick(() => {
+          this.saveProject()
+          this.compileLater()
+        })
       })
     },
-    updatePreview (src) {
+    onCompileComplete (src) {
       this.output = src
       this.saveProject()
     },
@@ -170,31 +176,36 @@ export default {
         this.$emit('compile')
       }, 100)
     },
-    saveProject () {
+    saveProject: debounce(function () {
       window.localStorage.setItem('alpha-root', JSON.stringify(this.root))
-    },
+    }, 333),
     setup () {
       this.$on('compile', () => {
-        this.needsCompile = true
+        // this.needsCompile = true
+        this.compileLater()
+        this.saveProject()
       })
     },
+    compileLater: debounce(function () {
+      this.compileNow()
+    }, 888),
     compileNow () {
       if (this.$refs['exec']) {
         this.$refs['exec'].compile()
       }
     },
     autoRun () {
-      this.dirtyTimer = setInterval(() => {
-        if (this.needsCompile) {
-          this.needsCompile = false
-          this.saveProject()
-          this.compileNow()
-        }
-      }, 1000)
+      // this.dirtyTimer = setInterval(() => {
+      //   if (this.needsCompile) {
+      //     this.needsCompile = false
+      //     this.saveProject()
+      //     this.compileNow()
+      //   }
+      // }, 1000)
     }
   },
   beforeDestroy () {
-    clearInterval(this.dirtyTimer)
+    // clearInterval(this.dirtyTimer)
   }
 }
 </script>

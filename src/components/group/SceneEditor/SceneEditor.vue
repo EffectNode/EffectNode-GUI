@@ -1,13 +1,28 @@
 <template>
-  <div>
-    Scene Editor
-    <ul class="obj-tree">
-      <TreeItem @tooltip="(v) => { $emit('tooltip', v) }">
-      </TreeItem>
-    </ul>
+  <div class="scene-editor">
+    <div class="pages-row">
+      <div class="page-icon">
 
+      </div>
+    </div>
+    <div class="editor-row">
+      <ul class="editor-tree">
+        <TreeItem
+          @tooltip="(v) => { $emit('tooltip', v) }"
+          @choose-item="logStuff"
+          @view-detail="logStuff"
+        >
+        </TreeItem>
+      </ul>
+      <div class="editor-preview">
+        <Previewer :output="output" />
+      </div>
+      <div class="editor-options">
+      </div>
+    </div>
+
+    <!-- Tree Exec, Animation Expresssor -->
     <button @click="() => { $emit('compile') }">compile</button>
-    <Previewer :output="output" />
   </div>
 </template>
 
@@ -34,44 +49,43 @@ export default {
   },
   data () {
     return {
-      treeStruc: {
-        name: 'My Scene',
-        children: [
-          { name: 'hello' },
-          { name: 'wat' },
-          {
-            name: 'child folder',
-            children: [
-              {
-                name: 'child folder',
-                children: [
-                  { name: 'hello' },
-                  { name: 'wat' }
-                ]
-              },
-              { name: 'hello' },
-              { name: 'wat' },
-              {
-                name: 'child folder',
-                children: [
-                  { name: 'hello' },
-                  { name: 'wat' }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-
-      //
+    }
+  },
+  methods: {
+    logStuff (v) {
+      console.table([v])
     }
   }
 }
 </script>
 
 <style scoped>
-.obj-tree{
-  padding-left: 20px;
-  list-style: none;
+
+.editor-tree{
+  margin: 0px;
+  padding-left: 0px;
+  width: 300px;
+  /* border: red solid 1px; */
+}
+.editor-row{
+  display: flex;
+  justify-content: space-between;
+}
+.editor-options{
+  width: 300px;
+  /* border: red solid 1px; */
+}
+.editor-preview{
+  width: calc(100% - 8px * 2 - 300px * 2);
+  height: 50vmin;
+}
+
+
+.pages-row{
+  width: 100%;
+  height: 80px;
+}
+.page-icon{
+
 }
 </style>

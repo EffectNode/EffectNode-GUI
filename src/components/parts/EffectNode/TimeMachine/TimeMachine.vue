@@ -29,7 +29,7 @@
 
     <div class="label">
       <div class="v-center">
-        <img @mouseover="$emit('tooltip', { name: 'Reset All?', reverseX: -100 })" @mouseout="$emit('tooltip', false)" @click="format" src="./img/nuke.svg" class="icon-img hover-magnify" />
+        <img @mouseover="$emit('tooltip', { name: 'Delete and Reset All?', reverseX: -150 })" @mouseout="$emit('tooltip', false)" @click="format" src="./img/nuke.svg" class="icon-img hover-magnify" />
       </div>
     </div>
 
@@ -107,7 +107,7 @@ export default {
       if (this.enableTimeMachine) {
         this.takeSnapshot()
       }
-    }, 1000 * 60 * 10)
+    }, 1000 * 60 * 7)
     this.clean = () => {
       clearInterval(autosaveTimer)
     }
