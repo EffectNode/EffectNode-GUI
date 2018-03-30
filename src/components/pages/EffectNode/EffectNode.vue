@@ -75,7 +75,7 @@ export default {
       // dirtyTimer: 0,
       // needsCompile: false,
       state: {
-        mode: 'SceneEditor' // CodeEditor / SceneEditor
+        mode: 'CodeEditor' // CodeEditor / SceneEditor
       },
       root: {
         // basic data structure

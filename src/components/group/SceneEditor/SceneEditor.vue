@@ -64,7 +64,10 @@ export default {
 .editor-tree{
   margin: 0px;
   padding-left: 0px;
+  height: 50vmin;
   width: 300px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
   /* border: red solid 1px; */
 }
 .editor-row{
@@ -77,7 +80,6 @@ export default {
 }
 .editor-preview{
   width: calc(100% - 8px * 2 - 300px * 2);
-  height: 50vmin;
 }
 
 

@@ -140,7 +140,7 @@ export default {
                   type: 'Object3D',
                   children: [
                     { name: 'Custom Element', type: 'Element' },
-                    { name: 'Hello 😎', type: 'Text' },
+                    { name: 'Hello', type: 'Text' },
                     { name: 'Sample Image', type: 'Image' }
                   ]
                 }
