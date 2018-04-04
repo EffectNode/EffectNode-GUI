@@ -10,13 +10,19 @@
       >
         <div class="toucher" ref="toucher"></div>
 
-        <div class="content">
-          <div :key="node.nid" v-for="(node, iNode) in nodes">
-            <pre>{{ nodes[iNode].from }}</pre>
-            <pre>{{ nodes[iNode].to }}</pre>
-            <span v-if="node">{{ node.error }} <br /></span>
+        <div class="content-clicker" v-if="currentObj" @click="() => { currentObj = false }"></div>
+        <div class="content" v-if="currentObj">
+
+          <label for=""><input type="checkbox" v-model="useBloom">use bloom</label>
+
+          <div :key="node.nid" v-for="(node, iNode) in nodes" v-if="node.nid === currentObj.userData.node.nid">
+            <button @click="() => { currentObj = false }">close</button>
+            <pre>{{ node.from }}</pre>
+            <pre>{{ node.to }}</pre>
+            <span :style="{ color: node.error ? 'red': 'black' }" v-if="node">{{ node.error }} <br /></span>
             <textarea :style="{ color: node.error ? 'red': 'black' }"  cols="50" rows="10" v-model="node.src" @input="updateSRC({ node, iNode, nodes })" />
           </div>
+
         </div>
 
       </Renderer>
@@ -43,6 +49,13 @@
           <ShaderMaterial :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
         </Points>
       </Object3D> -->
+
+      <Object3D>
+        <Mesh>
+          <PlaneBufferGeometry />
+          <MeshBasicMaterial :color="0xffffff" />
+        </Mesh>
+      </Object3D>
 
       <Object3D>
         <!--  -->
@@ -78,9 +91,21 @@ import * as THREE from 'three'
 import 'imports-loader?THREE=three!three/examples/js/controls/DragControls.js'
 import 'imports-loader?THREE=three!./TrackTrack.js'
 
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer.js'
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass.js'
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/MaskPass.js'
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass.js'
+import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader.js'
+import 'imports-loader?THREE=three!three/examples/js/shaders/FXAAShader.js'
+import 'imports-loader?THREE=three!three/examples/js/shaders/ConvolutionShader.js'
+import 'imports-loader?THREE=three!three/examples/js/shaders/LuminosityHighPassShader.js'
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/UnrealBloomPass.js'
+
 // import 'imports-loader?THREE=three!three/examples/js/controls/TrackballControls.js'
 // import 'imports-loader?THREE=three!three/examples/js/controls/EditorControls.js'
 /* eslint-enable */
+
+// currentObj
 
 export default {
   components: {
@@ -107,10 +132,49 @@ export default {
 
       dragControls.addEventListener('dragstart', this.dragStart)
       dragControls.addEventListener('drag', this.dragING)
+      dragControls.addEventListener('click', this.clickObj)
       dragControls.addEventListener('dragend', this.dragEnd)
+
+      let bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85) // 1.0, 9, 0.5, 512)
+      // bloomPass.renderToScreen = true;
+
+      bloomPass.threshold = Number(0.85)
+      bloomPass.strength = Number(1.5)
+      bloomPass.radius = Number(1.0)
+
+      var effectCopy = new THREE.ShaderPass(THREE.CopyShader)
+      effectCopy.renderToScreen = true
+
+      let renderPass = new THREE.RenderPass(this.scene, this.camera)
+      this.scene.background = new THREE.Color(0x374967)
+
+      let rtParameters = {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBFormat// ,
+        // stencilBuffer: true
+      }
+      let dpi = window.devicePixelRatio || 1.0
+      let composer = new THREE.EffectComposer(this.renderer, new THREE.WebGLRenderTarget(window.innerWidth * dpi, window.innerHeight * dpi, rtParameters))
+      composer.setSize(window.innerWidth * dpi, window.innerHeight * dpi)
+      window.addEventListener('resize', () => {
+        composer.setSize(window.innerWidth * dpi, window.innerHeight * dpi)
+      }, false)
+
+      composer.addPass(renderPass)
+      // composer.addPass(renderMask)
+      composer.addPass(bloomPass)
+      // composer.addPass(clearMask)
+      composer.addPass(effectCopy)
+
+      this.composer = composer
     },
     getPos ({ nodes, iNode }) {
       return nodes[iNode].pos
+    },
+    clickObj (event) {
+      console.log(event)
+      this.currentObj = event.object
     },
     dragStart (event) {
       this.controls.enabled = false
@@ -168,14 +232,17 @@ export default {
         this.controls.update()
       }
       this.animatable.time.value = window.performance.now() * 0.001
-      if (this.scene && this.camera && this.renderer) {
+      if (this.composer && this.useBloom) {
+        this.composer.render()
+      } else if (this.scene && this.camera && this.renderer) {
         this.renderer.render(this.scene, this.camera)
       }
     }
   },
   data () {
     return {
-      world: false,
+      useBloom: window.innerWidth >= 767,
+      currentObj: false,
       camPos: { x: 0, y: 0, z: 25 },
       dragControls: false,
       animatable: {
@@ -237,6 +304,7 @@ export default {
 
 <style scoped>
 .full{
+  color: white;
   width: 100%;
   height: 100%;
 }
@@ -252,5 +320,17 @@ export default {
   position: absolute;
   top: 0px;
   left: 0px;
+  font-size: 16px;
+}
+.content-clicker{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+textarea{
+  font-size: 16px;
+  max-width: 100%;
 }
 </style>

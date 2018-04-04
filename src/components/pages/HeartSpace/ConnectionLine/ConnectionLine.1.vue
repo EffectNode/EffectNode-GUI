@@ -5,10 +5,12 @@
 <script>
 /* eslint-disable */
 import * as THREE from 'three'
-import 'imports-loader?THREE=three!three/examples/js/lines/LineSegmentsGeometry.js'
-import 'imports-loader?THREE=three!three/examples/js/lines/LineGeometry.js'
-import 'imports-loader?THREE=three!three/examples/js/lines/WireframeGeometry2.js'
-import 'imports-loader?THREE=three!three/examples/js/lines/LineMaterial.js'
+// import 'imports-loader?THREE=three!three/examples/js/lines/LineSegmentsGeometry.js'
+// import 'imports-loader?THREE=three!three/examples/js/lines/LineGeometry.js'
+// import 'imports-loader?THREE=three!three/examples/js/lines/WireframeGeometry2.js'
+// import 'imports-loader?THREE=three!three/examples/js/lines/LineMaterial.js'
+// import 'imports-loader?THREE=three!three/examples/js/lines/LineGeometry.js'
+// import 'imports-loader?THREE=three!three/examples/js/lines/LineGeometry.js'
 /* eslint-enable */
 
 export default {
@@ -106,10 +108,10 @@ export default {
     // var geometry = new THREE.BufferGeometry().setFromPoints(points)
 
     var material = new THREE.LineBasicMaterial({
-      color: 0xffffff// ,
-      // linewidth: 1 * (window.devicePixelRatio || 1)
+      color: 0xffffff,
+      linewidth: 5 * (window.devicePixelRatio || 1)
     })
-    // material.linewidth = 1
+    material.linewidth = 5
     material.needsUpdate = true
 
     var line = this.line = new THREE.Line(geometry, material)

@@ -487,7 +487,9 @@ THREE.TrackballControls = function ( object, domElement ) {
 		switch ( event.deltaMode ) {
 			case 2:
 
-				if (event.metaKey || event.ctrlKey) {
+				if (event.ctrlKey) {
+					_zoomStart.y -= event.deltaY * 0.025 * 10;
+				} else if (event.metaKey) {
 					_zoomStart.y -= event.deltaY * 0.025;
 				} else {
 					_panEnd.x += -event.deltaX * 0.025;
@@ -497,7 +499,9 @@ THREE.TrackballControls = function ( object, domElement ) {
 				break;
 
 			case 1:
-				if (event.metaKey || event.ctrlKey) {
+				if (event.ctrlKey) {
+					_zoomStart.y -= event.deltaY * 0.01 * 10;
+				} else if (event.metaKey) {
 					_zoomStart.y -= event.deltaY * 0.01;
 				} else {
 					_panEnd.x += -event.deltaX * 0.01;
@@ -507,7 +511,9 @@ THREE.TrackballControls = function ( object, domElement ) {
 				break;
 
 			default:
-				if (event.metaKey || event.ctrlKey) {
+				if (event.ctrlKey) {
+					_zoomStart.y -= event.deltaY * 0.00025 * 10;
+				} else if (event.metaKey) {
 					_zoomStart.y -= event.deltaY * 0.00025;
 				} else {
 					_panEnd.x += -event.deltaX * 0.00025;

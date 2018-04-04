@@ -42,9 +42,11 @@ export const getFnInfo = ({ src, nid }) => {
   function getArgsStr (fn) {
     return toString(tokens.slice(fn.args[0], fn.args[1]))
   }
+
   function getOuter (fn) {
     return toString(tokens.slice(fn.outer[0], fn.outer[1]))
   }
+
   function getArgsList (argsStr) {
     let ans = argsStr.replace('(', '')
     ans = ans.replace(')', '')
