@@ -17,6 +17,12 @@ export default {
       controls: false
     }
   },
+  watch: {
+    toucher () {
+      this.controls = new THREE.OrbitControls(this.camera, this.toucher)
+      this.$emit('controls', this.controls)
+    }
+  },
   mounted () {
     this.controls = new THREE.OrbitControls(this.camera, this.toucher)
     this.$emit('controls', this.controls)

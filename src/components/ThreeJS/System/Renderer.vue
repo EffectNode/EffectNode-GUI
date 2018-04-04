@@ -1,7 +1,7 @@
 <template>
   <div class="full pos-rel">
     <div class="full layer" ref="mounter"></div>
-    <div class="full layer"><slot></slot></div>
+    <div class="full layer" ref="toucher"><slot></slot></div>
   </div>
 </template>
 
@@ -26,13 +26,16 @@ export default {
   mounted () {
     this.renderer = new THREE.WebGLRenderer({
       alpha: this.alpha,
-      antialias: this.antialias
+      antialias: this.antialias// ,
+      // preserveDrawingBuffer: true
     })
+
     this.resize()
     this.renderer.domElement.style.marginBottom = '-6px'
     this.$refs.mounter.appendChild(this.renderer.domElement)
 
     this.$emit('renderer', this.renderer)
+    this.$emit('toucher', this.$refs['toucher'])
   },
   beforeDestroy () {
     this.$refs.mounter.removeChild(this.renderer.domElement)

@@ -21,6 +21,7 @@ export default {
   created () {
     this.element = this.mesh = new THREE.Mesh()
     this.$parent.$emit('add', this.mesh)
+    this.$emit('attach', this.mesh)
     this.$emit('element', this.mesh)
 
     this.$on('material', (v) => {
@@ -47,6 +48,7 @@ export default {
       }
     },
     uninstall () {
+      this.$emit('detach', this.mesh)
       this.$parent.$emit('remove', this.mesh)
     }
   }
