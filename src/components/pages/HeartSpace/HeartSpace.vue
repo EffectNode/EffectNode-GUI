@@ -22,7 +22,6 @@
             <span :style="{ color: node.error ? 'red': 'black' }" v-if="node">{{ node.error }} <br /></span>
             <textarea :style="{ color: node.error ? 'red': 'black' }"  cols="50" rows="10" v-model="node.src" @input="updateSRC({ node, iNode, nodes })" />
           </div>
-
         </div>
 
       </Renderer>
@@ -65,14 +64,13 @@
           <ConnectionLine :p1="{ x: 0, y: 0 }" :p2="getPos({ nodes, iNode })">
           </ConnectionLine>
 
-          <Mesh @element="(v) => { setNodeUserData({ mesh: v, node }) }" @attach="(v) => { draggables.push(v); }"  @detach="(v) => { draggables.splice(draggables.findIndex(a => a === v), 1); }">
+          <Mesh @element="(v) => { setNodeUserData({ mesh: v, node }) }" @attach="(v) => { boxes.push(v); }"  @detach="(v) => { boxes.splice(boxes.findIndex(a => a === v), 1); }">
             <BoxBufferGeometry />
             <ShaderMaterial :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
           </Mesh>
 
         </Object3D>
       </Object3D>
-
 
 
     </Scene>
@@ -114,8 +112,12 @@ export default {
   },
   methods: {
     setup () {
+      this.setupBloom()
+      this.setupTouch()
+    },
+    setupTouch () {
       var touchSurface = this.$refs.toucher
-      var objects = this.draggables
+      var objects = this.boxes
       var camera = this.camera
       // var controls = this.controls = new THREE.EditorControls(camera, touchSurface)
 
@@ -128,19 +130,20 @@ export default {
       controls.staticMoving = true
       controls.dynamicDampingFactor = 0.3
 
-      var dragControls = this.dragControls = new THREE.DragControls(objects, camera, touchSurface)
+      var boxDragControl = this.boxDragControl = new THREE.DragControls(objects, camera, touchSurface)
 
-      dragControls.addEventListener('dragstart', this.dragStart)
-      dragControls.addEventListener('drag', this.dragING)
-      dragControls.addEventListener('click', this.clickObj)
-      dragControls.addEventListener('dragend', this.dragEnd)
-
-      let bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85) // 1.0, 9, 0.5, 512)
+      boxDragControl.addEventListener('dragstart', this.dragStart)
+      boxDragControl.addEventListener('drag', this.dragING)
+      boxDragControl.addEventListener('click', this.clickObj)
+      boxDragControl.addEventListener('dragend', this.dragEnd)
+    },
+    setupBloom () {
+      let bloomPass = this.bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85) // 1.0, 9, 0.5, 512)
       // bloomPass.renderToScreen = true;
 
       bloomPass.threshold = Number(0.85)
-      bloomPass.strength = Number(1.5)
-      bloomPass.radius = Number(1.0)
+      bloomPass.strength = Number(1.0)
+      bloomPass.radius = Number(0.5)
 
       var effectCopy = new THREE.ShaderPass(THREE.CopyShader)
       effectCopy.renderToScreen = true
@@ -244,7 +247,7 @@ export default {
       useBloom: window.innerWidth >= 767,
       currentObj: false,
       camPos: { x: 0, y: 0, z: 25 },
-      dragControls: false,
+      boxDragControl: false,
       animatable: {
         time: { value: 0 }
       },
@@ -262,7 +265,7 @@ export default {
       scene: false,
       camera: false,
       EffectNode: false,
-      draggables: []
+      boxes: []
     }
   },
   watch: {
@@ -328,6 +331,7 @@ export default {
   left: 0px;
   width: 100%;
   height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 textarea{
   font-size: 16px;
