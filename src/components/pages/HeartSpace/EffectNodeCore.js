@@ -234,6 +234,7 @@ export const hydrate = () => {
       } else {
         root = dbRoot
       }
+      root = template
       resolve(root)
     }, 750)
   })

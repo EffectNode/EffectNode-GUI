@@ -62,7 +62,15 @@
         <!--  -->
         <!-- Nodes -->
 
-        <ConnectionLine :key="conn.outputNID" v-for="(conn) in connections" :p1="getInputPos({ conn })" :p2="getOutputPos({ conn })">
+        <ConnectionLine
+          :scene="scene"
+          :key="conn.outputNID" v-for="(conn) in connections"
+          v-if="scene && getOutputPos({ conn }) && getInputPos({ conn })"
+          :p1="getOutputPos({ conn })"
+          :p2="getInputPos({ conn })"
+        >
+          {{ getInputPos({ conn }) }}
+          {{ getOutputPos({ conn }) }}
         </ConnectionLine>
 
         <Object3D :key="node.compiledFnName" v-for="(node, iNode) in nodes">
@@ -231,6 +239,8 @@ export default {
       output.userData = output.userData || {}
       output.userData.node = node
       output.userData.output = node.output
+
+      this.tryRefresh()
     },
     cleanUpBox ({ v, node, nodes }) {
       let boxMeshes = this.boxMeshes
@@ -263,12 +273,35 @@ export default {
         }
       })
     },
-    getPos ({ nodes, iNode }) {
-      return nodes[iNode].pos
-    },
     getInputPos ({ conn }) {
+      let inputMesh = this.inputMeshes.filter((iM) => {
+        return iM.userData.input.nid === conn.input.nid && iM.userData.input.index === conn.input.index
+      })[0]
+      // console.log(inputMesh)
+      if (inputMesh) {
+        let loc = inputMesh.position.clone().setFromMatrixPosition(inputMesh.matrixWorld)
+        return {
+          x: loc.x,
+          y: loc.y
+        }
+      } else {
+        return false
+      }
     },
     getOutputPos ({ conn }) {
+      let outputMesh = this.outputMeshes.filter((iM) => {
+        return iM.userData.node.nid === conn.output.nid
+      })[0]
+      // console.log(outputMesh)
+      if (outputMesh) {
+        let loc = outputMesh.position.clone().setFromMatrixPosition(outputMesh.matrixWorld)
+        return {
+          x: loc.x,
+          y: loc.y
+        }
+      } else {
+        return false
+      }
     },
     inputDragStart (event) {
       this.trackBallControls.enabled = false
@@ -281,17 +314,25 @@ export default {
       new TWEEN.Tween(mesh.position)
         .to(mesh.userData.originalPos, 500)
         .easing(TWEEN.Easing.Quadratic.Out)
+        .onStart(() => {
+          this.tryRefresh()
+        })
+        .onUpdate(() => {
+          this.tryRefresh()
+        })
+        .onComplete(() => {
+          this.tryRefresh()
+        })
         .start()
+
       // console.log('sim sim ling')
       this.scene.updateMatrixWorld(true)
       this.getNearest({ mesh, compares: this.outputMeshes }).then((nearest) => {
-        // console.log(nearest.userData)
-        // nearest.userData.node.from.push(mesh.userData.node.nid)
-        // mesh.userData.node.to.push(nearest.userData.node.nid)
         this.addConnectionInputHand({ hand: mesh, land: nearest })
+        EN.saveRoot({ root: this.EffectNode })
+        this.tryRefresh()
       }, () => {
       })
-      EN.saveRoot({ root: this.EffectNode })
     },
     addConnectionInputHand ({ hand, land }) {
       let inputData = hand.userData.input
@@ -302,13 +343,14 @@ export default {
         input: inputData,
         output: outputData
       })
+      this.tryRefresh()
     },
     getNearest ({ mesh, compares }) {
       return new Promise((resolve, reject) => {
         let found = false
         compares.reduce((accu, item, key) => {
           let distance = item.position.clone().setFromMatrixPosition(item.matrixWorld).sub(mesh.position.clone().setFromMatrixPosition(mesh.matrixWorld)).length()
-          if (distance < 1.5) {
+          if (distance < 3) {
             accu.push(item)
           }
           return accu
@@ -357,6 +399,8 @@ export default {
       group3D.position.x = node.pos.x
       group3D.position.y = node.pos.y
       group3D.position.z = node.pos.z
+
+      this.tryRefresh()
     },
     boxDragEnd (event) {
       this.trackBallControls.enabled = true
@@ -370,6 +414,7 @@ export default {
       node.pos.z = mesh.position.z
 
       EN.saveRoot({ root: this.EffectNode })
+      this.tryRefresh()
     },
     updateSRC ({ node, nodes, iNode }) {
       try {
@@ -380,6 +425,9 @@ export default {
         // console.error(e)
         console.table([e])
       }
+      this.tryRefresh()
+    },
+    tryRefresh () {
       this.$nextTick(() => {
         this.$forceUpdate()
       })
