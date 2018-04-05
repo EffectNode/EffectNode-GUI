@@ -15,6 +15,9 @@
           <label for=""><input type="checkbox" v-model="useBloom">use bloom</label>
 
           <div :key="node.nid" v-for="(node, iNode) in nodes" v-if="node.nid === currentObj.userData.node.nid">
+
+            <button @click="removeCurrentBox({ node, nodes, mesh: currentObj, iNode })">Remove me</button>
+
             <button @click="() => { currentObj = false }">close</button>
             <br />
             <textarea :style="{ color: node.error ? 'red': 'black' }"  cols="50" rows="10" v-model="node.src" @input="updateSRC({ node, iNode, nodes })" />
@@ -84,7 +87,7 @@
             :iNode="iNode"
 
             @attach="(v) => { setupBox({ v, node, nodes, iNode }) }"
-            @detach="(v) => { cleanUpBox({ v, node, nods, iNode }) }"
+            @detach="(v) => { cleanUpBox({ v, node, nodes, iNode }) }"
           >
           </EffectBox>
 
@@ -262,16 +265,18 @@ export default {
         }
       })
 
-      let outputs = v.outputs
-      outputs.forEach((eOutput) => {
-        let outputMeshes = this.outputMeshes
-        let outputIndex = outputMeshes.findIndex(a => a === eOutput)
-        if (outputIndex !== -1) {
-          outputMeshes.splice(outputIndex, 1)
-        } else {
-          console.error('cant find output meshes')
-        }
-      })
+      let outputMeshes = this.outputMeshes
+      let outputIndex = outputMeshes.findIndex(a => a === v.output)
+      if (outputIndex !== -1) {
+        outputMeshes.splice(outputIndex, 1)
+      }
+
+      // let outputs = v.output
+      // outputs.forEach((eOutput) => {
+      //    else {
+      //     console.error('cant find output meshes')
+      //   }
+      // })
     },
     getInputPos ({ conn }) {
       let inputMesh = this.inputMeshes.filter((iM) => {
@@ -340,11 +345,17 @@ export default {
       let outputData = land.userData.output
       console.log(inputData, outputData)
 
-      this.connections.push({
-        input: inputData,
-        output: outputData
+      let idx = this.connections.findIndex((conn) => {
+        return conn.input.nid === inputData.nid && conn.input.index === inputData.index
       })
-      this.tryRefresh()
+
+      if (idx === -1) {
+        this.connections.push({
+          input: inputData,
+          output: outputData
+        })
+        this.tryRefresh()
+      }
     },
     getNearest ({ mesh, compares }) {
       return new Promise((resolve, reject) => {
@@ -457,6 +468,35 @@ export default {
     },
     log (v) {
       console.log(v)
+    },
+    removeCurrentBox ({ nodes, node, iNode, mesh }) {
+      // remove mesh box
+      let meshIdx = this.boxMeshes.findIndex(iBMesh => (iBMesh === mesh))
+      if (meshIdx !== -1) {
+        this.boxMeshes.splice(meshIdx, node)
+      }
+
+      // remove connections
+      let conns = this.connections
+      conns.reduce((accu, item, key) => {
+        let index = conns.findIndex(iConn => ((iConn.input && iConn.input.nid === node.nid) || (iConn.output && iConn.output.nid === node.nid)))
+        if (index !== -1) {
+          conns.splice(index, 1)
+          accu.push(item)
+        }
+        return accu
+      }, [])
+
+      // save
+      EN.saveRoot({ root: this.EffectNode })
+
+      // remove data
+      nodes.splice(iNode, 1)
+
+      // close popup
+      this.currentObj = false
+      EN.saveRoot({ root: this.EffectNode })
+      this.$forceUpdate()
     },
     renderWebGL () {
       TWEEN.update()
