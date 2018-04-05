@@ -28,7 +28,17 @@ export default {
   data () {
     return {
       temp: new THREE.Vector3(),
-      geometry: false
+      rAFID: 0,
+      animatable: {
+        time: {
+          value: 0
+        }
+      },
+      geometry: false,
+      down: {
+        vs: require('../Shaders/Down/Down.vert'),
+        fs: require('../Shaders/Down/Down.frag')
+      }
     }
   },
   watch: {
@@ -56,7 +66,7 @@ export default {
         v1.x = p2.x
         v1.y = p2.y
 
-        this.scene.updateMatrixWorld(true)
+        // this.scene.updateMatrixWorld(true)
 
         this.geometry.verticesNeedUpdate = true
         this.geometry.needsUpdate = true
@@ -69,6 +79,7 @@ export default {
     geometry.vertices.push(new THREE.Vector3(0, 0, 0))
     geometry.vertices.push(new THREE.Vector3(0, 0, 0))
 
+    this.scene.updateMatrixWorld(true)
     this.updateGeo()
 
     // var curve = new THREE.CatmullRomCurve3([
@@ -80,9 +91,12 @@ export default {
     // var points = curve.getPoints(4)
     // var geometry = new THREE.BufferGeometry().setFromPoints(points)
 
-    var material = new THREE.LineBasicMaterial({
-      color: 0xffffff,
-      linewidth: 1
+    var material = new THREE.ShaderMaterial({
+      vertexShader: this.down.vs,
+      fragmentShader: this.down.fs,
+      uniforms: this.animatable
+      // color: 0xffffff,
+      // linewidth: 1
     })
     // material.linewidth = 1
 
@@ -93,9 +107,16 @@ export default {
 
     this.$parent.$emit('add', line)
     console.log('created connection line')
+
+    var rAF = () => {
+      this.rAFID = window.requestAnimationFrame(rAF)
+      this.animatable.time.value = window.performance.now() * 0.001
+    }
+    this.rAFID = window.requestAnimationFrame(rAF)
   },
   beforeDestroy () {
-    this.$parent.$emit('add', this.line)
+    this.$parent.$emit('remove', this.line)
+    window.cancelAnimationFrame(this.rAFID)
   }
 }
 </script>

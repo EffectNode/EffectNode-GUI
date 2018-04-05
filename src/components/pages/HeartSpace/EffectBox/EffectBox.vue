@@ -12,7 +12,7 @@
       <Object3D py="3">
         <Object3D :key="input.aid" :px="((iInput + 1 - ((node.inputs.length + 1) / 2)) / node.inputs.length) * 10" v-for="(input, iInput) in node.inputs">
           <Mesh @element="addToInputs" @clean="removeFromInputs">
-            <SphereBufferGeometry :r="0.3" />
+            <SphereBufferGeometry :nx="7" :ny="7" :r="0.3" />
             <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
           </Mesh>
         </Object3D>
@@ -21,7 +21,7 @@
       <!-- output -->
       <Object3D py="-3">
         <Mesh @element="(v) => { output = v }" @clean="() => { output = false }">
-          <SphereBufferGeometry :r="0.3" />
+          <SphereBufferGeometry :nx="7" :ny="7" :r="0.3" />
           <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
         </Mesh>
       </Object3D>

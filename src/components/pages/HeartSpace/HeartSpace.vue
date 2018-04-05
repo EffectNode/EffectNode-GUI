@@ -145,11 +145,11 @@ export default {
       var trackBallControls = this.trackBallControls = new THREE.TrackballControls(camera, touchSurface)
       trackBallControls.rotateSpeed = 1.0
       trackBallControls.zoomSpeed = 3.0
-      trackBallControls.panSpeed = 1.2
+      trackBallControls.panSpeed = 0.5
       trackBallControls.noZoom = false
       trackBallControls.noPan = false
-      trackBallControls.staticMoving = true
-      trackBallControls.dynamicDampingFactor = 0.3
+      trackBallControls.staticMoving = false
+      trackBallControls.dynamicDampingFactor = 0.234
 
       var boxDragControl = this.boxDragControl = new THREE.DragControls(this.boxMeshes, camera, touchSurface)
       boxDragControl.addEventListener('dragstart', this.boxDragStart)
@@ -160,7 +160,7 @@ export default {
       var inputsDragControl = this.inputsDragControl = new THREE.DragControls(this.inputMeshes, camera, touchSurface)
       inputsDragControl.addEventListener('dragstart', this.inputDragStart)
       inputsDragControl.addEventListener('drag', this.inputDragging)
-      // inputsDragControl.addEventListener('click', this.inputClickObj)
+      inputsDragControl.addEventListener('click', this.inputClickObj)
       inputsDragControl.addEventListener('dragend', this.inputDragEnd)
     },
     setupBloom () {
@@ -332,6 +332,7 @@ export default {
         EN.saveRoot({ root: this.EffectNode })
         this.tryRefresh()
       }, () => {
+        this.removeConnectionAtInput({ input: mesh })
       })
     },
     addConnectionInputHand ({ hand, land }) {
@@ -374,6 +375,25 @@ export default {
       })
     },
     inputDragging () {
+      this.tryRefresh()
+    },
+    inputClickObj (event) {
+      this.removeConnectionAtInput({ input: event.object })
+    },
+    removeConnectionAtInput ({ input }) {
+      if (input) {
+        console.log(input)
+        let conns = this.connections
+        conns.reduce((accu, item, key) => {
+          let index = conns.findIndex(iConn => (iConn.input.nid === input.userData.input.nid && iConn.input.index === input.userData.input.index))
+          if (index !== -1) {
+            conns.splice(index, 1)
+            accu.push(item)
+          }
+          return accu
+        }, [])
+        EN.saveRoot({ root: this.EffectNode })
+      }
     },
     boxClickObj (event) {
       console.log(event)
