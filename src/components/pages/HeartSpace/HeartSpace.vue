@@ -64,10 +64,15 @@
           <ConnectionLine :p1="{ x: 0, y: 0 }" :p2="getPos({ nodes, iNode })">
           </ConnectionLine>
 
-          <Mesh @element="(v) => { setNodeUserData({ mesh: v, node }) }" @attach="(v) => { boxes.push(v); }"  @detach="(v) => { boxes.splice(boxes.findIndex(a => a === v), 1); }">
-            <BoxBufferGeometry />
-            <ShaderMaterial :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
-          </Mesh>
+          <EffectBox
+            :node="node"
+            :nodes="nodes"
+            :iNode="iNode"
+
+            @attach="(v) => { setupBox({ v, node, nodes, iNode }) }"
+            @detach="(v) => { cleanUpBox({ v, node, nods, iNode }) }"
+          >
+          </EffectBox>
 
         </Object3D>
       </Object3D>
@@ -81,8 +86,9 @@
 <script>
 import Bundle from '@/components/ThreeJS/Bundle.js'
 import _ from 'lodash'
-import * as EN from './effectNode'
+import * as EN from './EffectNodeCore'
 import ConnectionLine from './ConnectionLine/ConnectionLine'
+import EffectBox from './EffectBox/EffectBox'
 
 /* eslint-disable */
 import * as THREE from 'three'
@@ -108,7 +114,8 @@ import 'imports-loader?THREE=three!three/examples/js/postprocessing/UnrealBloomP
 export default {
   components: {
     ...Bundle,
-    ConnectionLine
+    ConnectionLine,
+    EffectBox
   },
   methods: {
     setup () {
@@ -121,14 +128,14 @@ export default {
       var camera = this.camera
       // var controls = this.controls = new THREE.EditorControls(camera, touchSurface)
 
-      var controls = this.controls = new THREE.TrackballControls(camera, touchSurface)
-      controls.rotateSpeed = 1.0
-      controls.zoomSpeed = 3.0
-      controls.panSpeed = 1.8
-      controls.noZoom = false
-      controls.noPan = false
-      controls.staticMoving = true
-      controls.dynamicDampingFactor = 0.3
+      var trackBallControls = this.trackBallControls = new THREE.TrackballControls(camera, touchSurface)
+      trackBallControls.rotateSpeed = 1.0
+      trackBallControls.zoomSpeed = 3.0
+      trackBallControls.panSpeed = 1.2
+      trackBallControls.noZoom = false
+      trackBallControls.noPan = false
+      trackBallControls.staticMoving = true
+      trackBallControls.dynamicDampingFactor = 0.3
 
       var boxDragControl = this.boxDragControl = new THREE.DragControls(objects, camera, touchSurface)
 
@@ -172,6 +179,24 @@ export default {
 
       this.composer = composer
     },
+    setupBox ({ v, node }) {
+      this.boxes.push(v.box)
+
+      let mesh = v.box
+      let group3D = v.group
+
+      mesh.userData = mesh.userData || {}
+      mesh.userData.node = node
+      mesh.userData.group3D = group3D
+
+      mesh.position.x = node.pos.x
+      mesh.position.y = node.pos.y
+      mesh.position.z = node.pos.z
+    },
+    cleanUpBox ({ v, node, nodes }) {
+      let boxes = this.boxes
+      boxes.splice(boxes.findIndex(a => a === v.box), 1)
+    },
     getPos ({ nodes, iNode }) {
       return nodes[iNode].pos
     },
@@ -180,21 +205,52 @@ export default {
       this.currentObj = event.object
     },
     dragStart (event) {
-      this.controls.enabled = false
+      this.trackBallControls.enabled = false
+
+      // let mesh = event.object
+      // let group3D = event.object.userData.group3D
+      // let node = mesh.userData.node
+
+      // mesh.position.x = node.pos.x
+      // mesh.position.y = node.pos.y
+      // mesh.position.z = node.pos.z
+
+      // group3D.position.copy(mesh.position)
+
+      // mesh.position.x = 0
+      // mesh.position.y = 0
+      // mesh.position.z = 0
+
       console.log(event)
     },
     dragING (event) {
       let mesh = event.object
+      let group3D = event.object.userData.group3D
       let node = mesh.userData.node
 
       node.pos.x = mesh.position.x
       node.pos.y = mesh.position.y
       node.pos.z = mesh.position.z
+
+      // mesh.position.x = 0
+      // mesh.position.y = 0
+      // mesh.position.z = 0
+
+      mesh.position.x = node.pos.x
+      mesh.position.y = node.pos.y
+      mesh.position.z = node.pos.z
+
+      group3D.position.x = node.pos.x
+      group3D.position.y = node.pos.y
+      group3D.position.z = node.pos.z
+
+      this.$forceUpdate()
     },
     dragEnd (event) {
-      this.controls.enabled = true
+      this.trackBallControls.enabled = true
       console.log(event)
       let mesh = event.object
+      // let group3D = event.object.userData.group3D
       let node = mesh.userData.node
 
       node.pos.x = mesh.position.x
@@ -216,13 +272,8 @@ export default {
         this.$forceUpdate()
       })
     },
-    setNodeUserData ({ mesh, node }) {
-      mesh.userData = mesh.userData || {}
-      mesh.userData.node = node
+    setNodeBoxUserData ({ boxMesh, node }) {
 
-      mesh.position.x = node.pos.x
-      mesh.position.y = node.pos.y
-      mesh.position.z = node.pos.z
     },
     generateGLSL () {
       // EN.generateGLSL(this.EffectNode)
@@ -231,10 +282,10 @@ export default {
       console.log(v)
     },
     renderWebGL () {
-      if (this.controls) {
-        this.controls.update()
+      if (this.trackBallControls) {
+        this.trackBallControls.update()
       }
-      this.animatable.time.value = window.performance.now() * 0.001
+      // this.animatable.time.value = window.performance.now() * 0.001
       if (this.composer && this.useBloom) {
         this.composer.render()
       } else if (this.scene && this.camera && this.renderer) {
@@ -248,14 +299,7 @@ export default {
       currentObj: false,
       camPos: { x: 0, y: 0, z: 25 },
       boxDragControl: false,
-      animatable: {
-        time: { value: 0 }
-      },
       toucher: false,
-      demo: {
-        vs: require('./Shaders/Simple/vs.vert'),
-        fs: require('./Shaders/Simple/fs.frag')
-      },
       size: {
         width: window.innerWidth,
         height: window.innerHeight,

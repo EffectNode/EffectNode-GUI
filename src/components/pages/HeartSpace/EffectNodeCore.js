@@ -213,6 +213,15 @@ export const hydrate = () => {
         })
       )
 
+      root.state.nodes.push(
+        makeNode({
+          src:
+`vec4 main (vec4 inV4, float inV1, float inV2) {
+  gl_FragColor = vec4(1);
+}`
+        })
+      )
+
       resolve(root)
     }, 750)
   })
@@ -221,7 +230,7 @@ export const hydrate = () => {
 export const loadNode = ({ shader }) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      let node = JSON.parse()
+      let node = JSON.parse('{}')
       resolve(node)
     }, 100)
   })
