@@ -1,3 +1,5 @@
+import * as ENdb from './ENdb.js'
+
 export const makeRoot = () => {
   return {
     state: false
@@ -179,66 +181,71 @@ export const makeState = () => {
   }
 }
 
+export const makeTemplateNodes = () => {
+  let template = makeNodeList()
+  template.push(
+    makeNode({
+      src:
+`vec4 loklok (vec4 inV4, float inV1, float inV2) {
+gl_FragColor = vec4(1);
+}`
+    })
+  )
+
+  template.push(
+    makeNode({
+      src:
+`vec4 main (vec4 inV4, float inV1, float inV2) {
+gl_FragColor = vec4(1);
+}`
+    })
+  )
+
+  template.push(
+    makeNode({
+      src:
+`vec4 main (vec4 inV4, float inV1, float inV2) {
+gl_FragColor = vec4(1);
+}`
+    })
+  )
+
+  template.push(
+    makeNode({
+      src:
+`vec4 main (vec4 inV4, float inV1, float inV2) {
+gl_FragColor = vec4(1);
+}`
+    })
+  )
+
+  return template
+}
+
 export const hydrate = () => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       let root = makeRoot()
       root.state = makeState()
-      root.state.nodes = makeNodeList()
 
-      root.state.nodes.push(
-        makeNode({
-          src:
-`vec4 loklok (vec4 inV4, float inV1, float inV2) {
-  gl_FragColor = vec4(1);
-}`
-        })
-      )
-
-      root.state.nodes.push(
-        makeNode({
-          src:
-`vec4 main (vec4 inV4, float inV1, float inV2) {
-  gl_FragColor = vec4(1);
-}`
-        })
-      )
-
-      root.state.nodes.push(
-        makeNode({
-          src:
-`vec4 main (vec4 inV4, float inV1, float inV2) {
-  gl_FragColor = vec4(1);
-}`
-        })
-      )
-
-      root.state.nodes.push(
-        makeNode({
-          src:
-`vec4 main (vec4 inV4, float inV1, float inV2) {
-  gl_FragColor = vec4(1);
-}`
-        })
-      )
+      let dbNdoes = ENdb.getNodes()
+      if (!dbNdoes) {
+        let nodeTemplates = makeTemplateNodes()
+        root.state.nodes = nodeTemplates
+        ENdb.setNodes(nodeTemplates)
+      } else {
+        root.state.nodes = dbNdoes
+      }
 
       resolve(root)
     }, 750)
   })
 }
 
-export const loadNode = ({ shader }) => {
+export const saveNode = ({ node, nodes }) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      let node = JSON.parse('{}')
-      resolve(node)
-    }, 100)
-  })
-}
-
-export const saveNode = ({ node }) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
+      ENdb.setNodes(nodes)
       resolve()
     }, 100)
   })

@@ -17,10 +17,12 @@
 
           <div :key="node.nid" v-for="(node, iNode) in nodes" v-if="node.nid === currentObj.userData.node.nid">
             <button @click="() => { currentObj = false }">close</button>
+            <br />
+            <textarea :style="{ color: node.error ? 'red': 'black' }"  cols="50" rows="10" v-model="node.src" @input="updateSRC({ node, iNode, nodes })" />
+            <br />
+            <span :style="{ color: node.error ? 'red': 'black' }" v-if="node">{{ node.error }} <br /></span>
             <pre>{{ node.from }}</pre>
             <pre>{{ node.to }}</pre>
-            <span :style="{ color: node.error ? 'red': 'black' }" v-if="node">{{ node.error }} <br /></span>
-            <textarea :style="{ color: node.error ? 'red': 'black' }"  cols="50" rows="10" v-model="node.src" @input="updateSRC({ node, iNode, nodes })" />
           </div>
         </div>
 
@@ -124,7 +126,7 @@ export default {
     },
     setupTouch () {
       var touchSurface = this.$refs.toucher
-      var objects = this.boxes
+      var objects = this.boxMeshes
       var camera = this.camera
       // var controls = this.controls = new THREE.EditorControls(camera, touchSurface)
 
@@ -179,23 +181,32 @@ export default {
 
       this.composer = composer
     },
-    setupBox ({ v, node }) {
-      this.boxes.push(v.box)
+    setupBox ({ v, node, nodes }) {
+      this.boxMeshes.push(v.box)
 
       let mesh = v.box
       let group3D = v.group
+      let inputs = v.inputs
+      let output = v.output
 
       mesh.userData = mesh.userData || {}
       mesh.userData.node = node
       mesh.userData.group3D = group3D
+      mesh.userData.inputs = inputs
+      mesh.userData.output = output
+
+      // hydrate
+      group3D.position.x = node.pos.x
+      group3D.position.y = node.pos.y
+      group3D.position.z = node.pos.z
 
       mesh.position.x = node.pos.x
       mesh.position.y = node.pos.y
       mesh.position.z = node.pos.z
     },
     cleanUpBox ({ v, node, nodes }) {
-      let boxes = this.boxes
-      boxes.splice(boxes.findIndex(a => a === v.box), 1)
+      let boxMeshes = this.boxMeshes
+      boxMeshes.splice(boxMeshes.findIndex(a => a === v.box), 1)
     },
     getPos ({ nodes, iNode }) {
       return nodes[iNode].pos
@@ -236,7 +247,7 @@ export default {
       node.pos.y = mesh.position.y
       node.pos.z = mesh.position.z
 
-      EN.saveNode({ node })
+      EN.saveNode({ node, nodes: this.nodes })
     },
     updateSRC ({ node, nodes, iNode }) {
       try {
@@ -250,9 +261,6 @@ export default {
       this.$nextTick(() => {
         this.$forceUpdate()
       })
-    },
-    setNodeBoxUserData ({ boxMesh, node }) {
-
     },
     generateGLSL () {
       // EN.generateGLSL(this.EffectNode)
@@ -288,7 +296,9 @@ export default {
       scene: false,
       camera: false,
       EffectNode: false,
-      boxes: []
+      boxMeshes: [],
+      inputMeshes: [],
+      outputMeshes: []
     }
   },
   watch: {
@@ -311,7 +321,7 @@ export default {
       }
     }), false)
   },
-  mounted () {
+  async mounted () {
     var self = this
     function loop () {
       self.rAFID = window.requestAnimationFrame(loop)
@@ -321,9 +331,7 @@ export default {
 
     this.setup()
 
-    EN.hydrate().then((v) => {
-      this.EffectNode = v
-    })
+    this.EffectNode = await EN.hydrate()
   }
 }
 </script>

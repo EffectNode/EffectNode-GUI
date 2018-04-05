@@ -76,6 +76,13 @@ export default {
     }
   },
   methods: {
+    addToInputs (v) {
+      this.inputs.push(v)
+    },
+    removeFromInputs (v) {
+      let inputs = this.inputs
+      inputs.splice(inputs.findIndex(a => a.aid === v.aid), 1)
+    },
     setupBox () {
       if (this.box && this.output) {
         this.$emit('attach', {
