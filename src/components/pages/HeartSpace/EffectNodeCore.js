@@ -2,7 +2,8 @@ import * as ENdb from './ENdb.js'
 
 export const makeRoot = () => {
   return {
-    state: false
+    state: false,
+    backups: []
   }
 }
 
@@ -57,19 +58,19 @@ export const getFnInfo = ({ src, nid }) => {
       let info = trimmed.split(' ')
       if (info.length === 2) {
         return {
-          i,
+          index: i,
           nid,
           direction: 'in',
-          type: info[0],
-          name: info[1]
+          type: info[0], // arg type
+          name: info[1] // arg name
         }
       } else if (info.length === 3) {
         return {
-          i,
+          index: i,
           nid,
-          direction: info[0],
-          type: info[1],
-          name: info[2]
+          direction: info[0], // inout / in / out
+          type: info[1], // args type
+          name: info[2] // arg name
         }
       }
     })
@@ -133,26 +134,21 @@ export const makeNode = ({ src, oldNode }) => {
     compiledFnName: fnNewName,
     compiledSrc: compiledSrc,
     inputs: false,
-    output: false,
-    from: [],
-    to: [],
+    output: {
+      nid,
+      name: fnName,
+      type: fnOutputType
+    },
     pos: makePos()
   }
 
   if (oldNode) {
-    newNode.from = oldNode.from
-    newNode.to = oldNode.to
     newNode.pos = oldNode.pos
-  }
-
-  newNode.outputs = {
-    nid,
-    name: fnName,
-    type: fnOutputType
   }
 
   newNode.inputs = argsList.map((v) => {
     return {
+      pos: makePos(),
       ...v
     }
   })
@@ -225,27 +221,28 @@ gl_FragColor = vec4(1);
 export const hydrate = () => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      let root = makeRoot()
-      root.state = makeState()
+      let template = makeRoot()
+      template.state = makeState()
+      template.state.nodes = makeTemplateNodes()
+      template.state.connections = []
+      let root = template
 
-      let dbNdoes = ENdb.getNodes()
-      if (!dbNdoes) {
-        let nodeTemplates = makeTemplateNodes()
-        root.state.nodes = nodeTemplates
-        ENdb.setNodes(nodeTemplates)
+      let dbRoot = ENdb.getRoot()
+      if (!dbRoot) {
+        ENdb.setRoot(template)
+        root = template
       } else {
-        root.state.nodes = dbNdoes
+        root = dbRoot
       }
-
       resolve(root)
     }, 750)
   })
 }
 
-export const saveNode = ({ node, nodes }) => {
+export const saveRoot = ({ root }) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      ENdb.setNodes(nodes)
+      ENdb.setRoot(root)
       resolve()
     }, 100)
   })

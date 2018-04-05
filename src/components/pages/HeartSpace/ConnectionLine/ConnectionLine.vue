@@ -118,7 +118,7 @@ export default {
     line.frustumCulled = false
 
     this.$parent.$emit('add', line)
-    console.log('created')
+    console.log('created connection line')
   },
   beforeDestroy () {
     this.$parent.$emit('add', this.line)

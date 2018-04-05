@@ -1,21 +1,21 @@
 // import * as idb from 'idb-keyval'
-// const Nodes = new idb.Store('EffectNode-LocalStorage', 'Nodes')
+// const Root = new idb.Store('EffectNode-LocalStorage', 'Root')
 
-export const setNodes = (v) => {
-  return window.sessionStorage.setItem('all-nodes-effect-node-db', JSON.stringify(v))
+export const setRoot = (v) => {
+  return window.sessionStorage.setItem('all-nodes-effect-root-db', JSON.stringify(v))
 }
-export const getNodes = () => {
-  return JSON.parse(window.sessionStorage.getItem('all-nodes-effect-node-db'))
-}
-
-export const addNode = (v) => {
-  let allNodes = getNodes()
-  allNodes.push(v)
-  setNodes(allNodes)
+export const getRoot = () => {
+  return JSON.parse(window.sessionStorage.getItem('all-nodes-effect-root-db'))
 }
 
-export const removeNode = (v) => {
-  let allNodes = getNodes()
-  allNodes.splice(allNodes.findIndex(n => n.nid === v.nid), 1)
-  setNodes(allNodes)
-}
+// export const addNode = (v) => {
+//   let allRoot = getRoot()
+//   allRoot.push(v)
+//   setRoot(allRoot)
+// }
+
+// export const removeNode = (v) => {
+//   let allRoot = getRoot()
+//   allRoot.splice(allRoot.findIndex(n => n.nid === v.nid), 1)
+//   setRoot(allRoot)
+// }

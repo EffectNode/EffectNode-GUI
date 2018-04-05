@@ -12,7 +12,6 @@
 
         <div class="content-clicker" v-if="currentObj" @click="() => { currentObj = false }"></div>
         <div class="content" v-if="currentObj">
-
           <label for=""><input type="checkbox" v-model="useBloom">use bloom</label>
 
           <div :key="node.nid" v-for="(node, iNode) in nodes" v-if="node.nid === currentObj.userData.node.nid">
@@ -21,10 +20,11 @@
             <textarea :style="{ color: node.error ? 'red': 'black' }"  cols="50" rows="10" v-model="node.src" @input="updateSRC({ node, iNode, nodes })" />
             <br />
             <span :style="{ color: node.error ? 'red': 'black' }" v-if="node">{{ node.error }} <br /></span>
-            <pre>{{ node.from }}</pre>
-            <pre>{{ node.to }}</pre>
+            <pre>{{ connections }}</pre>
           </div>
         </div>
+
+
 
       </Renderer>
     </keep-alive>
@@ -51,20 +51,24 @@
         </Points>
       </Object3D> -->
 
-      <Object3D>
+      <!-- <Object3D>
         <Mesh>
           <PlaneBufferGeometry />
           <MeshBasicMaterial :color="0xffffff" />
         </Mesh>
-      </Object3D>
+      </Object3D> -->
 
       <Object3D>
         <!--  -->
         <!-- Nodes -->
+
+        <ConnectionLine :key="conn.outputNID" v-for="(conn) in connections" :p1="getInputPos({ conn })" :p2="getOutputPos({ conn })">
+        </ConnectionLine>
+
         <Object3D :key="node.compiledFnName" v-for="(node, iNode) in nodes">
 
-          <ConnectionLine :p1="{ x: 0, y: 0 }" :p2="getPos({ nodes, iNode })">
-          </ConnectionLine>
+          <!-- <ConnectionLine :p1="{ x: 0, y: 0 }" :p2="getPos({ nodes, iNode })">
+          </ConnectionLine> -->
 
           <EffectBox
             :node="node"
@@ -93,6 +97,7 @@ import ConnectionLine from './ConnectionLine/ConnectionLine'
 import EffectBox from './EffectBox/EffectBox'
 
 /* eslint-disable */
+import * as TWEEN from '@tweenjs/tween.js'
 import * as THREE from 'three'
 import 'imports-loader?THREE=three!three/examples/js/controls/DragControls.js'
 import 'imports-loader?THREE=three!./TrackTrack.js'
@@ -126,7 +131,6 @@ export default {
     },
     setupTouch () {
       var touchSurface = this.$refs.toucher
-      var objects = this.boxMeshes
       var camera = this.camera
       // var controls = this.controls = new THREE.EditorControls(camera, touchSurface)
 
@@ -139,12 +143,17 @@ export default {
       trackBallControls.staticMoving = true
       trackBallControls.dynamicDampingFactor = 0.3
 
-      var boxDragControl = this.boxDragControl = new THREE.DragControls(objects, camera, touchSurface)
+      var boxDragControl = this.boxDragControl = new THREE.DragControls(this.boxMeshes, camera, touchSurface)
+      boxDragControl.addEventListener('dragstart', this.boxDragStart)
+      boxDragControl.addEventListener('drag', this.boxDragging)
+      boxDragControl.addEventListener('click', this.boxClickObj)
+      boxDragControl.addEventListener('dragend', this.boxDragEnd)
 
-      boxDragControl.addEventListener('dragstart', this.dragStart)
-      boxDragControl.addEventListener('drag', this.dragING)
-      boxDragControl.addEventListener('click', this.clickObj)
-      boxDragControl.addEventListener('dragend', this.dragEnd)
+      var inputsDragControl = this.inputsDragControl = new THREE.DragControls(this.inputMeshes, camera, touchSurface)
+      inputsDragControl.addEventListener('dragstart', this.inputDragStart)
+      inputsDragControl.addEventListener('drag', this.inputDragging)
+      // inputsDragControl.addEventListener('click', this.inputClickObj)
+      inputsDragControl.addEventListener('dragend', this.inputDragEnd)
     },
     setupBloom () {
       let bloomPass = this.bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85) // 1.0, 9, 0.5, 512)
@@ -182,13 +191,14 @@ export default {
       this.composer = composer
     },
     setupBox ({ v, node, nodes }) {
-      this.boxMeshes.push(v.box)
-
       let mesh = v.box
       let group3D = v.group
-      let inputs = v.inputs
       let output = v.output
+      let inputs = v.inputs
 
+      console.table([v])
+
+      //
       mesh.userData = mesh.userData || {}
       mesh.userData.node = node
       mesh.userData.group3D = group3D
@@ -203,23 +213,135 @@ export default {
       mesh.position.x = node.pos.x
       mesh.position.y = node.pos.y
       mesh.position.z = node.pos.z
+
+      // boxes draggables
+      this.boxMeshes.push(v.box)
+
+      // inputs draggables
+      inputs.forEach((eInput, key) => {
+        let inputMeshes = this.inputMeshes
+        inputMeshes.push(eInput)
+        eInput.userData = eInput.userData || {}
+        eInput.userData.node = node
+        eInput.userData.input = node.inputs[key]
+      })
+
+      // outputs draggables
+      this.outputMeshes.push(output)
+      output.userData = output.userData || {}
+      output.userData.node = node
+      output.userData.output = node.output
     },
     cleanUpBox ({ v, node, nodes }) {
       let boxMeshes = this.boxMeshes
-      boxMeshes.splice(boxMeshes.findIndex(a => a === v.box), 1)
+      let boxIndex = boxMeshes.findIndex(a => a === v.box)
+      if (boxIndex !== -1) {
+        boxMeshes.splice(boxIndex, 1)
+      } else {
+        console.error('cant find box meshes')
+      }
+
+      let inputs = v.inputs
+      inputs.forEach((eInput) => {
+        let inputMeshes = this.inputMeshes
+        let inputIndex = inputMeshes.findIndex(a => a === eInput)
+        if (inputIndex !== -1) {
+          inputMeshes.splice(inputIndex, 1)
+        } else {
+          console.error('cant find input meshes')
+        }
+      })
+
+      let outputs = v.outputs
+      outputs.forEach((eOutput) => {
+        let outputMeshes = this.outputMeshes
+        let outputIndex = outputMeshes.findIndex(a => a === eOutput)
+        if (outputIndex !== -1) {
+          outputMeshes.splice(outputIndex, 1)
+        } else {
+          console.error('cant find output meshes')
+        }
+      })
     },
     getPos ({ nodes, iNode }) {
       return nodes[iNode].pos
     },
-    clickObj (event) {
+    getInputPos ({ conn }) {
+    },
+    getOutputPos ({ conn }) {
+    },
+    inputDragStart (event) {
+      this.trackBallControls.enabled = false
+      let mesh = event.object
+      mesh.userData.originalPos = new THREE.Vector3().copy(mesh.position)
+    },
+    inputDragEnd (event) {
+      this.trackBallControls.enabled = true
+      let mesh = event.object
+      new TWEEN.Tween(mesh.position)
+        .to(mesh.userData.originalPos, 500)
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .start()
+      // console.log('sim sim ling')
+      this.scene.updateMatrixWorld(true)
+      this.getNearest({ mesh, compares: this.outputMeshes }).then((nearest) => {
+        // console.log(nearest.userData)
+        // nearest.userData.node.from.push(mesh.userData.node.nid)
+        // mesh.userData.node.to.push(nearest.userData.node.nid)
+        this.addConnectionInputHand({ hand: mesh, land: nearest })
+      }, () => {
+      })
+      EN.saveRoot({ root: this.EffectNode })
+    },
+    addConnectionInputHand ({ hand, land }) {
+      let inputData = hand.userData.input
+      let outputData = land.userData.output
+      console.log(inputData, outputData)
+
+      this.connections.push({
+        input: inputData,
+        output: outputData
+      })
+    },
+    getNearest ({ mesh, compares }) {
+      return new Promise((resolve, reject) => {
+        let found = false
+        compares.reduce((accu, item, key) => {
+          let distance = item.position.clone().setFromMatrixPosition(item.matrixWorld).sub(mesh.position.clone().setFromMatrixPosition(mesh.matrixWorld)).length()
+          if (distance < 1.5) {
+            accu.push(item)
+          }
+          return accu
+        }, []).sort((itemA, itemB) => {
+          let distanceA = itemA.position.clone().setFromMatrixPosition(itemA.matrixWorld).sub(mesh.position.clone().setFromMatrixPosition(mesh.matrixWorld)).length()
+          let distanceB = itemB.position.clone().setFromMatrixPosition(itemB.matrixWorld).sub(mesh.position.clone().setFromMatrixPosition(mesh.matrixWorld)).length()
+          return distanceA > distanceB
+        }).forEach((item, key) => {
+          let distance = item.position.clone().setFromMatrixPosition(item.matrixWorld).sub(mesh.position.clone().setFromMatrixPosition(mesh.matrixWorld)).length()
+          console.log(distance)
+
+          if (key === 0) {
+            found = true
+            resolve(item)
+          }
+        })
+        if (!found) {
+          reject(new Error('cant find'))
+          console.log('cant find', mesh, compares)
+        }
+      })
+    },
+    inputDragging () {
+    },
+    boxClickObj (event) {
       console.log(event)
       this.currentObj = event.object
     },
-    dragStart (event) {
+    boxDragStart (event) {
       this.trackBallControls.enabled = false
       console.log(event)
     },
-    dragING (event) {
+    boxDragging (event) {
       let mesh = event.object
       let group3D = event.object.userData.group3D
       let node = mesh.userData.node
@@ -236,7 +358,7 @@ export default {
       group3D.position.y = node.pos.y
       group3D.position.z = node.pos.z
     },
-    dragEnd (event) {
+    boxDragEnd (event) {
       this.trackBallControls.enabled = true
       console.log(event)
       let mesh = event.object
@@ -247,7 +369,7 @@ export default {
       node.pos.y = mesh.position.y
       node.pos.z = mesh.position.z
 
-      EN.saveNode({ node, nodes: this.nodes })
+      EN.saveRoot({ root: this.EffectNode })
     },
     updateSRC ({ node, nodes, iNode }) {
       try {
@@ -269,6 +391,7 @@ export default {
       console.log(v)
     },
     renderWebGL () {
+      TWEEN.update()
       if (this.trackBallControls) {
         this.trackBallControls.update()
       }
@@ -304,6 +427,13 @@ export default {
   watch: {
   },
   computed: {
+    connections () {
+      if (this.EffectNode && this.EffectNode.state && this.EffectNode.state.connections) {
+        return this.EffectNode.state.connections
+      } else {
+        return []
+      }
+    },
     nodes () {
       if (this.EffectNode && this.EffectNode.state && this.EffectNode.state.nodes) {
         return this.EffectNode.state.nodes
