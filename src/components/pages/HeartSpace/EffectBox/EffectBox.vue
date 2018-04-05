@@ -6,27 +6,33 @@
       <MeshBasicMaterial :opacity="0.0" />
     </Mesh>
 
-    <Object3D @element="(v) => { group = v }">
-      <Mesh>
+    <Object3D @element="(v) => { group = v }" v-if="node">
+      <Points v-if="node.shaderType === 'vertexShader'" >
         <TorusKnotBufferGeometry />
-        <ShaderMaterial :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
+        <ShaderMaterial :vs="VSDesc.vs" :fs="VSDesc.fs" :uniforms="VSDesc.animatable" />
+      </Points>
+      <Mesh v-if="node.shaderType === 'fragmentShader'">
+        <TorusKnotBufferGeometry />
+        <ShaderMaterial :vs="FSDesc.vs" :fs="FSDesc.fs" :uniforms="FSDesc.animatable" />
       </Mesh>
 
       <!-- inputs -->
       <Object3D py="3">
         <Object3D :key="input.aid" :px="((iInput + 1 - ((node.inputs.length + 1) / 2)) / node.inputs.length) * (node.inputs.length * 2.5)" v-for="(input, iInput) in node.inputs">
+
           <Mesh @element="addToInputs" @clean="() => {}">
             <SphereBufferGeometry :nx="7" :ny="7" :r="0.65" />
-            <MeshBasicMaterial :color="0xddddff" :size="1.0" :sizeAttenuation="false" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
+            <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" />
           </Mesh>
+
         </Object3D>
       </Object3D>
 
       <!-- output -->
-      <Object3D py="-3">
+      <Object3D py="-3" v-if="node.output.type !== 'void'">
         <Mesh @element="(v) => { output = v }" @clean="() => { }">
           <SphereBufferGeometry :nx="7" :ny="7" :r="0.65" />
-          <MeshBasicMaterial :color="0xddddff" :size="1.0" :sizeAttenuation="false" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
+          <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" />
         </Mesh>
       </Object3D>
 
@@ -59,44 +65,65 @@ export default {
       inputs: [],
       output: false,
 
-      animatable: {
-        time: { value: 0 }
+      VSDesc: {
+        vs: require('../Shaders/VSDesc/VSDesc.vert'),
+        fs: require('../Shaders/VSDesc/VSDesc.frag'),
+        animatable: {
+          time: { value: 0 }
+        }
       },
-
-      demo: {
-        vs: require('../Shaders/Fling/vs.vert'),
-        fs: require('../Shaders/Simple/fs.frag')
+      FSDesc: {
+        vs: require('../Shaders/FSDesc/FSDesc.vert'),
+        fs: require('../Shaders/FSDesc/FSDesc.frag'),
+        animatable: {
+          time: { value: 0 }
+        }
       },
       rAFID: 0
     }
   },
   watch: {
     box () {
-      this.cleanUpBox()
-      this.$nextTick(() => {
-        this.setupBox()
-      })
+      if (this.isReady()) {
+        this.cleanUpBox()
+        this.$nextTick(() => {
+          this.setupBox()
+        })
+      }
     },
     output () {
-      this.cleanUpBox()
-      this.$nextTick(() => {
-        this.setupBox()
-      })
+      if (this.isReady()) {
+        this.cleanUpBox()
+        this.$nextTick(() => {
+          this.setupBox()
+        })
+      }
     },
     inputsLength () {
-      this.cleanUpBox()
-      this.$nextTick(() => {
-        this.setupBox()
-      })
+      if (this.isReady()) {
+        this.cleanUpBox()
+        this.$nextTick(() => {
+          this.setupBox()
+        })
+      }
     },
     inputs () {
-      this.cleanUpBox()
-      this.$nextTick(() => {
-        this.setupBox()
-      })
+      if (this.isReady()) {
+        this.cleanUpBox()
+        this.$nextTick(() => {
+          this.setupBox()
+        })
+      } else {
+        this.$nextTick(() => {
+
+        })
+      }
     }
   },
   methods: {
+    isReady () {
+      return (this.output || this.node.output.type === 'void') && this.box
+    },
     inputsLength () {
       return this.inputs.length
     },
@@ -131,7 +158,13 @@ export default {
   mounted () {
     var rAF = () => {
       this.rAFID = window.requestAnimationFrame(rAF)
-      this.animatable.time.value = window.performance.now() * 0.001
+
+      if (this.node.shaderType === 'vertexShader') {
+        this.VSDesc.animatable.time.value = window.performance.now() * 0.001
+      }
+      if (this.node.shaderType === 'fragmentShader') {
+        this.FSDesc.animatable.time.value = window.performance.now() * 0.001
+      }
     }
     this.rAFID = window.requestAnimationFrame(rAF)
   },

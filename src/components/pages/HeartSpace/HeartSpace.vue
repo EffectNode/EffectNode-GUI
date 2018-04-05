@@ -8,15 +8,16 @@
         @renderer="(v) => { renderer = v }"
         @d-toucher="(v) => { toucher = v; log(v) }"
       >
-
         <div class="toucher" ref="toucher"></div>
-        <div class="content-clicker" v-if="currentObj" @click="() => { currentObj = false }"></div>
-        <div class="content" v-if="currentObj">
-          <label for=""><input type="checkbox" v-model="useBloom">use bloom</label>
 
+        <transition name="fade">
+          <div class="editor-bg-overlay" v-if="currentObj" @click="() => { currentObj = false }"></div>
+        </transition>
+
+        <div class="editor-area" v-if="currentObj">
           <div :key="node.nid" v-for="(node, iNode) in nodes" v-if="node.nid === currentObj.userData.node.nid">
 
-            <button @click="removeCurrentBox({ node, nodes, mesh: currentObj, iNode })">Remove me</button>
+            <button v-if="!node.isEntry" @click="removeCurrentBox({ node, nodes, mesh: currentObj, iNode })">Remove me</button>
 
             <button @click="() => { currentObj = false }">close</button>
             <br />
@@ -25,8 +26,37 @@
             <span :style="{ color: node.error ? 'red': 'black' }" v-if="node">{{ node.error }} <br /></span>
             <pre>{{ connections }}</pre>
           </div>
+
         </div>
-        <!-- <div class="content" v-if="!currentObj">
+
+        <div class="tools" v-if="!welcome">
+          <button @click="addEffectNode()">+EffectNode</button>
+        </div>
+
+        <transition name="fade">
+          <div class="welcome-bg-overlay" v-if="welcome" @click="() => { }"></div>
+        </transition>
+        <div class="welcome-area" v-if="welcome">
+          <div  v-if="!loading">
+            Welcome to Effect Node~
+            <br />
+            <label for=""><input type="checkbox" v-model="useBloom">use bloom</label>
+            <br />
+            <ol>
+              <li><button @click="hydrate({ use: 'session' })">Continue session</button></li>
+              <li><button @click="hydrate({ use: 'template1' })">Start with Clean Template</button></li>
+            </ol>
+          </div>
+          <div class="full xy-center" v-if="loading">
+            Loading....
+          </div>
+        </div>
+
+
+
+        <!-- CREATION -->
+
+        <!-- <div class="editor-area" v-if="!currentObj">
           <pre>{{ connections }}</pre>
         </div> -->
         <!-- <pre :style="{ display: 'none' }">{{ connections }}</pre> -->
@@ -138,6 +168,12 @@ export default {
     EffectBox
   },
   methods: {
+    async hydrate ({ use }) {
+      this.loading = true
+      this.EffectNode = await EN.hydrate({ use: use || 'template1' })
+      this.loading = false
+      this.welcome = false
+    },
     setup () {
       this.setupBloom({ dpi: 1.25 })
       this.setupTouch()
@@ -178,8 +214,8 @@ export default {
       let bloomPass = this.bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85) // 1.0, 9, 0.5, 512)
       // bloomPass.renderToScreen = true;
 
-      bloomPass.threshold = Number(0.85)
-      bloomPass.strength = Number(1.0)
+      bloomPass.threshold = Number(0.95)
+      bloomPass.strength = Number(0.5)
       bloomPass.radius = Number(0.5)
 
       var effectCopy = new THREE.ShaderPass(THREE.CopyShader)
@@ -222,7 +258,9 @@ export default {
       mesh.userData.node = node
       mesh.userData.group3D = group3D
       mesh.userData.inputs = inputs
-      mesh.userData.output = output
+      if (output) {
+        mesh.userData.output = output
+      }
 
       // hydrate
       group3D.position.x = node.pos.x
@@ -246,10 +284,12 @@ export default {
       })
 
       // outputs draggables
-      this.outputMeshes.push(output)
-      output.userData = output.userData || {}
-      output.userData.node = node
-      output.userData.output = node.output
+      if (output) {
+        this.outputMeshes.push(output)
+        output.userData = output.userData || {}
+        output.userData.node = node
+        output.userData.output = node.output
+      }
 
       this.tryRefresh()
     },
@@ -591,6 +631,17 @@ export default {
     getConnKey ({ conn }) {
       return JSON.stringify(conn)
     },
+    addEffectNode () {
+      this.nodes.push(EN.makeNode({
+        src:
+`float floatSource () {
+  retrun time;
+}`,
+        isEntry: false,
+        shaderType: EN.VERTEX_SHADER,
+        nodePos: { ...this.camera.position }
+      }))
+    },
     renderWebGL () {
       TWEEN.update()
       if (this.trackBallControls) {
@@ -606,6 +657,8 @@ export default {
   },
   data () {
     return {
+      loading: false,
+      welcome: true,
       useBloom: true,
       currentObj: false,
       camPos: { x: 0, y: 0, z: 25 },
@@ -669,8 +722,6 @@ export default {
     self.rAFID = window.requestAnimationFrame(loop)
 
     this.setup()
-
-    this.EffectNode = await EN.hydrate()
   }
 }
 </script>
@@ -689,7 +740,8 @@ export default {
   width: 100%;
   height: 100%;
 }
-.content{
+
+.editor-area{
   position: absolute;
   top: 0px;
   left: 0px;
@@ -699,7 +751,9 @@ export default {
   max-width: 100%;
   max-height: 100%;
 }
-.content-clicker{
+
+.welcome-bg-overlay,
+.editor-bg-overlay{
   position: absolute;
   top: 0px;
   left: 0px;
@@ -707,8 +761,42 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
+
+.welcome-area{
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  font-size: 16px;
+  width: calc(100% - 20% * 2);
+  height: calc(100% - 20% * 2);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  max-height: 100%;
+  background-color: rgba(255,255,255,0.1);
+}
+
 textarea{
   font-size: 16px;
   max-width: 100%;
+}
+
+.xy-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tools{
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1.0s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

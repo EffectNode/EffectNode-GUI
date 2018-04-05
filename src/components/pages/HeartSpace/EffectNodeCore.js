@@ -1,5 +1,8 @@
 import * as ENdb from './ENdb.js'
 
+export const VERTEX_SHADER = 'vertexShader'
+export const FRAGMENT_SHADER = 'fragmentShader'
+
 export const makeRoot = () => {
   return {
     state: false,
@@ -108,7 +111,7 @@ export const makePos = () => {
   }
 }
 
-export const makeNode = ({ src, oldNode }) => {
+export const makeNode = ({ src, oldNode, shaderType = VERTEX_SHADER, isEntry = false, nodePos = false }) => {
   let nid = makeID()
   if (oldNode) {
     nid = oldNode.nid
@@ -127,8 +130,8 @@ export const makeNode = ({ src, oldNode }) => {
   console.table([fnInfo])
 
   var newNode = {}
-
-  newNode.isMain = fnName === 'main'
+  newNode.shaderType = shaderType
+  newNode.isEntry = isEntry
   newNode.nid = nid
   newNode.src = src
   newNode.name = fnName
@@ -140,7 +143,7 @@ export const makeNode = ({ src, oldNode }) => {
     name: fnName,
     type: fnOutputType
   }
-  newNode.pos = makePos()
+  newNode.pos = nodePos || makePos()
 
   if (oldNode) {
     newNode.pos = oldNode.pos
@@ -176,67 +179,62 @@ export const makeState = () => {
   }
 }
 
-export const makeTemplateNodes = () => {
-  let template = makeNodeList()
-  template.push(
-    makeNode({
-      src:
-`vec4 loklok (vec4 inV4, float inV1, float inV2) {
-gl_FragColor = vec4(1);
+export const makeTemplateNodes = ({ tid = 'template1' }) => {
+  let nl = makeNodeList()
+  if (tid === 'template1') {
+    nl.push(
+      makeNode({
+        nodePos: { x: -6.5, y: -8, z: 0 },
+        shaderType: VERTEX_SHADER,
+        isEntry: true,
+        src:
+`void entry (float x, float y, float z, float w) {
+  gl_Position = vec4(x, y, z, w);
 }`
-    })
-  )
-
-  template.push(
-    makeNode({
-      src:
-`vec4 main (vec4 inV4, float inV1, float inV2) {
-gl_FragColor = vec4(1);
+      })
+    )
+    nl.push(
+      makeNode({
+        nodePos: { x: 6.5, y: -8, z: 0 },
+        shaderType: FRAGMENT_SHADER,
+        isEntry: true,
+        src:
+`void entry (float r, float g, float b, float a) {
+  gl_FragColor = vec4(r, g, b, a);
 }`
-    })
-  )
+      })
+    )
+  }
+  return nl
+}
 
-  template.push(
-    makeNode({
-      src:
-`vec4 main (vec4 inV4, float inV1, float inV2) {
-gl_FragColor = vec4(1);
-}`
-    })
-  )
-
-  template.push(
-    makeNode({
-      src:
-`vec4 main (vec4 inV4, float inV1, float inV2) {
-gl_FragColor = vec4(1);
-}`
-    })
-  )
-
+export const makeTemplate = ({ tid = '1' }) => {
+  let template = makeRoot()
+  template.state = makeState()
+  template.state.nodes = makeTemplateNodes({ tid })
+  template.state.connections = []
   return template
 }
 
-export const hydrate = () => {
+export const hydrate = ({ use }) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      let template = makeRoot()
-      template.state = makeState()
-      template.state.nodes = makeTemplateNodes()
-      template.state.connections = []
+      let template = makeTemplate({ tid: use })
+
       let root = template
 
-      let dbRoot = ENdb.getRoot()
-      if (!dbRoot) {
-        ENdb.setRoot(template)
-        root = template
-      } else {
-        root = dbRoot
+      if (use === 'session') {
+        let dbRoot = ENdb.getRoot()
+        if (!dbRoot) {
+          ENdb.setRoot(template)
+          root = template
+        } else {
+          root = dbRoot
+        }
       }
 
-      root = template
       resolve(root)
-    }, 750)
+    }, 300)
   })
 }
 
@@ -247,4 +245,8 @@ export const saveRoot = ({ root }) => {
       resolve()
     }, 100)
   })
+}
+
+export const makeGLSL = ({ root }) => {
+
 }
