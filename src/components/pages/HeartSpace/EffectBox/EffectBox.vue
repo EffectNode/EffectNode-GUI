@@ -1,29 +1,29 @@
 <template>
   <div>
 
-    <Mesh @attach="(v) => { box = v }" @detach="() => { box = false }">
+    <Points @attach="(v) => { box = v }" @detach="() => { box = false }">
       <BoxBufferGeometry />
-      <ShaderMaterial :color="0xff0000" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
-    </Mesh>
+      <ShaderMaterial :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
+    </Points>
 
     <Object3D @element="(v) => { group = v }">
 
-      <Object3D :sx="0.25" :sy="0.25" :sz="0.25" py="5.0">
+      <!-- inputs -->
+      <Object3D :sx="0.2" :sy="0.2" :sz="0.2" py="3">
         <Object3D :key="input.aid" :px="((iInput + 1 - ((node.inputs.length + 1) / 2)) / node.inputs.length) * 30.0" v-for="(input, iInput) in node.inputs">
-          <Mesh>
+          <Points @element="addToInputs" @clean="removeFromInputs">
             <SphereBufferGeometry />
-            <ShaderMaterial :color="0xff0000" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
-          </Mesh>
+            <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
+          </Points>
         </Object3D>
       </Object3D>
 
-
-
-      <Object3D :sx="0.25" :sy="0.25" :sz="0.25" py="-5.0">
-        <Mesh>
+      <!-- output -->
+      <Object3D :sx="0.2" :sy="0.2" :sz="0.2" py="-3">
+        <Points @element="(v) => { output = v }">
           <SphereBufferGeometry />
-          <ShaderMaterial :color="0xff0000" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
-        </Mesh>
+          <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
+        </Points>
       </Object3D>
 
     </Object3D>
@@ -53,14 +53,14 @@ export default {
 
       box: false,
       inputs: [],
-      output: [1],
+      output: true,
 
       animatable: {
         time: { value: 0 }
       },
 
       demo: {
-        vs: require('../Shaders/Simple/vs.vert'),
+        vs: require('../Shaders/Fling/vs.vert'),
         fs: require('../Shaders/Simple/fs.frag')
       },
       rAFID: 0
@@ -77,8 +77,9 @@ export default {
   },
   methods: {
     setupBox () {
-      if (this.box && this.output.length > 0) {
+      if (this.box && this.output) {
         this.$emit('attach', {
+          inputs: this.inputs,
           box: this.box,
           group: this.group
         })
@@ -87,8 +88,9 @@ export default {
       }
     },
     cleanUpBox () {
-      if (this.box && this.output.length > 0) {
+      if (this.box && this.output) {
         this.$emit('detach', {
+          inputs: this.inputs,
           box: this.box,
           group: this.group
         })

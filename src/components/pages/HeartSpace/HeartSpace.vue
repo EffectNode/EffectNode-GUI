@@ -206,21 +206,6 @@ export default {
     },
     dragStart (event) {
       this.trackBallControls.enabled = false
-
-      // let mesh = event.object
-      // let group3D = event.object.userData.group3D
-      // let node = mesh.userData.node
-
-      // mesh.position.x = node.pos.x
-      // mesh.position.y = node.pos.y
-      // mesh.position.z = node.pos.z
-
-      // group3D.position.copy(mesh.position)
-
-      // mesh.position.x = 0
-      // mesh.position.y = 0
-      // mesh.position.z = 0
-
       console.log(event)
     },
     dragING (event) {
@@ -232,10 +217,6 @@ export default {
       node.pos.y = mesh.position.y
       node.pos.z = mesh.position.z
 
-      // mesh.position.x = 0
-      // mesh.position.y = 0
-      // mesh.position.z = 0
-
       mesh.position.x = node.pos.x
       mesh.position.y = node.pos.y
       mesh.position.z = node.pos.z
@@ -243,8 +224,6 @@ export default {
       group3D.position.x = node.pos.x
       group3D.position.y = node.pos.y
       group3D.position.z = node.pos.z
-
-      this.$forceUpdate()
     },
     dragEnd (event) {
       this.trackBallControls.enabled = true
@@ -356,7 +335,7 @@ export default {
   height: 100%;
 }
 .toucher{
-  border: red solid 1px;
+  /* border: red solid 1px; */
   position: absolute;
   top: 0px;
   left: 0px;

@@ -22,6 +22,7 @@ export default {
   LineBasicMaterial: require('./Material/LineBasicMaterial.vue').default,
   ShaderMaterial: require('./Material/ShaderMaterial.vue').default,
   MeshBasicMaterial: require('./Material/MeshBasicMaterial.vue').default,
+  PointsMaterial: require('./Material/PointsMaterial.vue').default,
 
   TorusKnotBufferGeometry: require('./Geo/TorusKnotBufferGeometry.vue').default,
   SphereBufferGeometry: require('./Geo/SphereBufferGeometry.vue').default,

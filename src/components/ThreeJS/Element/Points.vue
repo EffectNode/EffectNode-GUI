@@ -23,6 +23,7 @@ export default {
     this.element = this.points = new THREE.Points()
     this.$parent.$emit('add', this.points)
     this.$emit('element', this.points)
+    this.$emit('attach', this.points)
     this.$on('material', (v) => {
       this.material = v
       this.tryUpdateMaterial()
@@ -47,6 +48,7 @@ export default {
       }
     },
     uninstall () {
+      this.$emit('detach', this.points)
       this.$parent.$emit('remove', this.points)
     }
   }
