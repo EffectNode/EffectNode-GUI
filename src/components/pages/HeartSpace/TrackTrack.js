@@ -631,18 +631,25 @@ THREE.TrackballControls = function ( object, domElement ) {
 				break;
 
 			case 1:
-				// _state = STATE.NONE;
-				_state = STATE.PAN;
+				_state = STATE.NONE;
+				// _state = STATE.PAN;
 				// var dx = event.touches[ 0 ].pageX - event.touches[ 0 ].pageX;
 				// var dy = event.touches[ 0 ].pageY - event.touches[ 0 ].pageY;
 				// _touchZoomDistanceEnd = _touchZoomDistanceStart = Math.sqrt( dx * dx + dy * dy );
 
-				var x = ( event.touches[ 0 ].pageX + event.touches[ 0 ].pageX ) / 2;
-				var y = ( event.touches[ 0 ].pageY + event.touches[ 0 ].pageY ) / 2;
-				_panStart.copy( getMouseOnScreen( x, y ) );
-				_panEnd.copy( _panStart );
+				// var x = ( event.touches[ 0 ].pageX + event.touches[ 0 ].pageX ) / 2;
+				// var y = ( event.touches[ 0 ].pageY + event.touches[ 0 ].pageY ) / 2;
+				// _panStart.copy( getMouseOnScreen( x, y ) );
+				// _panEnd.copy( _panStart );
 
-			case 2:
+				case 2:
+				_state = STATE.NONE;
+				// _state = STATE.TOUCH_ROTATE;
+				// _moveCurr.copy( getMouseOnCircle( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY ) );
+				// _movePrev.copy( _moveCurr );
+				break;
+
+			case 3:
 				_state = STATE.NONE;
 				// _state = STATE.TOUCH_ROTATE;
 				// _moveCurr.copy( getMouseOnCircle( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY ) );

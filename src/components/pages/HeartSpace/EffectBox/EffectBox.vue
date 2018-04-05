@@ -14,8 +14,8 @@
 
       <!-- inputs -->
       <Object3D py="3">
-        <Object3D :key="input.aid" :px="((iInput + 1 - ((node.inputs.length + 1) / 2)) / node.inputs.length) * 10" v-for="(input, iInput) in node.inputs">
-          <Mesh @element="addToInputs" @clean="removeFromInputs">
+        <Object3D :key="input.aid" :px="((iInput + 1 - ((node.inputs.length + 1) / 2)) / node.inputs.length) * (node.inputs.length * 2.5)" v-for="(input, iInput) in node.inputs">
+          <Mesh @element="addToInputs" @clean="() => {}">
             <SphereBufferGeometry :nx="7" :ny="7" :r="0.65" />
             <MeshBasicMaterial :color="0xddddff" :size="1.0" :sizeAttenuation="false" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
           </Mesh>
@@ -24,7 +24,7 @@
 
       <!-- output -->
       <Object3D py="-3">
-        <Mesh @element="(v) => { output = v }" @clean="() => { output = false }">
+        <Mesh @element="(v) => { output = v }" @clean="() => { }">
           <SphereBufferGeometry :nx="7" :ny="7" :r="0.65" />
           <MeshBasicMaterial :color="0xddddff" :size="1.0" :sizeAttenuation="false" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
         </Mesh>
@@ -53,8 +53,6 @@ export default {
   },
   data () {
     return {
-      didOnce: false,
-
       group: false,
 
       box: false,
@@ -74,22 +72,34 @@ export default {
   },
   watch: {
     box () {
-      if (this.box && this.output && this.inputs.length > 0) {
+      this.cleanUpBox()
+      this.$nextTick(() => {
         this.setupBox()
-      }
+      })
     },
     output () {
-      if (this.box && this.output && this.inputs.length > 0) {
+      this.cleanUpBox()
+      this.$nextTick(() => {
         this.setupBox()
-      }
+      })
+    },
+    inputsLength () {
+      this.cleanUpBox()
+      this.$nextTick(() => {
+        this.setupBox()
+      })
     },
     inputs () {
-      if (this.box && this.output && this.inputs.length > 0) {
+      this.cleanUpBox()
+      this.$nextTick(() => {
         this.setupBox()
-      }
+      })
     }
   },
   methods: {
+    inputsLength () {
+      return this.inputs.length
+    },
     addToInputs (v) {
       this.inputs.push(v)
     },
@@ -98,8 +108,6 @@ export default {
       inputs.splice(inputs.findIndex(a => a.aid === v.aid), 1)
     },
     setupBox () {
-      if (this.didOnce) { return }
-      this.didOnce = true
       this.$emit('attach', {
         box: this.box,
         group: this.group,

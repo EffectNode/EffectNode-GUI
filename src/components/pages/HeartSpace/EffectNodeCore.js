@@ -126,21 +126,21 @@ export const makeNode = ({ src, oldNode }) => {
 
   console.table([fnInfo])
 
-  var newNode = {
-    isMain: fnName === 'main',
+  var newNode = {}
+
+  newNode.isMain = fnName === 'main'
+  newNode.nid = nid
+  newNode.src = src
+  newNode.name = fnName
+  newNode.compiledFnName = fnNewName
+  newNode.compiledSrc = compiledSrc
+  newNode.inputs = false
+  newNode.output = {
     nid,
-    src,
     name: fnName,
-    compiledFnName: fnNewName,
-    compiledSrc: compiledSrc,
-    inputs: false,
-    output: {
-      nid,
-      name: fnName,
-      type: fnOutputType
-    },
-    pos: makePos()
+    type: fnOutputType
   }
+  newNode.pos = makePos()
 
   if (oldNode) {
     newNode.pos = oldNode.pos
@@ -148,7 +148,6 @@ export const makeNode = ({ src, oldNode }) => {
 
   newNode.inputs = argsList.map((v) => {
     return {
-      pos: makePos(),
       ...v
     }
   })
@@ -234,6 +233,7 @@ export const hydrate = () => {
       } else {
         root = dbRoot
       }
+
       root = template
       resolve(root)
     }, 750)

@@ -5,10 +5,10 @@
 <script>
 /* eslint-disable */
 import * as THREE from 'three'
-import 'imports-loader?THREE=three!three/examples/js/lines/LineSegmentsGeometry.js'
-import 'imports-loader?THREE=three!three/examples/js/lines/LineGeometry.js'
-import 'imports-loader?THREE=three!three/examples/js/lines/WireframeGeometry2.js'
-import 'imports-loader?THREE=three!three/examples/js/lines/LineMaterial.js'
+// import 'imports-loader?THREE=three!three/examples/js/lines/LineSegmentsGeometry.js'
+// import 'imports-loader?THREE=three!three/examples/js/lines/LineGeometry.js'
+// import 'imports-loader?THREE=three!three/examples/js/lines/WireframeGeometry2.js'
+// import 'imports-loader?THREE=three!three/examples/js/lines/LineMaterial.js'
 /* eslint-enable */
 
 export default {

@@ -8,8 +8,8 @@
         @renderer="(v) => { renderer = v }"
         @d-toucher="(v) => { toucher = v; log(v) }"
       >
-        <div class="toucher" ref="toucher"></div>
 
+        <div class="toucher" ref="toucher"></div>
         <div class="content-clicker" v-if="currentObj" @click="() => { currentObj = false }"></div>
         <div class="content" v-if="currentObj">
           <label for=""><input type="checkbox" v-model="useBloom">use bloom</label>
@@ -26,8 +26,10 @@
             <pre>{{ connections }}</pre>
           </div>
         </div>
-
-
+        <!-- <div class="content" v-if="!currentObj">
+          <pre>{{ connections }}</pre>
+        </div> -->
+        <!-- <pre :style="{ display: 'none' }">{{ connections }}</pre> -->
 
       </Renderer>
     </keep-alive>
@@ -67,7 +69,7 @@
 
         <ConnectionLine
           :scene="scene"
-          :key="conn.outputNID" v-for="(conn) in connections"
+          :key="getConnKey({ conn })" v-for="(conn) in connections"
           v-if="scene && getOutputPos({ conn }) && getInputPos({ conn })"
           :p1="getOutputPos({ conn })"
           :p2="getInputPos({ conn })"
@@ -165,6 +167,12 @@ export default {
       inputsDragControl.addEventListener('drag', this.inputDragging)
       inputsDragControl.addEventListener('click', this.inputClickObj)
       inputsDragControl.addEventListener('dragend', this.inputDragEnd)
+
+      let outputDragControl = this.outputDragControl = new THREE.DragControls(this.outputMeshes, camera, touchSurface)
+      outputDragControl.addEventListener('dragstart', this.outputDragStart)
+      outputDragControl.addEventListener('drag', this.outputDragging)
+      outputDragControl.addEventListener('click', this.outputClickObj)
+      outputDragControl.addEventListener('dragend', this.outputDragEnd)
     },
     setupBloom ({ dpi = 1.25 }) {
       let bloomPass = this.bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85) // 1.0, 9, 0.5, 512)
@@ -250,18 +258,13 @@ export default {
       let boxIndex = boxMeshes.findIndex(a => a === v.box)
       if (boxIndex !== -1) {
         boxMeshes.splice(boxIndex, 1)
-      } else {
-        console.error('cant find box meshes')
       }
 
       let inputs = v.inputs
       inputs.forEach((eInput) => {
-        let inputMeshes = this.inputMeshes
-        let inputIndex = inputMeshes.findIndex(a => a === eInput)
+        let inputIndex = this.inputMeshes.findIndex(a => a === eInput)
         if (inputIndex !== -1) {
-          inputMeshes.splice(inputIndex, 1)
-        } else {
-          console.error('cant find input meshes')
+          this.inputMeshes.splice(inputIndex, 1)
         }
       })
 
@@ -311,12 +314,12 @@ export default {
     inputDragStart (event) {
       this.trackBallControls.enabled = false
       let mesh = event.object
-      mesh.userData.originalPos = new THREE.Vector3().copy(mesh.position)
+      mesh.userData.originalPos = new THREE.Vector3(0, 0, 0)
     },
     inputDragEnd (event) {
       this.trackBallControls.enabled = true
       let mesh = event.object
-      new TWEEN.Tween(mesh.position)
+      let tween = new TWEEN.Tween(mesh.position)
         .to(mesh.userData.originalPos, 500)
         .easing(TWEEN.Easing.Quadratic.Out)
         .onStart(() => {
@@ -328,10 +331,11 @@ export default {
         .onComplete(() => {
           this.tryRefresh()
         })
-        .start()
+
+      tween.start()
 
       // console.log('sim sim ling')
-      this.scene.updateMatrixWorld(true)
+      // this.scene.updateMatrixWorld(true)
       this.getNearest({ mesh, compares: this.outputMeshes }).then((nearest) => {
         this.addConnectionInputHand({ hand: mesh, land: nearest })
         EN.saveRoot({ root: this.EffectNode })
@@ -346,7 +350,7 @@ export default {
       console.log(inputData, outputData)
 
       let idx = this.connections.findIndex((conn) => {
-        return conn.input.nid === inputData.nid && conn.input.index === inputData.index
+        return conn.output.nid === outputData.nid && conn.input.nid === inputData.nid && conn.input.index === inputData.index
       })
 
       if (idx === -1) {
@@ -447,6 +451,84 @@ export default {
       EN.saveRoot({ root: this.EffectNode })
       this.tryRefresh()
     },
+    outputDragStart (event) {
+      this.trackBallControls.enabled = false
+      let mesh = event.object
+      mesh.userData.originalPos = new THREE.Vector3(0, 0, 0)
+    },
+    outputDragEnd (event) {
+      this.trackBallControls.enabled = true
+      let mesh = event.object
+      let tween = new TWEEN.Tween(mesh.position)
+        .to(mesh.userData.originalPos, 500)
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .onStart(() => {
+          this.tryRefresh()
+        })
+        .onUpdate(() => {
+          this.tryRefresh()
+        })
+        .onComplete(() => {
+          this.tryRefresh()
+        })
+
+      tween.start()
+
+      // this.scene.updateMatrixWorld(true)
+      this.getNearest({ mesh, compares: this.inputMeshes }).then((nearest) => {
+        this.addConnectionOutputHand({ hand: mesh, land: nearest })
+        EN.saveRoot({ root: this.EffectNode })
+        this.tryRefresh()
+      }, () => {
+        this.removeConnectionAtOutput({ output: mesh })
+      })
+    },
+    addConnectionOutputHand ({ hand, land }) {
+      let outputData = hand.userData.output
+      let inputData = land.userData.input
+      console.log(inputData, outputData)
+
+      let idx = this.connections.findIndex((conn) => {
+        return conn.output.nid === outputData.nid && conn.input.nid === inputData.nid && conn.input.index === inputData.index
+      })
+
+      if (idx === -1) {
+        this.connections.push({
+          input: inputData,
+          output: outputData
+        })
+        this.tryRefresh()
+      }
+    },
+    removeConnectionAtOutput ({ output }) {
+      if (output) {
+        console.log(output)
+
+        let conns = this.connections
+        conns.forEach((item, key) => {
+          if (item.output.nid === output.userData.output.nid || item.input.nid === output.userData.output.nid) {
+            conns.splice(key, 1)
+          }
+        })
+
+        // let conns = this.connections
+        // let outputNID = output.userData.output.nid
+        // conns.forEach((iConn, key) => {
+        //   if (iConn.input.nid === outputNID || iConn.output.nid === outputNID) {
+        //     conns.splice(key, 1)
+        //   }
+        // })
+
+        EN.saveRoot({ root: this.EffectNode })
+        this.$forceUpdate()
+      }
+    },
+    outputDragging () {
+      this.tryRefresh()
+    },
+    outputClickObj (event) {
+      this.removeConnectionAtOutput({ output: event.object })
+    },
     updateSRC ({ node, nodes, iNode }) {
       try {
         EN.updateSRC({ node, nodes, iNode })
@@ -479,13 +561,21 @@ export default {
       // remove connections
       let conns = this.connections
       conns.reduce((accu, item, key) => {
-        let index = conns.findIndex(iConn => ((iConn.input && iConn.input.nid === node.nid) || (iConn.output && iConn.output.nid === node.nid)))
+        let index = conns.findIndex(iConn => ((iConn.input.nid === node.nid) || (iConn.output.nid === node.nid)))
         if (index !== -1) {
           conns.splice(index, 1)
           accu.push(item)
         }
         return accu
       }, [])
+
+      this.$nextTick(() => {
+        conns.forEach((iConn, key) => {
+          if (!iConn.input.nid || !iConn.output.nid) {
+            conns.splice(key, 1)
+          }
+        })
+      })
 
       // save
       EN.saveRoot({ root: this.EffectNode })
@@ -497,6 +587,9 @@ export default {
       this.currentObj = false
       EN.saveRoot({ root: this.EffectNode })
       this.$forceUpdate()
+    },
+    getConnKey ({ conn }) {
+      return JSON.stringify(conn)
     },
     renderWebGL () {
       TWEEN.update()
@@ -535,11 +628,19 @@ export default {
   watch: {
   },
   computed: {
-    connections () {
-      if (this.EffectNode && this.EffectNode.state && this.EffectNode.state.connections) {
-        return this.EffectNode.state.connections
-      } else {
-        return []
+    connections: {
+      get () {
+        if (this.EffectNode && this.EffectNode.state && this.EffectNode.state.connections) {
+          return this.EffectNode.state.connections
+        } else {
+          return []
+        }
+      },
+      set (v) {
+        if (this.EffectNode && this.EffectNode.state && this.EffectNode.state.connections) {
+          this.EffectNode.state.connections = v
+          return v
+        }
       }
     },
     nodes () {
@@ -593,6 +694,10 @@ export default {
   top: 0px;
   left: 0px;
   font-size: 16px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  max-height: 100%;
 }
 .content-clicker{
   position: absolute;
