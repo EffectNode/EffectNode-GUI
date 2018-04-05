@@ -6,10 +6,18 @@
 import * as THREE from 'three'
 export default {
   props: {
+    opacity: {
+      default: 1
+    },
     color: {
       default () {
         return new THREE.Color(Math.random() * 0xffffff)
       }
+    }
+  },
+  watch: {
+    opacity () {
+      this.material.opacity = this.opacity
     }
   },
   data () {
@@ -18,7 +26,7 @@ export default {
     }
   },
   mounted () {
-    this.material = new THREE.MeshBasicMaterial({ color: this.color })
+    this.material = new THREE.MeshBasicMaterial({ color: this.color, transparent: true, opacity: this.opacity })
     this.$parent.$emit('material', this.material)
   }
 }

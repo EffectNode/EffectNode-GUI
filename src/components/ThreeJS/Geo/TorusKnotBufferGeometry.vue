@@ -11,8 +11,8 @@ export default {
     }
   },
   mounted () {
-    let radius = 6
-    let tube = 0.6
+    let radius = 1
+    let tube = 0.1
     let tubularSegments = 300
     let radialSegments = 20
     let p = 4

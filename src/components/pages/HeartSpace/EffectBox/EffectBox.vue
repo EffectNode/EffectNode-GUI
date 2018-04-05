@@ -1,19 +1,23 @@
 <template>
   <div>
 
-    <Points @attach="(v) => { box = v }" @detach="() => { box = false }">
-      <BoxBufferGeometry />
-      <ShaderMaterial :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
-    </Points>
+    <Mesh @attach="(v) => { box = v }" @detach="() => { box = false }">
+      <PlaneBufferGeometry />
+      <MeshBasicMaterial :opacity="0.0" />
+    </Mesh>
 
     <Object3D @element="(v) => { group = v }">
+      <Mesh>
+        <TorusKnotBufferGeometry />
+        <ShaderMaterial :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
+      </Mesh>
 
       <!-- inputs -->
       <Object3D py="3">
         <Object3D :key="input.aid" :px="((iInput + 1 - ((node.inputs.length + 1) / 2)) / node.inputs.length) * 10" v-for="(input, iInput) in node.inputs">
           <Mesh @element="addToInputs" @clean="removeFromInputs">
-            <SphereBufferGeometry :nx="7" :ny="7" :r="0.5" />
-            <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
+            <SphereBufferGeometry :nx="7" :ny="7" :r="0.65" />
+            <MeshBasicMaterial :color="0xddddff" :size="1.0" :sizeAttenuation="false" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
           </Mesh>
         </Object3D>
       </Object3D>
@@ -21,8 +25,8 @@
       <!-- output -->
       <Object3D py="-3">
         <Mesh @element="(v) => { output = v }" @clean="() => { output = false }">
-          <SphereBufferGeometry :nx="7" :ny="7" :r="0.5" />
-          <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
+          <SphereBufferGeometry :nx="7" :ny="7" :r="0.65" />
+          <MeshBasicMaterial :color="0xddddff" :size="1.0" :sizeAttenuation="false" :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
         </Mesh>
       </Object3D>
 

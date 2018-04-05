@@ -7,10 +7,10 @@ import * as THREE from 'three'
 export default {
   props: {
     nx: {
-      default: 24
+      default: 5
     },
     ny: {
-      default: 24
+      default: 5
     },
     r: {
       default: 2

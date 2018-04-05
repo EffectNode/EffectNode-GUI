@@ -137,7 +137,7 @@ export default {
   },
   methods: {
     setup () {
-      this.setupBloom()
+      this.setupBloom({ dpi: 1.25 })
       this.setupTouch()
     },
     setupTouch () {
@@ -166,7 +166,7 @@ export default {
       inputsDragControl.addEventListener('click', this.inputClickObj)
       inputsDragControl.addEventListener('dragend', this.inputDragEnd)
     },
-    setupBloom () {
+    setupBloom ({ dpi = 1.25 }) {
       let bloomPass = this.bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85) // 1.0, 9, 0.5, 512)
       // bloomPass.renderToScreen = true;
 
@@ -186,7 +186,7 @@ export default {
         format: THREE.RGBFormat// ,
         // stencilBuffer: true
       }
-      let dpi = window.devicePixelRatio || 1.0
+      // let dpi = window.devicePixelRatio || 1.0
       let composer = new THREE.EffectComposer(this.renderer, new THREE.WebGLRenderTarget(window.innerWidth * dpi, window.innerHeight * dpi, rtParameters))
       composer.setSize(window.innerWidth * dpi, window.innerHeight * dpi)
       window.addEventListener('resize', () => {
@@ -513,7 +513,7 @@ export default {
   },
   data () {
     return {
-      useBloom: window.innerWidth >= 767,
+      useBloom: true,
       currentObj: false,
       camPos: { x: 0, y: 0, z: 25 },
       boxDragControl: false,
