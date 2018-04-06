@@ -133,7 +133,7 @@ export const makeNode = ({ src, oldNode, shaderType = VERTEX_SHADER, isEntry = f
 
   var newNode = {}
   newNode.shaderType = shaderType
-  newNode.isEntry = fnName === 'entry'
+  newNode.isEntry = fnName.indexOf('entry') === 0
   newNode.nid = nid
   newNode.src = src
   newNode.name = fnName
@@ -271,8 +271,21 @@ export const getVertexNodes = ({ nodes }) => {
   })
 }
 
+export const getFragmentNodes = ({ nodes }) => {
+  return nodes.filter((node) => {
+    return node.shaderType === FRAGMENT_SHADER
+  })
+}
+
 export const getVertexFunctions = ({ nodes }) => {
   return getVertexNodes({ nodes }).reduce((accu, node) => {
+    accu += node.compiledSrc + '\n\n'
+    return accu
+  }, '')
+}
+
+export const getFragmentFunctions = ({ nodes }) => {
+  return getFragmentNodes({ nodes }).reduce((accu, node) => {
     accu += node.compiledSrc + '\n\n'
     return accu
   }, '')
@@ -292,7 +305,15 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
 
   let getDefualtValue = (type) => {
     if (type === 'float') {
-      return 0.0
+      return '0.0'
+    } else if (type === 'vec4') {
+      return 'vec4(0.0)'
+    } else if (type === 'vec3') {
+      return 'vec3(0.0)'
+    } else if (type === 'vec2') {
+      return 'vec2(0.0)'
+    } else if (type === 'bool') {
+      return 'false'
     }
   }
 
@@ -349,141 +370,43 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
         return accu
       }, [])
   }
+  var _ = require('lodash')
 
-  let convertDepIntoCalc = (input) => {
-    return input.reduce((accu, node, key, arr) => {
-      accu += `  ${node.output.type} ${node.compiledFnName}_result = ${node.compiledFnName}(${resolveArgs({ node })});\n`
+  let concatStr = (input) => {
+    return input.reduce((accu, item) => {
+      accu += item
       return accu
     }, '')
+  }
+
+  let convertDepIntoCalc = (input) => {
+    return _.uniq(input.reduce((accu, node, key, arr) => {
+      accu.push(`  ${node.output.type} ${node.compiledFnName}_result = ${node.compiledFnName}(${resolveArgs({ node })});\n`)
+      return accu
+    }, []))
   }
 
   let rootArgs = resolveArgs({ node: entry })
   let rootCode = `  ${entry.compiledFnName}(${rootArgs});`
 
   let cachedComps = ''
-
+  let cachedCompsArr = []
   function recursive (entry) {
     let nodeDeps = getAllDepsOf({ node: entry, connections })
-    cachedComps = convertDepIntoCalc(nodeDeps) + cachedComps
-
+    let calcs = convertDepIntoCalc(nodeDeps)
+    cachedCompsArr = _.uniq([
+      ...cachedCompsArr,
+      ...calcs
+    ])
     nodeDeps.forEach(recursive)
   }
   recursive(entry)
 
+  cachedComps = concatStr(cachedCompsArr)
+
+  // cachedComps = _.uniq(cachedComps.split(';')).join(';')
+
   return cachedComps + rootCode
-  //
-
-  // let getVarName = ({ remoteNode, node, inputIndex }) => {
-  //   return remoteNode.nid + '_' + node.nid + '_' + inputIndex
-  // }
-
-  // let getRemoteConn = ({ nid, inputIndex }) => {
-  //   return connections.find((iConn) => {
-  //     return iConn.input.nid === nid && iConn.input.index === inputIndex
-  //   })
-  // }
-
-  // let getNode = ({ node, nid }) => {
-  //   return nodes.find(node => node.nid === nid)
-  // }
-
-  // let getDefault = ({ type }) => {
-  //   if (type === 'float') {
-  //     return '0.0'
-  //   }
-  // }
-
-  // let applyDepsToCaller = ({ node }) => {
-  //   let args = ''
-  //   node.inputs.forEach((input, key, arr) => {
-  //     let remoteConn = getRemoteConn({ node, input, inputIndex: input.index })
-  //     if (remoteConn) {
-  //       var remoteNode = getRemoteNode({ node, remoteConn })
-  //       if (remoteNode) {
-  //         args += getVarName({ targeNode: remoteNode, node, inputIndex: input.index })
-  //         if (key <= arr.length - 2) {
-  //           args += ', '
-  //         }
-  //       }
-  //     } else {
-  //       args += getDefault({ type: input.type })
-  //       if (key <= arr.length - 2) {
-  //         args += ', '
-  //       }
-  //     }
-  //   })
-  //   return node.compiledFnName + '(' + args + ')'
-  // }
-
-  // let args
-
-  // let bucket = []
-
-  // return JSON.stringify(bucket)
-  // let node = entry
-  // // let i = 5
-
-  // let getCompute = ({ node, nodes, input, inputIndex, remoteNode }) => {
-  //   let execStatement = applyDepsToCaller({ node: remoteNode })
-  //   return execStatement
-  // }
-
-  // let genDendenciesStatement = ({ node, nodes, input, inputIndex }) => {
-  //   let remoteConn = getRemoteConn({ node, input, inputIndex })
-  //   if (!remoteConn) {
-  //     return ''
-  //   } else {
-  //     let remoteNode = getRemoteNode({ node, remoteConn })
-  //     let argsObj = { node, nodes, input, inputIndex, remoteNode }
-  //     return getVar(argsObj) + getCompute(argsObj) + '\n'
-  //   }
-  // }
-
-  // let buildDepsStatements = ({ node, dependencyStatements = '' }) => {
-  //   let remotes = []
-  //   node.inputs.forEach((input, inputIndex) => {
-  //     dependencyStatements += genDendenciesStatement({ node, nodes, input, inputIndex })
-
-  //     let remoteConn = getRemoteConn({ node, input, inputIndex })
-  //     if (remoteConn) {
-  //       remotes.push(getRemoteNode({ node, remoteConn }))
-  //     }
-  //   })
-  //   return {
-  //     statements: dependencyStatements,
-  //     remotes
-  //   }
-  // }
-
-  // let jumps = []
-  // let buildTree = (remotes) => {
-  //   jumps = [...jumps, ...remotes]
-  //   jumps = _.uniq(jumps)
-
-  //   if (remotes.length > 0) {
-  //     remotes.forEach((node) => {
-  //       let ans = buildDepsStatements({ node })
-  //       buildTree(ans.remotes)
-  //     })
-  //   }
-  // }
-
-  // let { statements, remotes } = buildDepsStatements({ node })
-  // let execStatement = applyDepsToCaller({ node })
-  // let deps = []
-
-  // buildTree(remotes)
-
-  // console.log(jumps)
-
-  // jumps.forEach((node) => {
-  //   let { statements } = buildDepsStatements({ node })
-  //   let execStatement = applyDepsToCaller({ node })
-
-  //   deps.push(statements + ' ' + execStatement)
-  // })
-
-  // return deps.join('\n') + statements + ' ' + execStatement
 }
 
 export const getVertexExecutions = ({ nodes, connections }) => {
@@ -492,11 +415,24 @@ export const getVertexExecutions = ({ nodes, connections }) => {
 
   let vertexEntries = getVertexEntries({ nodes })
   let vExec = vertexEntries.reduce((accu, node, iNode) => {
-    accu += getEntryExecs({ entry: node, nodes, connections })
+    accu += getEntryExecs({ entry: node, nodes, connections }) + '\n'
     return accu
   }, '')
 
   return prefix + vExec + suffix
+}
+
+export const getFragmentExecutions = ({ nodes, connections }) => {
+  let prefix = `void main (void) {\n`
+  let suffix = `\n}`
+
+  let fragmentEntries = getFragmentEntries({ nodes })
+  let fExec = fragmentEntries.reduce((accu, node, iNode) => {
+    accu += getEntryExecs({ entry: node, nodes, connections })
+    return accu
+  }, '')
+
+  return prefix + fExec + suffix
 }
 
 // lol
@@ -506,21 +442,30 @@ export const makeGLSL = ({ root }) => {
   let connections = root.state.connections
   // let vertexEntries = getVertexEntries({ nodes })
 
-  let vUnis = getUniforms({ uniforms })
+  let Unis = getUniforms({ uniforms })
 
   let vFns = getVertexFunctions({ nodes })
-
   let vExecs = getVertexExecutions({ nodes, connections })
+
+  let fFns = getFragmentFunctions({ nodes })
+  let fExecs = getFragmentExecutions({ nodes, connections })
 
   return {
     vertexShader: `
 // Uniforms //
-${vUnis}
+${Unis}
 // Functions //
 ${vFns}
 // Main function executions //
 ${vExecs}
 `,
-    fragmentShader: `2`
+    fragmentShader: `
+// Uniforms //
+${Unis}
+// Functions //
+${fFns}
+// Main function executions //
+${fExecs}
+    `
   }
 }

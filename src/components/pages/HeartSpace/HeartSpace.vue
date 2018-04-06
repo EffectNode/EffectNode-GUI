@@ -31,7 +31,8 @@
         </div>
 
         <div class="tools" v-if="!welcome">
-          <button @click="addEffectNode()">+EffectNode</button>
+          <button @click="addEffectNode({ shaderType: EN.VERTEX_SHADER })">+VertexNode</button>
+          <button @click="addEffectNode({ shaderType: EN.FRAGMENT_SHADER })">+FragmentNode</button>
         </div>
 
         <transition name="fade">
@@ -53,9 +54,12 @@
           </div>
         </div>
 
-
-        <div class="debug-area" v-if="!currentObj">
+        <div class="debug-area" v-if="!currentObj && !welcome">
+          <h1>VertexShader</h1>
           <pre>{{ glsl.vertexShader }}</pre>
+
+          <h1>FragmentShader</h1>
+          <pre>{{ glsl.fragmentShader }}</pre>
         </div>
         <!-- CREATION -->
         <!--  -->
@@ -646,14 +650,14 @@ export default {
     getConnKey ({ conn }) {
       return JSON.stringify(conn)
     },
-    addEffectNode () {
+    addEffectNode ({ shaderType = EN.VERTEX_SHADER }) {
       this.nodes.push(EN.makeNode({
         src:
 `float floatSource () {
   return time;
 }`,
         isEntry: false,
-        shaderType: EN.VERTEX_SHADER,
+        shaderType,
         nodePos: { ...this.camera.position, z: 0 }
       }))
       this.tryRefreshGUI()
@@ -674,6 +678,7 @@ export default {
   },
   data () {
     return {
+      EN,
       glsl: {
         needsUpdate: false,
         vertexShadedr: ``,
