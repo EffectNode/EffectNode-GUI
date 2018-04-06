@@ -744,8 +744,8 @@ export default {
     self.rAFID = window.requestAnimationFrame(loop)
 
     setTimeout(() => {
-      this.hydrate({ use: 'continue' })
-    }, 100)
+      // this.hydrate({ use: 'continue' })
+    }, 2000)
 
     this.setup()
   }

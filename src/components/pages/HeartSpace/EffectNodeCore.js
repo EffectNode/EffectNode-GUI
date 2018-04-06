@@ -218,7 +218,7 @@ export const makeTemplate = ({ tid = '1' }) => {
   template.state = makeState()
   template.state.nodes = makeTemplateNodes({ tid })
   template.state.connections = []
-  template.state.globals = [
+  template.state.uniforms = [
     {
       src: `uniform float time;`
     }
@@ -230,9 +230,7 @@ export const hydrate = ({ use }) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       let template = makeTemplate({ tid: use })
-
       let root = template
-
       if (use === 'continue') {
         let dbRoot = ENdb.getRoot()
         if (!dbRoot) {
@@ -242,7 +240,6 @@ export const hydrate = ({ use }) => {
           root = dbRoot
         }
       }
-
       resolve(root)
     }, 300)
   })
@@ -281,16 +278,14 @@ export const getVertexFunctions = ({ nodes }) => {
   }, '')
 }
 
-export const getVertexGlobals = ({ globals }) => {
-  return globals.reduce((accu, globe) => {
-    accu += globe.src + '\n'
+export const getUniforms = ({ uniforms }) => {
+  return uniforms.reduce((accu, uniform) => {
+    accu += uniform.src + '\n'
     return accu
   }, '')
 }
 
 export const getEntryExecs = ({ entry, nodes, connections }) => {
-  let depCode = ''
-
   let getConnection = ({ nid, inputIndex }) => {
     return connections.find(iC => iC.input.nid === nid && iC.input.index === inputIndex)
   }
@@ -301,22 +296,81 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
     }
   }
 
+  let getNodeInfo = ({ nid }) => {
+    return nodes.find(n => n.nid === nid)
+  }
+
+  let getComputedVariable = ({ conn }) => {
+    let info = getNodeInfo({ nid: conn.output.nid })
+    return `${info.compiledFnName}_result`
+  }
+
   let resolveArgs = ({ node }) => {
+    // get all input
     return node.inputs.map((input) => {
+      // if there is connection
       let conn = getConnection({ nid: node.nid, inputIndex: input.index })
       if (conn) {
-        return input.name
+        // return computed varaible
+        return getComputedVariable({ conn })
       } else {
+        // return default value
         return getDefualtValue(input.type)
       }
     })
+      // calcualate stuff
+      .reduce((accu, item, key, arr) => {
+        accu += '\n    '
+        accu += item
+        if (key <= arr.length - 2) {
+          accu += ','
+        }
+        if (key === arr.length - 1) {
+          accu += '\n  '
+        }
+        return accu
+      }, '')
+  }
+  let getAllDepsOf = ({ node, connection }) => {
+    // get all related connections
+    return connections.filter((conn) => {
+      return conn.input.nid === node.nid
+    })
+      // get node info of remote node
+      .map((conn) => {
+        return getNodeInfo({ nid: conn.output.nid })
+      })
+      // make unique
+      .reduce((accu, node, key, arr) => {
+        let idx = accu.findIndex(nd => nd.nid === node.nid)
+        if (idx === -1) {
+          accu.push(node)
+        }
+        return accu
+      }, [])
   }
 
-  let rootCode = ''
-  let rootArgs = resolveArgs({ node: entry })
-  rootCode += `${entry.compiledFnName}(${rootArgs});`
+  let convertDepIntoCalc = (input) => {
+    return input.reduce((accu, node, key, arr) => {
+      accu += `  ${node.output.type} ${node.compiledFnName}_result = ${node.compiledFnName}(${resolveArgs({ node })});\n`
+      return accu
+    }, '')
+  }
 
-  return rootCode + depCode
+  let rootArgs = resolveArgs({ node: entry })
+  let rootCode = `  ${entry.compiledFnName}(${rootArgs});`
+
+  let cachedComps = ''
+
+  function recursive (entry) {
+    let nodeDeps = getAllDepsOf({ node: entry, connections })
+    cachedComps = convertDepIntoCalc(nodeDeps) + cachedComps
+
+    nodeDeps.forEach(recursive)
+  }
+  recursive(entry)
+
+  return cachedComps + rootCode
   //
 
   // let getVarName = ({ remoteNode, node, inputIndex }) => {
@@ -448,11 +502,11 @@ export const getVertexExecutions = ({ nodes, connections }) => {
 // lol
 export const makeGLSL = ({ root }) => {
   let nodes = root.state.nodes
-  let globals = root.state.globals
+  let uniforms = root.state.uniforms
   let connections = root.state.connections
   // let vertexEntries = getVertexEntries({ nodes })
 
-  let vGlbs = getVertexGlobals({ globals })
+  let vUnis = getUniforms({ uniforms })
 
   let vFns = getVertexFunctions({ nodes })
 
@@ -460,11 +514,11 @@ export const makeGLSL = ({ root }) => {
 
   return {
     vertexShader: `
-// Globals //
-${vGlbs}
-// functions //
+// Uniforms //
+${vUnis}
+// Functions //
 ${vFns}
-// main func executions //
+// Main function executions //
 ${vExecs}
 `,
     fragmentShader: `2`
