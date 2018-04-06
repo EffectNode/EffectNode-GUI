@@ -306,6 +306,8 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
   let getDefualtValue = ({ type, name }) => {
     if (type === 'float' && name === 'w') {
       return '1.0'
+    } else if (type === 'float' && name === 'a') {
+      return '1.0'
     } else if (type === 'float') {
       return '0.0'
     } else if (type === 'vec4') {
