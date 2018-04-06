@@ -1,5 +1,7 @@
 import * as ENdb from './ENdb.js'
 
+// import * as _ from 'lodash'
+
 export const VERTEX_SHADER = 'vertexShader'
 export const FRAGMENT_SHADER = 'fragmentShader'
 
@@ -12,7 +14,7 @@ export const makeRoot = () => {
 
 export const makeID = () => {
   var text = ''
-  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
   for (var i = 0; i < 5; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
   }
@@ -287,61 +289,147 @@ export const getVertexGlobals = ({ globals }) => {
 }
 
 export const getEntryExecs = ({ entry, nodes, connections }) => {
-  let node = entry
-  let bucket = []
-  // let i = 5
+  let depCode = ''
 
-  // let getArgs = (node) => {
-  //   return node.inputs.reduce((accu, input, key, arr) => {
-  //     if (key === 0) {
-  //       accu += '('
-  //     }
-
-  //     accu += getRemoteExec({ input, node, connections })
-
-  //     if (key <= arr.length - 2) {
-  //       accu += ','
-  //     }
-
-  //     if (key === arr.length - 1) {
-  //       accu += ')'
-  //     }
-
-  //     return accu
-  //   }, '')
-  // }
-
-  let getRemoteConn = ({ node, input, inputIndex }) => {
-    return connections.find((iConn) => {
-      return iConn.input.nid === node.nid && iConn.input.index === inputIndex
-    })
+  let getConnection = ({ nid, inputIndex }) => {
+    return connections.find(iC => iC.input.nid === nid && iC.input.index === inputIndex)
   }
 
-  let getVar = ({ node, nodes, input, inputIndex, remoteNode }) => {
-    return '  ' + input.type + ' ' + node.nid + '_' + inputIndex
-  }
-
-  let genExec = ({ node, nodes, input, inputIndex }) => {
-    let remoteConn = getRemoteConn({ node, input, inputIndex })
-    if (!remoteConn) {
-      return ''
-    } else {
-      let remoteNode = nodes.find(node => node.nid === remoteConn.output.nid)
-      return getVar({ node, nodes, input, inputIndex, remoteNode }) + '\n'
+  let getDefualtValue = (type) => {
+    if (type === 'float') {
+      return 0.0
     }
   }
 
-  let run = (node) => {
-    node.inputs.forEach((input, inputIndex) => {
-      bucket.push(
-        genExec({ node, nodes, input, inputIndex })
-      )
+  let resolveArgs = ({ node }) => {
+    return node.inputs.map((input) => {
+      let conn = getConnection({ nid: node.nid, inputIndex: input.index })
+      if (conn) {
+        return input.name
+      } else {
+        return getDefualtValue(input.type)
+      }
     })
   }
 
-  run(node)
+  let rootCode = ''
+  let rootArgs = resolveArgs({ node: entry })
+  rootCode += `${entry.compiledFnName}(${rootArgs});`
 
-  return bucket.slice().reverse().join('\n')
+  return rootCode + depCode
+  //
+
+  // let getVarName = ({ remoteNode, node, inputIndex }) => {
+  //   return remoteNode.nid + '_' + node.nid + '_' + inputIndex
+  // }
+
+  // let getRemoteConn = ({ nid, inputIndex }) => {
+  //   return connections.find((iConn) => {
+  //     return iConn.input.nid === nid && iConn.input.index === inputIndex
+  //   })
+  // }
+
+  // let getNode = ({ node, nid }) => {
+  //   return nodes.find(node => node.nid === nid)
+  // }
+
+  // let getDefault = ({ type }) => {
+  //   if (type === 'float') {
+  //     return '0.0'
+  //   }
+  // }
+
+  // let applyDepsToCaller = ({ node }) => {
+  //   let args = ''
+  //   node.inputs.forEach((input, key, arr) => {
+  //     let remoteConn = getRemoteConn({ node, input, inputIndex: input.index })
+  //     if (remoteConn) {
+  //       var remoteNode = getRemoteNode({ node, remoteConn })
+  //       if (remoteNode) {
+  //         args += getVarName({ targeNode: remoteNode, node, inputIndex: input.index })
+  //         if (key <= arr.length - 2) {
+  //           args += ', '
+  //         }
+  //       }
+  //     } else {
+  //       args += getDefault({ type: input.type })
+  //       if (key <= arr.length - 2) {
+  //         args += ', '
+  //       }
+  //     }
+  //   })
+  //   return node.compiledFnName + '(' + args + ')'
+  // }
+
+  // let args
+
+  // let bucket = []
+
+  // return JSON.stringify(bucket)
+  // let node = entry
+  // // let i = 5
+
+  // let getCompute = ({ node, nodes, input, inputIndex, remoteNode }) => {
+  //   let execStatement = applyDepsToCaller({ node: remoteNode })
+  //   return execStatement
+  // }
+
+  // let genDendenciesStatement = ({ node, nodes, input, inputIndex }) => {
+  //   let remoteConn = getRemoteConn({ node, input, inputIndex })
+  //   if (!remoteConn) {
+  //     return ''
+  //   } else {
+  //     let remoteNode = getRemoteNode({ node, remoteConn })
+  //     let argsObj = { node, nodes, input, inputIndex, remoteNode }
+  //     return getVar(argsObj) + getCompute(argsObj) + '\n'
+  //   }
+  // }
+
+  // let buildDepsStatements = ({ node, dependencyStatements = '' }) => {
+  //   let remotes = []
+  //   node.inputs.forEach((input, inputIndex) => {
+  //     dependencyStatements += genDendenciesStatement({ node, nodes, input, inputIndex })
+
+  //     let remoteConn = getRemoteConn({ node, input, inputIndex })
+  //     if (remoteConn) {
+  //       remotes.push(getRemoteNode({ node, remoteConn }))
+  //     }
+  //   })
+  //   return {
+  //     statements: dependencyStatements,
+  //     remotes
+  //   }
+  // }
+
+  // let jumps = []
+  // let buildTree = (remotes) => {
+  //   jumps = [...jumps, ...remotes]
+  //   jumps = _.uniq(jumps)
+
+  //   if (remotes.length > 0) {
+  //     remotes.forEach((node) => {
+  //       let ans = buildDepsStatements({ node })
+  //       buildTree(ans.remotes)
+  //     })
+  //   }
+  // }
+
+  // let { statements, remotes } = buildDepsStatements({ node })
+  // let execStatement = applyDepsToCaller({ node })
+  // let deps = []
+
+  // buildTree(remotes)
+
+  // console.log(jumps)
+
+  // jumps.forEach((node) => {
+  //   let { statements } = buildDepsStatements({ node })
+  //   let execStatement = applyDepsToCaller({ node })
+
+  //   deps.push(statements + ' ' + execStatement)
+  // })
+
+  // return deps.join('\n') + statements + ' ' + execStatement
 }
 
 export const getVertexExecutions = ({ nodes, connections }) => {

@@ -381,7 +381,7 @@ export default {
         this.tryRefreshGUI()
         this.tryRefreshGLSL()
       }, () => {
-        this.removeConnectionAtInput({ input: mesh })
+        // this.removeConnectionAtInput({ input: mesh })
         this.tryRefreshGLSL()
       })
     },
@@ -531,7 +531,7 @@ export default {
         this.tryRefreshGUI()
         this.tryRefreshGLSL()
       }, () => {
-        this.removeConnectionAtOutput({ output: mesh })
+        // this.removeConnectionAtOutput({ output: mesh })
         this.tryRefreshGLSL()
       })
     },
@@ -681,7 +681,7 @@ export default {
       },
       loading: false,
       welcome: true,
-      useBloom: true,
+      useBloom: false,
       currentObj: false,
       camPos: { x: 0, y: 0, z: 25 },
       boxDragControl: false,
