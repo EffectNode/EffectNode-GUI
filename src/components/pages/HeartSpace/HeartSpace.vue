@@ -24,7 +24,8 @@
             <textarea :style="{ color: node.error ? 'red': 'black' }"  cols="50" rows="10" v-model="node.src" @input="updateSRC({ node, iNode, nodes })" />
             <br />
             <span :style="{ color: node.error ? 'red': 'black' }" v-if="node">{{ node.error }} <br /></span>
-            <pre>{{ connections }}</pre>
+            node<br/><pre>{{ node }}</pre>
+            connections<br/><pre>{{ connections }}</pre>
           </div>
 
         </div>
@@ -43,7 +44,7 @@
             <label for=""><input type="checkbox" v-model="useBloom">use bloom</label>
             <br />
             <ol>
-              <li><button @click="hydrate({ use: 'session' })">Continue session</button></li>
+              <li><button @click="hydrate({ use: 'continue' })">Continue</button></li>
               <li><button @click="hydrate({ use: 'template1' })">Start with Clean Template</button></li>
             </ol>
           </div>
@@ -53,12 +54,12 @@
         </div>
 
 
-
+        <div class="debug-area" v-if="!currentObj">
+          <pre>{{ glsl.vertexShader }}</pre>
+        </div>
         <!-- CREATION -->
+        <!--  -->
 
-        <!-- <div class="editor-area" v-if="!currentObj">
-          <pre>{{ connections }}</pre>
-        </div> -->
         <!-- <pre :style="{ display: 'none' }">{{ connections }}</pre> -->
 
       </Renderer>
@@ -108,22 +109,18 @@
           {{ getOutputPos({ conn }) }}
         </ConnectionLine>
 
-        <Object3D :key="node.compiledFnName" v-for="(node, iNode) in nodes">
+        <!-- <Object3D > -->
+        <EffectBox
+          :key="node.nid" v-for="(node, iNode) in nodes"
+          :node="node"
+          :nodes="nodes"
+          :iNode="iNode"
 
-          <!-- <ConnectionLine :p1="{ x: 0, y: 0 }" :p2="getPos({ nodes, iNode })">
-          </ConnectionLine> -->
-
-          <EffectBox
-            :node="node"
-            :nodes="nodes"
-            :iNode="iNode"
-
-            @attach="(v) => { setupBox({ v, node, nodes, iNode }) }"
-            @detach="(v) => { cleanUpBox({ v, node, nodes, iNode }) }"
-          >
-          </EffectBox>
-
-        </Object3D>
+          @attach="(v) => { $nextTick(() => { setupBox({ v, node, nodes, iNode }) }) }"
+          @detach="(v) => { cleanUpBox({ v, node, nodes, iNode }) }"
+        >
+        </EffectBox>
+        <!-- </Object3D> -->
       </Object3D>
 
 
@@ -171,12 +168,14 @@ export default {
     async hydrate ({ use }) {
       this.loading = true
       this.EffectNode = await EN.hydrate({ use: use || 'template1' })
+      this.tryRefreshGLSL()
       this.loading = false
       this.welcome = false
     },
     setup () {
       this.setupBloom({ dpi: 1.25 })
       this.setupTouch()
+      this.setupGLSLMaker()
     },
     setupTouch () {
       var touchSurface = this.$refs.toucher
@@ -291,7 +290,7 @@ export default {
         output.userData.output = node.output
       }
 
-      this.tryRefresh()
+      this.tryRefreshGUI()
     },
     cleanUpBox ({ v, node, nodes }) {
       let boxMeshes = this.boxMeshes
@@ -363,13 +362,13 @@ export default {
         .to(mesh.userData.originalPos, 500)
         .easing(TWEEN.Easing.Quadratic.Out)
         .onStart(() => {
-          this.tryRefresh()
+          this.tryRefreshGUI()
         })
         .onUpdate(() => {
-          this.tryRefresh()
+          this.tryRefreshGUI()
         })
         .onComplete(() => {
-          this.tryRefresh()
+          this.tryRefreshGUI()
         })
 
       tween.start()
@@ -379,9 +378,19 @@ export default {
       this.getNearest({ mesh, compares: this.outputMeshes }).then((nearest) => {
         this.addConnectionInputHand({ hand: mesh, land: nearest })
         EN.saveRoot({ root: this.EffectNode })
-        this.tryRefresh()
+        this.tryRefreshGUI()
+        this.tryRefreshGLSL()
       }, () => {
         this.removeConnectionAtInput({ input: mesh })
+        this.tryRefreshGLSL()
+      })
+    },
+    tryRefreshGLSL () {
+      this.glsl.needsUpdate = true
+    },
+    tryRefreshGUI () {
+      this.$nextTick(() => {
+        this.$forceUpdate()
       })
     },
     addConnectionInputHand ({ hand, land }) {
@@ -398,7 +407,7 @@ export default {
           input: inputData,
           output: outputData
         })
-        this.tryRefresh()
+        this.tryRefreshGUI()
       }
     },
     getNearest ({ mesh, compares }) {
@@ -430,7 +439,7 @@ export default {
       })
     },
     inputDragging () {
-      this.tryRefresh()
+      this.tryRefreshGUI()
     },
     inputClickObj (event) {
       this.removeConnectionAtInput({ input: event.object })
@@ -475,7 +484,7 @@ export default {
       group3D.position.y = node.pos.y
       group3D.position.z = node.pos.z
 
-      this.tryRefresh()
+      this.tryRefreshGUI()
     },
     boxDragEnd (event) {
       this.trackBallControls.enabled = true
@@ -489,7 +498,8 @@ export default {
       node.pos.z = mesh.position.z
 
       EN.saveRoot({ root: this.EffectNode })
-      this.tryRefresh()
+      this.tryRefreshGUI()
+      this.tryRefreshGLSL()
     },
     outputDragStart (event) {
       this.trackBallControls.enabled = false
@@ -503,13 +513,13 @@ export default {
         .to(mesh.userData.originalPos, 500)
         .easing(TWEEN.Easing.Quadratic.Out)
         .onStart(() => {
-          this.tryRefresh()
+          this.tryRefreshGUI()
         })
         .onUpdate(() => {
-          this.tryRefresh()
+          this.tryRefreshGUI()
         })
         .onComplete(() => {
-          this.tryRefresh()
+          this.tryRefreshGUI()
         })
 
       tween.start()
@@ -518,9 +528,11 @@ export default {
       this.getNearest({ mesh, compares: this.inputMeshes }).then((nearest) => {
         this.addConnectionOutputHand({ hand: mesh, land: nearest })
         EN.saveRoot({ root: this.EffectNode })
-        this.tryRefresh()
+        this.tryRefreshGUI()
+        this.tryRefreshGLSL()
       }, () => {
         this.removeConnectionAtOutput({ output: mesh })
+        this.tryRefreshGLSL()
       })
     },
     addConnectionOutputHand ({ hand, land }) {
@@ -537,7 +549,7 @@ export default {
           input: inputData,
           output: outputData
         })
-        this.tryRefresh()
+        this.tryRefreshGUI()
       }
     },
     removeConnectionAtOutput ({ output }) {
@@ -564,7 +576,7 @@ export default {
       }
     },
     outputDragging () {
-      this.tryRefresh()
+      this.tryRefreshGUI()
     },
     outputClickObj (event) {
       this.removeConnectionAtOutput({ output: event.object })
@@ -578,15 +590,18 @@ export default {
         // console.error(e)
         console.table([e])
       }
-      this.tryRefresh()
+      this.tryRefreshGUI()
+      this.tryRefreshGLSL()
     },
-    tryRefresh () {
-      this.$nextTick(() => {
-        this.$forceUpdate()
-      })
-    },
-    generateGLSL () {
-      // EN.generateGLSL(this.EffectNode)
+    setupGLSLMaker () {
+      setInterval(() => {
+        if (this.glsl.needsUpdate) {
+          this.glsl = {
+            ...EN.makeGLSL({ root: this.EffectNode }),
+            needsUpdate: false
+          }
+        }
+      }, 333)
     },
     log (v) {
       console.log(v)
@@ -635,12 +650,14 @@ export default {
       this.nodes.push(EN.makeNode({
         src:
 `float floatSource () {
-  retrun time;
+  return time;
 }`,
         isEntry: false,
         shaderType: EN.VERTEX_SHADER,
-        nodePos: { ...this.camera.position }
+        nodePos: { ...this.camera.position, z: 0 }
       }))
+      this.tryRefreshGUI()
+      this.tryRefreshGLSL()
     },
     renderWebGL () {
       TWEEN.update()
@@ -657,6 +674,11 @@ export default {
   },
   data () {
     return {
+      glsl: {
+        needsUpdate: false,
+        vertexShadedr: ``,
+        fragmentShader: ``
+      },
       loading: false,
       welcome: true,
       useBloom: true,
@@ -721,6 +743,10 @@ export default {
     }
     self.rAFID = window.requestAnimationFrame(loop)
 
+    setTimeout(() => {
+      this.hydrate({ use: 'continue' })
+    }, 100)
+
     this.setup()
   }
 }
@@ -774,6 +800,21 @@ export default {
   max-width: 100%;
   max-height: 100%;
   background-color: rgba(255,255,255,0.1);
+}
+
+.debug-area{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-size: 12px;
+  max-width: 50%;
+  max-height: 80%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.debug-area pre{
+  white-space: pre-wrap;
 }
 
 textarea{

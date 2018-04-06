@@ -2,7 +2,7 @@
   <div>
 
     <Mesh @attach="(v) => { box = v }" @detach="() => { box = false }">
-      <PlaneBufferGeometry />
+      <CircleBufferGeometry :r="2.5" />
       <MeshBasicMaterial :opacity="0.0" />
     </Mesh>
 
@@ -17,11 +17,11 @@
       </Mesh>
 
       <!-- inputs -->
-      <Object3D py="3">
+      <Object3D py="3.5">
         <Object3D :key="input.aid" :px="((iInput + 1 - ((node.inputs.length + 1) / 2)) / node.inputs.length) * (node.inputs.length * 2.5)" v-for="(input, iInput) in node.inputs">
 
           <Mesh @element="addToInputs" @clean="() => {}">
-            <SphereBufferGeometry :nx="7" :ny="7" :r="0.65" />
+            <CircleBufferGeometry :nx="7" :ny="7" :r="0.65" />
             <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" />
           </Mesh>
 
@@ -29,9 +29,9 @@
       </Object3D>
 
       <!-- output -->
-      <Object3D py="-3" v-if="node.output.type !== 'void'">
+      <Object3D py="-3.5" v-if="node.output.type !== 'void'">
         <Mesh @element="(v) => { output = v }" @clean="() => { }">
-          <SphereBufferGeometry :nx="7" :ny="7" :r="0.65" />
+          <CircleBufferGeometry :nx="7" :ny="7" :r="0.65" />
           <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" />
         </Mesh>
       </Object3D>

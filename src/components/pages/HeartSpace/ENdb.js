@@ -2,10 +2,10 @@
 // const Root = new idb.Store('EffectNode-LocalStorage', 'Root')
 
 export const setRoot = (v) => {
-  return window.sessionStorage.setItem('all-nodes-effect-root-db', JSON.stringify(v))
+  return window.localStorage.setItem('all-nodes-effect-root-db', JSON.stringify(v))
 }
 export const getRoot = () => {
-  return JSON.parse(window.sessionStorage.getItem('all-nodes-effect-root-db'))
+  return JSON.parse(window.localStorage.getItem('all-nodes-effect-root-db'))
 }
 
 // export const addNode = (v) => {

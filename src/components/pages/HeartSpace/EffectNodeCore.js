@@ -131,7 +131,7 @@ export const makeNode = ({ src, oldNode, shaderType = VERTEX_SHADER, isEntry = f
 
   var newNode = {}
   newNode.shaderType = shaderType
-  newNode.isEntry = isEntry
+  newNode.isEntry = fnName === 'entry'
   newNode.nid = nid
   newNode.src = src
   newNode.name = fnName
@@ -149,11 +149,14 @@ export const makeNode = ({ src, oldNode, shaderType = VERTEX_SHADER, isEntry = f
     newNode.pos = oldNode.pos
   }
 
-  newNode.inputs = argsList.map((v) => {
-    return {
-      ...v
+  newNode.inputs = argsList.reduce((accu, v) => {
+    if (v && v.nid) {
+      accu.push({
+        ...v
+      })
     }
-  })
+    return accu
+  }, [])
 
   console.table([newNode])
 
@@ -213,6 +216,11 @@ export const makeTemplate = ({ tid = '1' }) => {
   template.state = makeState()
   template.state.nodes = makeTemplateNodes({ tid })
   template.state.connections = []
+  template.state.globals = [
+    {
+      src: `uniform float time;`
+    }
+  ]
   return template
 }
 
@@ -223,7 +231,7 @@ export const hydrate = ({ use }) => {
 
       let root = template
 
-      if (use === 'session') {
+      if (use === 'continue') {
         let dbRoot = ENdb.getRoot()
         if (!dbRoot) {
           ENdb.setRoot(template)
@@ -247,6 +255,130 @@ export const saveRoot = ({ root }) => {
   })
 }
 
-export const makeGLSL = ({ root }) => {
+export const getVertexEntries = ({ nodes }) => {
+  return nodes.filter((node) => {
+    return node.isEntry && node.shaderType === VERTEX_SHADER
+  })
+}
+export const getFragmentEntries = ({ nodes }) => {
+  return nodes.filter((node) => {
+    return node.isEntry && node.shaderType === FRAGMENT_SHADER
+  })
+}
 
+export const getVertexNodes = ({ nodes }) => {
+  return nodes.filter((node) => {
+    return node.shaderType === VERTEX_SHADER
+  })
+}
+
+export const getVertexFunctions = ({ nodes }) => {
+  return getVertexNodes({ nodes }).reduce((accu, node) => {
+    accu += node.compiledSrc + '\n\n'
+    return accu
+  }, '')
+}
+
+export const getVertexGlobals = ({ globals }) => {
+  return globals.reduce((accu, globe) => {
+    accu += globe.src + '\n'
+    return accu
+  }, '')
+}
+
+export const getEntryExecs = ({ entry, nodes, connections }) => {
+  let node = entry
+  let bucket = []
+  // let i = 5
+
+  // let getArgs = (node) => {
+  //   return node.inputs.reduce((accu, input, key, arr) => {
+  //     if (key === 0) {
+  //       accu += '('
+  //     }
+
+  //     accu += getRemoteExec({ input, node, connections })
+
+  //     if (key <= arr.length - 2) {
+  //       accu += ','
+  //     }
+
+  //     if (key === arr.length - 1) {
+  //       accu += ')'
+  //     }
+
+  //     return accu
+  //   }, '')
+  // }
+
+  let getRemoteConn = ({ node, input, inputIndex }) => {
+    return connections.find((iConn) => {
+      return iConn.input.nid === node.nid && iConn.input.index === inputIndex
+    })
+  }
+
+  let getVar = ({ node, nodes, input, inputIndex, remoteNode }) => {
+    return '  ' + input.type + ' ' + node.nid + '_' + inputIndex
+  }
+
+  let genExec = ({ node, nodes, input, inputIndex }) => {
+    let remoteConn = getRemoteConn({ node, input, inputIndex })
+    if (!remoteConn) {
+      return ''
+    } else {
+      let remoteNode = nodes.find(node => node.nid === remoteConn.output.nid)
+      return getVar({ node, nodes, input, inputIndex, remoteNode }) + '\n'
+    }
+  }
+
+  let run = (node) => {
+    node.inputs.forEach((input, inputIndex) => {
+      bucket.push(
+        genExec({ node, nodes, input, inputIndex })
+      )
+    })
+  }
+
+  run(node)
+
+  return bucket.slice().reverse().join('\n')
+}
+
+export const getVertexExecutions = ({ nodes, connections }) => {
+  let prefix = `void main (void) {\n`
+  let suffix = `\n}`
+
+  let vertexEntries = getVertexEntries({ nodes })
+  let vExec = vertexEntries.reduce((accu, node, iNode) => {
+    accu += getEntryExecs({ entry: node, nodes, connections })
+    return accu
+  }, '')
+
+  return prefix + vExec + suffix
+}
+
+// lol
+export const makeGLSL = ({ root }) => {
+  let nodes = root.state.nodes
+  let globals = root.state.globals
+  let connections = root.state.connections
+  // let vertexEntries = getVertexEntries({ nodes })
+
+  let vGlbs = getVertexGlobals({ globals })
+
+  let vFns = getVertexFunctions({ nodes })
+
+  let vExecs = getVertexExecutions({ nodes, connections })
+
+  return {
+    vertexShader: `
+// Globals //
+${vGlbs}
+// functions //
+${vFns}
+// main func executions //
+${vExecs}
+`,
+    fragmentShader: `2`
+  }
 }
