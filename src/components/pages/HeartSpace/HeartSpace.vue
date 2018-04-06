@@ -24,8 +24,8 @@
             <textarea :style="{ color: node.error ? 'red': 'black' }"  cols="50" rows="10" v-model="node.src" @input="updateSRC({ node, iNode, nodes })" />
             <br />
             <span :style="{ color: node.error ? 'red': 'black' }" v-if="node">{{ node.error }} <br /></span>
-            node<br/><pre>{{ node }}</pre>
-            connections<br/><pre>{{ connections }}</pre>
+            <!-- node<br/><pre>{{ node }}</pre>
+            connections<br/><pre>{{ connections }}</pre> -->
           </div>
 
         </div>
@@ -403,7 +403,7 @@ export default {
       console.log(inputData, outputData)
 
       let idx = this.connections.findIndex((conn) => {
-        return conn.output.nid === outputData.nid && conn.input.nid === inputData.nid && conn.input.index === inputData.index
+        return conn.input.nid === inputData.nid && conn.input.index === inputData.index
       })
 
       if (idx === -1) {

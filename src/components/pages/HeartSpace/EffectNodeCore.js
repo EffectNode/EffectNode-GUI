@@ -452,6 +452,13 @@ export const makeGLSL = ({ root }) => {
 
   return {
     vertexShader: `
+/*
+VV     VV  SSSSS
+VV     VV SS
+ VV   VV   SSSSS
+  VV VV        SS
+   VVV     SSSSS
+*/
 // Uniforms //
 ${Unis}
 // Functions //
@@ -460,6 +467,13 @@ ${vFns}
 ${vExecs}
 `,
     fragmentShader: `
+/*
+FFFFFFF  SSSSS
+FF      SS
+FFFF     SSSSS
+FF           SS
+FF       SSSSS
+*/
 // Uniforms //
 ${Unis}
 // Functions //
