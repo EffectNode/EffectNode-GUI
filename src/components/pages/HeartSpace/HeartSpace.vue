@@ -325,32 +325,41 @@ export default {
       // })
     },
     getInputPos ({ conn }) {
-      let inputMesh = this.inputMeshes.filter((iM) => {
-        return iM.userData.input.nid === conn.input.nid && iM.userData.input.index === conn.input.index
-      })[0]
-      // console.log(inputMesh)
-      if (inputMesh) {
-        let loc = inputMesh.position.clone().setFromMatrixPosition(inputMesh.matrixWorld)
-        return {
-          x: loc.x,
-          y: loc.y
+      try {
+        let inputMesh = this.inputMeshes.filter((iM) => {
+          return iM.userData && iM.userData.input && iM.userData.input.nid === conn.input.nid && iM.userData.input.index === conn.input.index
+        })[0]
+        // console.log(inputMesh)
+        if (inputMesh) {
+          let loc = inputMesh.position.clone().setFromMatrixPosition(inputMesh.matrixWorld)
+          return {
+            x: loc.x,
+            y: loc.y
+          }
+        } else {
+          return false
         }
-      } else {
+      } catch (e) {
+        console.log(e)
         return false
       }
     },
     getOutputPos ({ conn }) {
-      let outputMesh = this.outputMeshes.filter((iM) => {
-        return iM.userData.node.nid === conn.output.nid
-      })[0]
-      // console.log(outputMesh)
-      if (outputMesh) {
-        let loc = outputMesh.position.clone().setFromMatrixPosition(outputMesh.matrixWorld)
-        return {
-          x: loc.x,
-          y: loc.y
+      try {
+        let outputMesh = this.outputMeshes.filter((iM) => {
+          return iM.userData && iM.userData.node && iM.userData.node.nid === conn.output.nid
+        })[0]
+        // console.log(outputMesh)
+        if (outputMesh) {
+          let loc = outputMesh.position.clone().setFromMatrixPosition(outputMesh.matrixWorld)
+          return {
+            x: loc.x,
+            y: loc.y
+          }
+        } else {
+          return false
         }
-      } else {
+      } catch (e) {
         return false
       }
     },
@@ -400,13 +409,15 @@ export default {
     addConnectionInputHand ({ hand, land }) {
       let inputData = hand.userData.input
       let outputData = land.userData.output
+      let iNode = hand.userData.node
+      let oNode = land.userData.node
       console.log(inputData, outputData)
 
       let idx = this.connections.findIndex((conn) => {
         return conn.input.nid === inputData.nid && conn.input.index === inputData.index
       })
 
-      if (idx === -1) {
+      if (idx === -1 && this.checkType({ iNode, oNode, inputData, outputData })) {
         this.connections.push({
           input: inputData,
           output: outputData
@@ -539,16 +550,25 @@ export default {
         this.tryRefreshGLSL()
       })
     },
+    checkType ({ iNode, oNode, inputData, outputData }) {
+      return (
+        (iNode.shaderType === oNode.shaderType) &&
+        (inputData.type === outputData.type)
+      )
+    },
     addConnectionOutputHand ({ hand, land }) {
       let outputData = hand.userData.output
       let inputData = land.userData.input
+      let iNode = hand.userData.node
+      let oNode = land.userData.node
+
       console.log(inputData, outputData)
 
       let idx = this.connections.findIndex((conn) => {
         return conn.output.nid === outputData.nid && conn.input.nid === inputData.nid && conn.input.index === inputData.index
       })
 
-      if (idx === -1) {
+      if (idx === -1 && this.checkType({ iNode, oNode, inputData, outputData })) {
         this.connections.push({
           input: inputData,
           output: outputData

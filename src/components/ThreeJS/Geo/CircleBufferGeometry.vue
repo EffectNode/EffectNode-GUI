@@ -6,7 +6,7 @@
 import * as THREE from 'three'
 export default {
   props: {
-    segments: {
+    n: {
       default: 32
     },
     r: {
@@ -18,8 +18,16 @@ export default {
       geometry: false
     }
   },
+  watch: {
+    n () {
+      let geometry = new THREE.CircleBufferGeometry(this.r, this.n)
+      this.$parent.$emit('geometry', geometry)
+    }
+  },
   mounted () {
-    let geometry = new THREE.CircleBufferGeometry(this.r, this.segments)
+    // n = segments
+    // r = radius
+    let geometry = new THREE.CircleBufferGeometry(this.r, this.n)
     this.$parent.$emit('geometry', geometry)
   }
 }

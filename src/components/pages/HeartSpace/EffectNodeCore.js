@@ -303,8 +303,10 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
     return connections.find(iC => iC.input.nid === nid && iC.input.index === inputIndex)
   }
 
-  let getDefualtValue = (type) => {
-    if (type === 'float') {
+  let getDefualtValue = ({ type, name }) => {
+    if (type === 'float' && name === 'w') {
+      return '1.0'
+    } else if (type === 'float') {
       return '0.0'
     } else if (type === 'vec4') {
       return 'vec4(0.0)'
@@ -336,7 +338,7 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
         return getComputedVariable({ conn })
       } else {
         // return default value
-        return getDefualtValue(input.type)
+        return getDefualtValue(input)
       }
     })
       // calcualate stuff
