@@ -33,6 +33,11 @@
         <div class="tools" v-if="!welcome">
           <button @click="addEffectNode({ shaderType: EN.VERTEX_SHADER })">+VertexNode</button>
           <button @click="addEffectNode({ shaderType: EN.FRAGMENT_SHADER })">+FragmentNode</button>
+          <br />
+          <button :key="iVar" v-for="(eVar, iVar) in EffectNode.variations" @click="loadVar({ iVar })">
+            {{ eVar.date }}
+          </button>
+          <button @click="makeVar()">Make Variation</button>
         </div>
 
         <transition name="fade">
@@ -113,18 +118,17 @@
           {{ getOutputPos({ conn }) }}
         </ConnectionLine>
 
-        <!-- <Object3D > -->
-        <EffectBox
-          :key="node.nid" v-for="(node, iNode) in nodes"
-          :node="node"
-          :nodes="nodes"
-          :iNode="iNode"
-
-          @attach="(v) => { $nextTick(() => { setupBox({ v, node, nodes, iNode }) }) }"
-          @detach="(v) => { cleanUpBox({ v, node, nodes, iNode }) }"
-        >
-        </EffectBox>
-        <!-- </Object3D> -->
+        <Object3D :key="node.nid" v-for="(node, iNode) in nodes">
+          <EffectBox
+            :node="node"
+            :nodes="nodes"
+            :iNode="iNode"
+            :pos="node.pos"
+            @attach="(v) => { $nextTick(() => { setupBox({ v, node, nodes, iNode }) }) }"
+            @detach="(v) => { cleanUpBox({ v, node, nodes, iNode }) }"
+          >
+          </EffectBox>
+        </Object3D>
       </Object3D>
 
 
@@ -172,9 +176,12 @@ export default {
     async hydrate ({ use }) {
       this.loading = true
       this.EffectNode = await EN.hydrate({ use: use || 'template1' })
-      this.tryRefreshGLSL()
       this.loading = false
       this.welcome = false
+      this.$nextTick(() => {
+        this.tryRefreshGLSL()
+        this.tryRefreshGUI()
+      })
     },
     setup () {
       this.setupBloom({ dpi: 1.25 })
@@ -185,6 +192,31 @@ export default {
       var touchSurface = this.$refs.toucher
       var camera = this.camera
       // var controls = this.controls = new THREE.EditorControls(camera, touchSurface)
+
+      // if (this.trackBallControls) {
+      //   this.trackBallControls.dispose()
+      // }
+      // if (this.boxDragControl) {
+      //   this.boxDragControl.removeEventListener('dragstart', this.boxDragStart)
+      //   this.boxDragControl.removeEventListener('drag', this.boxDragging)
+      //   this.boxDragControl.removeEventListener('click', this.boxClickObj)
+      //   this.boxDragControl.removeEventListener('dragend', this.boxDragEnd)
+      //   this.boxDragControl.dispose()
+      // }
+      // if (this.inputsDragControl) {
+      //   this.inputsDragControl.removeEventListener('dragstart', this.inputDragStart)
+      //   this.inputsDragControl.removeEventListener('drag', this.inputDragging)
+      //   this.inputsDragControl.removeEventListener('click', this.inputClickObj)
+      //   this.inputsDragControl.removeEventListener('dragend', this.inputDragEnd)
+      //   this.inputsDragControl.dispose()
+      // }
+      // if (this.outputDragControl) {
+      //   this.outputDragControl.removeEventListener('dragstart', this.outputDragStart)
+      //   this.outputDragControl.removeEventListener('drag', this.outputDragging)
+      //   this.outputDragControl.removeEventListener('click', this.outputClickObj)
+      //   this.outputDragControl.removeEventListener('dragend', this.outputDragEnd)
+      //   this.outputDragControl.dispose()
+      // }
 
       var trackBallControls = this.trackBallControls = new THREE.TrackballControls(camera, touchSurface)
       trackBallControls.rotateSpeed = 1.0
@@ -274,6 +306,10 @@ export default {
       mesh.position.y = node.pos.y
       mesh.position.z = node.pos.z
 
+      node.pos = {
+        ...node.pos
+      }
+
       // boxes draggables
       this.boxMeshes.push(v.box)
 
@@ -298,24 +334,39 @@ export default {
     },
     cleanUpBox ({ v, node, nodes }) {
       let boxMeshes = this.boxMeshes
-      let boxIndex = boxMeshes.findIndex(a => a === v.box)
-      if (boxIndex !== -1) {
-        boxMeshes.splice(boxIndex, 1)
-      }
-
-      let inputs = v.inputs
-      inputs.forEach((eInput) => {
-        let inputIndex = this.inputMeshes.findIndex(a => a === eInput)
-        if (inputIndex !== -1) {
-          this.inputMeshes.splice(inputIndex, 1)
+      // let boxIndex = boxMeshes.findIndex(a => a === v.box.nid)
+      // if (boxIndex !== -1) {
+      //   boxMeshes.splice(boxIndex, 1)
+      // }
+      boxMeshes.forEach((v, k) => {
+        if (v.userData.node && v.userData.node.nid === node.nid) {
+          boxMeshes.splice(k, 1)
         }
       })
 
+      let inputs = v.inputs
+      inputs.forEach((eInput) => {
+        // let inputIndex = this.inputMeshes.findIndex(a => a === eInput)
+        // if (inputIndex !== -1) {
+        //   this.inputMeshes.splice(inputIndex, 1)
+        // }
+        this.inputMeshes.forEach((v, k) => {
+          if (v.userData.node && v.userData.node.nid === node.nid) {
+            this.inputMeshes.splice(k, 1)
+          }
+        })
+      })
+
       let outputMeshes = this.outputMeshes
-      let outputIndex = outputMeshes.findIndex(a => a === v.output)
-      if (outputIndex !== -1) {
-        outputMeshes.splice(outputIndex, 1)
-      }
+      // let outputIndex = outputMeshes.findIndex(a => a === v.output)
+      // if (outputIndex !== -1) {
+      //   outputMeshes.splice(outputIndex, 1)
+      // }
+      outputMeshes.forEach((v, k) => {
+        if (v.userData.node && v.userData.node.nid === node.nid) {
+          outputMeshes.splice(k, 1)
+        }
+      })
 
       // let outputs = v.output
       // outputs.forEach((eOutput) => {
@@ -484,16 +535,17 @@ export default {
     },
     boxDragging (event) {
       let mesh = event.object
-      let group3D = event.object.userData.group3D
+      let group3D = mesh.userData.group3D
       let node = mesh.userData.node
 
+      node.pos = {}
       node.pos.x = mesh.position.x
       node.pos.y = mesh.position.y
       node.pos.z = mesh.position.z
 
-      mesh.position.x = node.pos.x
-      mesh.position.y = node.pos.y
-      mesh.position.z = node.pos.z
+      // mesh.position.x = node.pos.x
+      // mesh.position.y = node.pos.y
+      // mesh.position.z = node.pos.z
 
       group3D.position.x = node.pos.x
       group3D.position.y = node.pos.y
@@ -605,6 +657,18 @@ export default {
     outputClickObj (event) {
       this.removeConnectionAtOutput({ output: event.object })
     },
+    loadVar ({ iVar }) {
+      let history = EN.loadVariation({ root: this.EffectNode, index: iVar })
+      this.EffectNode.state = history
+      this.$forceUpdate()
+      this.tryRefreshGUI()
+      this.tryRefreshGLSL()
+    },
+    makeVar () {
+      EN.makeVariation({ root: this.EffectNode })
+      EN.saveRoot({ root: this.EffectNode })
+      this.$forceUpdate()
+    },
     updateSRC ({ node, nodes, iNode }) {
       try {
         EN.updateSRC({ node, nodes, iNode })
@@ -619,7 +683,7 @@ export default {
     },
     setupGLSLMaker () {
       setInterval(() => {
-        if (this.glsl.needsUpdate) {
+        if (this.glsl.needsUpdate && this.EffectNode) {
           this.glsl = {
             ...EN.makeGLSL({ root: this.EffectNode }),
             needsUpdate: false
@@ -678,7 +742,7 @@ export default {
 }`,
         isEntry: false,
         shaderType,
-        nodePos: { ...this.camera.position, z: 0 }
+        nodePos: { ...this.camera.position, y: 8, z: 0 }
       }))
       this.tryRefreshGUI()
       this.tryRefreshGLSL()
@@ -698,6 +762,8 @@ export default {
   },
   data () {
     return {
+      Math,
+      refreshToggle: true,
       EN,
       glsl: {
         needsUpdate: false,
@@ -719,7 +785,9 @@ export default {
       renderer: false,
       scene: false,
       camera: false,
+
       EffectNode: false,
+
       boxMeshes: [],
       inputMeshes: [],
       outputMeshes: []
@@ -733,7 +801,7 @@ export default {
         if (this.EffectNode && this.EffectNode.state && this.EffectNode.state.connections) {
           return this.EffectNode.state.connections
         } else {
-          return []
+          return false
         }
       },
       set (v) {
@@ -747,7 +815,7 @@ export default {
       if (this.EffectNode && this.EffectNode.state && this.EffectNode.state.nodes) {
         return this.EffectNode.state.nodes
       } else {
-        return []
+        return false
       }
     }
   },
@@ -767,12 +835,9 @@ export default {
       self.renderWebGL()
     }
     self.rAFID = window.requestAnimationFrame(loop)
-
-    setTimeout(() => {
-      // this.hydrate({ use: 'continue' })
-    }, 2000)
-
     this.setup()
+  },
+  beforeDestroy () {
   }
 }
 </script>

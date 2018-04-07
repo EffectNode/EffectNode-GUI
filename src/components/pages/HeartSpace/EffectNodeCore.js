@@ -7,9 +7,32 @@ export const FRAGMENT_SHADER = 'fragmentShader'
 
 export const makeRoot = () => {
   return {
-    state: false,
-    backups: []
+    editor: 0.1,
+    state: false, // for GUI data
+    variations: []
   }
+}
+
+export const makeVariation = ({ root }) => {
+  root.variations.push(cloneState({ state: root.state }))
+}
+
+export const cloneState = ({ state }) => {
+  return {
+    date: new Date(),
+    stateJSON: JSON.stringify(state)
+  }
+}
+
+export const loadVariationJSON = ({ root, index }) => {
+  let variations = root.variations
+  let archiveInfo = variations[index]
+  let archiveInfoJSON = archiveInfo.stateJSON
+  return (archiveInfoJSON)
+}
+
+export const loadVariation = ({ root, index }) => {
+  return JSON.parse(loadVariationJSON({ root, index }))
 }
 
 export const makeID = () => {
@@ -178,9 +201,6 @@ export const makeNodeList = () => {
 
 export const makeState = () => {
   return {
-    readOnly: false,
-    nodes: [
-    ]
   }
 }
 
@@ -307,6 +327,8 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
     if (type === 'float' && name === 'w') {
       return '1.0'
     } else if (type === 'float' && name === 'a') {
+      return '1.0'
+    } else if (type === 'float' && name === 'g') {
       return '1.0'
     } else if (type === 'float') {
       return '0.0'

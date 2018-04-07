@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div v-if="node">
 
-    <Mesh @attach="(v) => { box = v }" @detach="() => { box = false }">
+    <Mesh @attach="(v) => { box = v }" @detach="() => { }">
       <CircleBufferGeometry :r="2.5" />
-      <MeshBasicMaterial :opacity="0.0" />
+      <MeshBasicMaterial :opacity="0.5" />
     </Mesh>
 
-    <Object3D @element="(v) => { group = v }" v-if="node">
+    <Object3D @element="(v) => { group = v }">
       <Points v-if="node.shaderType === 'vertexShader'" >
         <TorusKnotBufferGeometry />
         <ShaderMaterial :vs="VSDesc.vs" :fs="VSDesc.fs" :uniforms="VSDesc.animatable" />
@@ -18,13 +18,11 @@
 
       <!-- inputs -->
       <Object3D py="3.5">
-        <Object3D :key="input.aid" :px="((iInput + 1 - ((node.inputs.length + 1) / 2)) / node.inputs.length) * (node.inputs.length * 2.5)" v-for="(input, iInput) in node.inputs">
-
+        <Object3D :key="input.nid + input.index" :px="((iInput + 1 - ((node.inputs.length + 1) / 2)) / node.inputs.length) * (node.inputs.length * 2.5)" v-for="(input, iInput) in node.inputs">
           <Mesh @element="addToInputs" @clean="() => {}">
             <CircleBufferGeometry :n="getSideByIO(input)" :r="0.65" />
             <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" />
           </Mesh>
-
         </Object3D>
       </Object3D>
 
@@ -55,6 +53,7 @@ export default {
     ...Bundle
   },
   props: {
+    pos: {},
     node: { required: true }
   },
   data () {
@@ -83,6 +82,11 @@ export default {
     }
   },
   watch: {
+    posJSON () {
+      if (this.box) {
+        this.setupPos()
+      }
+    },
     box () {
       if (this.isReady()) {
         this.cleanUpBox()
@@ -120,7 +124,25 @@ export default {
       }
     }
   },
+  computed: {
+    posJSON () {
+      return JSON.stringify(this.pos)
+    }
+  },
   methods: {
+    setupPos () {
+      this.box.position.x = this.pos.x
+      this.box.position.y = this.pos.y
+      this.box.position.z = this.pos.z
+
+      this.group.position.x = this.pos.x
+      this.group.position.y = this.pos.y
+      this.group.position.z = this.pos.z
+
+      this.$nextTick(() => {
+        this.$forceUpdate()
+      })
+    },
     getSideByIO (io) {
       switch (io.type) {
         case 'float':
@@ -155,6 +177,12 @@ export default {
         output: this.output,
         inputs: this.inputs
       })
+
+      this.box.userData = this.box.userData || {}
+      this.box.userData.group = this.group
+      this.box.userData.output = this.output
+      this.box.userData.inputs = this.inputs
+
       this.$parent.$emit('add', this.group)
       this.$parent.$emit('add', this.box)
     },
@@ -165,6 +193,7 @@ export default {
         output: this.output,
         inputs: this.inputs
       })
+
       this.$parent.$emit('remove', this.group)
       this.$parent.$emit('remove', this.box)
     }
@@ -181,6 +210,7 @@ export default {
       }
     }
     this.rAFID = window.requestAnimationFrame(rAF)
+    this.setupPos()
   },
   beforeDestroy () {
     this.cleanUpBox()
