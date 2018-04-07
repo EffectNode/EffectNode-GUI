@@ -11,6 +11,9 @@ export default {
     }
   },
   props: {
+    transparent: {
+      default: false
+    },
     vs: {
       default:
 `void main ( void ) {
@@ -32,6 +35,7 @@ export default {
     }
   },
   watch: {
+    transparent () { this.initShader() },
     vs () { this.initShader() },
     fs () { this.initShader() },
     uniforms () { this.initShader() }
@@ -43,6 +47,7 @@ export default {
     initShader () {
       try {
         this.material = new THREE.ShaderMaterial({
+          transparent: this.transparent,
           uniforms: {
             ...this.uniforms// ,
             // ...THREE.UniformsUtils.merge([

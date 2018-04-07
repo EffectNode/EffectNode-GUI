@@ -1,0 +1,504 @@
+{
+	"editor": 0.1,
+	"state": {
+		"nodes": [
+			{
+				"shaderType": "vertexShader",
+				"isEntry": true,
+				"nid": "QOOfC",
+				"src": "void entry (vec3 pos, float x, float y, float z, float w) {\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\n  vec4 mvPosition = modelViewMatrix * newPosition;\n  vec4 outputPos = projectionMatrix * mvPosition;\n  gl_Position = outputPos;\n  gl_PointSize = 3.0;\n  vPos = position;\n}",
+				"name": "entry",
+				"compiledFnName": "entry_QOOfC",
+				"compiledSrc": "void entry_QOOfC (vec3 pos, float x, float y, float z, float w) {\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\n  vec4 mvPosition = modelViewMatrix * newPosition;\n  vec4 outputPos = projectionMatrix * mvPosition;\n  gl_Position = outputPos;\n  gl_PointSize = 3.0;\n  vPos = position;\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "QOOfC",
+						"direction": "in",
+						"type": "vec3",
+						"name": "pos"
+					},
+					{
+						"index": 1,
+						"nid": "QOOfC",
+						"direction": "in",
+						"type": "float",
+						"name": "x"
+					},
+					{
+						"index": 2,
+						"nid": "QOOfC",
+						"direction": "in",
+						"type": "float",
+						"name": "y"
+					},
+					{
+						"index": 3,
+						"nid": "QOOfC",
+						"direction": "in",
+						"type": "float",
+						"name": "z"
+					},
+					{
+						"index": 4,
+						"nid": "QOOfC",
+						"direction": "in",
+						"type": "float",
+						"name": "w"
+					}
+				],
+				"output": {
+					"nid": "QOOfC",
+					"name": "entry",
+					"type": "void"
+				},
+				"pos": {
+					"x": -8,
+					"y": -15,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "fragmentShader",
+				"isEntry": true,
+				"nid": "yquaw",
+				"src": "void entry (vec4 color, float r, float g, float b, float a) {\n  gl_FragColor = color + vec4(r, g, b, a);\n}",
+				"name": "entry",
+				"compiledFnName": "entry_yquaw",
+				"compiledSrc": "void entry_yquaw (vec4 color, float r, float g, float b, float a) {\n  gl_FragColor = color + vec4(r, g, b, a);\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "yquaw",
+						"direction": "in",
+						"type": "vec4",
+						"name": "color"
+					},
+					{
+						"index": 1,
+						"nid": "yquaw",
+						"direction": "in",
+						"type": "float",
+						"name": "r"
+					},
+					{
+						"index": 2,
+						"nid": "yquaw",
+						"direction": "in",
+						"type": "float",
+						"name": "g"
+					},
+					{
+						"index": 3,
+						"nid": "yquaw",
+						"direction": "in",
+						"type": "float",
+						"name": "b"
+					},
+					{
+						"index": 4,
+						"nid": "yquaw",
+						"direction": "in",
+						"type": "float",
+						"name": "a"
+					}
+				],
+				"output": {
+					"nid": "yquaw",
+					"name": "entry",
+					"type": "void"
+				},
+				"pos": {
+					"x": 8,
+					"y": -15,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "vertexShader",
+				"isEntry": false,
+				"nid": "smzvG",
+				"src": "vec3 posRotator (mat3 rotateZ, vec3 pos) {\n    return position * rotateZ;\n}",
+				"name": "posRotator",
+				"compiledFnName": "posRotator_smzvG",
+				"compiledSrc": "vec3 posRotator_smzvG (mat3 rotateZ, vec3 pos) {\n    return position * rotateZ;\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "smzvG",
+						"direction": "in",
+						"type": "mat3",
+						"name": "rotateZ"
+					},
+					{
+						"index": 1,
+						"nid": "smzvG",
+						"direction": "in",
+						"type": "vec3",
+						"name": "pos"
+					}
+				],
+				"output": {
+					"nid": "smzvG",
+					"name": "posRotator",
+					"type": "vec3"
+				},
+				"pos": {
+					"x": -18.241109882549374,
+					"y": -1.188907436945315,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "vertexShader",
+				"isEntry": false,
+				"nid": "CcjqM",
+				"src": "mat3 rotateZ(float rad) {\n    float c = cos(rad);\n    float s = sin(rad);\n    return mat3(\n        c, s, 0.0,\n        -s, c, 0.0,\n        0.0, 0.0, 1.0\n    );\n}",
+				"name": "rotateZ",
+				"compiledFnName": "rotateZ_CcjqM",
+				"compiledSrc": "mat3 rotateZ_CcjqM(float rad) {\n    float c = cos(rad);\n    float s = sin(rad);\n    return mat3(\n        c, s, 0.0,\n        -s, c, 0.0,\n        0.0, 0.0, 1.0\n    );\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "CcjqM",
+						"direction": "in",
+						"type": "float",
+						"name": "rad"
+					}
+				],
+				"output": {
+					"nid": "CcjqM",
+					"name": "rotateZ",
+					"type": "mat3"
+				},
+				"pos": {
+					"x": -21.21925027153704,
+					"y": 9.872756865008826,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "vertexShader",
+				"isEntry": false,
+				"nid": "BpTev",
+				"src": "float timeSource () {\n  return time;\n}",
+				"name": "timeSource",
+				"compiledFnName": "timeSource_BpTev",
+				"compiledSrc": "float timeSource_BpTev () {\n  return time;\n}",
+				"inputs": [],
+				"output": {
+					"nid": "BpTev",
+					"name": "timeSource",
+					"type": "float"
+				},
+				"pos": {
+					"x": -15.794780277309513,
+					"y": 18.96672126709612,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "fragmentShader",
+				"isEntry": false,
+				"nid": "OdZxu",
+				"src": "float floatModifier (float i1) {\n  return abs(cos(time + i1));\n}",
+				"name": "floatModifier",
+				"compiledFnName": "floatModifier_OdZxu",
+				"compiledSrc": "float floatModifier_OdZxu (float i1) {\n  return abs(cos(time + i1));\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "OdZxu",
+						"direction": "in",
+						"type": "float",
+						"name": "i1"
+					}
+				],
+				"output": {
+					"nid": "OdZxu",
+					"name": "floatModifier",
+					"type": "float"
+				},
+				"pos": {
+					"x": 16.124987428543392,
+					"y": 4.49354033498842,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "vertexShader",
+				"isEntry": false,
+				"nid": "BHFBt",
+				"src": "float floatModifier (float i1) {\n  return sin(time * 3.0 * sin(position.y * 0.01) + i1) * 3.0;\n}",
+				"name": "floatModifier",
+				"compiledFnName": "floatModifier_BHFBt",
+				"compiledSrc": "float floatModifier_BHFBt (float i1) {\n  return sin(time * 3.0 * sin(position.y * 0.01) + i1) * 3.0;\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "BHFBt",
+						"direction": "in",
+						"type": "float",
+						"name": "i1"
+					}
+				],
+				"output": {
+					"nid": "BHFBt",
+					"name": "floatModifier",
+					"type": "float"
+				},
+				"pos": {
+					"x": -12.455162703426629,
+					"y": -1.178006967464781,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "fragmentShader",
+				"isEntry": false,
+				"nid": "zkvXJ",
+				"src": "float floatModifier (float i1) {\n  return abs(cos(time + i1));\n}",
+				"name": "floatModifier",
+				"compiledFnName": "floatModifier_zkvXJ",
+				"compiledSrc": "float floatModifier_zkvXJ (float i1) {\n  return abs(cos(time + i1));\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "zkvXJ",
+						"direction": "in",
+						"type": "float",
+						"name": "i1"
+					}
+				],
+				"output": {
+					"nid": "zkvXJ",
+					"name": "floatModifier",
+					"type": "float"
+				},
+				"pos": {
+					"x": 11.621111629536443,
+					"y": 10.387501257145662,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "fragmentShader",
+				"isEntry": false,
+				"nid": "FDYmj",
+				"src": "float floatModifier (float i1) {\n  return abs(sin(time + i1));\n}",
+				"name": "floatModifier",
+				"compiledFnName": "floatModifier_FDYmj",
+				"compiledSrc": "float floatModifier_FDYmj (float i1) {\n  return abs(sin(time + i1));\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "FDYmj",
+						"direction": "in",
+						"type": "float",
+						"name": "i1"
+					}
+				],
+				"output": {
+					"nid": "FDYmj",
+					"name": "floatModifier",
+					"type": "float"
+				},
+				"pos": {
+					"x": 7.39525285515956,
+					"y": 15.83663493989481,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "fragmentShader",
+				"isEntry": false,
+				"nid": "wiNZh",
+				"src": "vec4 vPosSource () {\n  return vec4(vPos + sin(time), 1.0);\n}",
+				"name": "vPosSource",
+				"compiledFnName": "vPosSource_wiNZh",
+				"compiledSrc": "vec4 vPosSource_wiNZh () {\n  return vec4(vPos + sin(time), 1.0);\n}",
+				"inputs": [],
+				"output": {
+					"nid": "wiNZh",
+					"name": "vPosSource",
+					"type": "vec4"
+				},
+				"pos": {
+					"x": 2.3353430068924905,
+					"y": 17.56034049260117,
+					"z": 0
+				}
+			}
+		],
+		"connections": [
+			{
+				"input": {
+					"index": 0,
+					"nid": "QOOfC",
+					"direction": "in",
+					"type": "vec3",
+					"name": "pos"
+				},
+				"output": {
+					"nid": "smzvG",
+					"name": "rotateZ",
+					"type": "mat3"
+				}
+			},
+			{
+				"input": {
+					"index": 0,
+					"nid": "smzvG",
+					"direction": "in",
+					"type": "mat3",
+					"name": "rotateZ"
+				},
+				"output": {
+					"nid": "CcjqM",
+					"name": "rotateZ",
+					"type": "mat3"
+				}
+			},
+			{
+				"input": {
+					"index": 0,
+					"nid": "CcjqM",
+					"direction": "in",
+					"type": "float",
+					"name": "rad"
+				},
+				"output": {
+					"nid": "BpTev",
+					"name": "timeSource",
+					"type": "float"
+				}
+			},
+			{
+				"input": {
+					"index": 3,
+					"nid": "yquaw",
+					"direction": "in",
+					"type": "float",
+					"name": "b"
+				},
+				"output": {
+					"nid": "OdZxu",
+					"name": "floatModifier",
+					"type": "float"
+				}
+			},
+			{
+				"input": {
+					"index": 2,
+					"nid": "yquaw",
+					"direction": "in",
+					"type": "float",
+					"name": "g"
+				},
+				"output": {
+					"nid": "zkvXJ",
+					"name": "floatModifier",
+					"type": "float"
+				}
+			},
+			{
+				"input": {
+					"index": 1,
+					"nid": "yquaw",
+					"direction": "in",
+					"type": "float",
+					"name": "r"
+				},
+				"output": {
+					"nid": "FDYmj",
+					"name": "floatModifier",
+					"type": "float"
+				}
+			},
+			{
+				"input": {
+					"index": 0,
+					"nid": "yquaw",
+					"direction": "in",
+					"type": "vec4",
+					"name": "color"
+				},
+				"output": {
+					"nid": "wiNZh",
+					"name": "vPosSource",
+					"type": "vec4"
+				}
+			},
+			{
+				"input": {
+					"index": 1,
+					"nid": "QOOfC",
+					"direction": "in",
+					"type": "float",
+					"name": "x"
+				},
+				"output": {
+					"nid": "BHFBt",
+					"name": "floatModifier",
+					"type": "float"
+				}
+			}
+		],
+		"uniforms": [
+			{
+				"src": "uniform float time;"
+			}
+		],
+		"varyings": [
+			{
+				"src": "varying vec3 vPos;"
+			}
+		]
+	},
+	"variations": [
+		{
+			"date": "2018-04-07T22:28:18.218Z",
+			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"QOOfC\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_QOOfC\",\"compiledSrc\":\"void entry_QOOfC (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"QOOfC\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"yquaw\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_yquaw\",\"compiledSrc\":\"void entry_yquaw (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"yquaw\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":8,\"y\":-15,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"smzvG\",\"src\":\"vec3 posRotator (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"name\":\"posRotator\",\"compiledFnName\":\"posRotator_smzvG\",\"compiledSrc\":\"vec3 posRotator_smzvG (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"}],\"output\":{\"nid\":\"smzvG\",\"name\":\"posRotator\",\"type\":\"vec3\"},\"pos\":{\"x\":-18.241109882549374,\"y\":-1.188907436945315,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"CcjqM\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_CcjqM\",\"compiledSrc\":\"mat3 rotateZ_CcjqM(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-21.21925027153704,\"y\":9.872756865008826,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BpTev\",\"src\":\"float timeSource () {\\n  return time;\\n}\",\"name\":\"timeSource\",\"compiledFnName\":\"timeSource_BpTev\",\"compiledSrc\":\"float timeSource_BpTev () {\\n  return time;\\n}\",\"inputs\":[],\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"},\"pos\":{\"x\":-15.794780277309513,\"y\":18.96672126709612,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"smzvG\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"},\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}]}"
+		},
+		{
+			"date": "2018-04-07T22:28:18.218Z",
+			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"QOOfC\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_QOOfC\",\"compiledSrc\":\"void entry_QOOfC (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"QOOfC\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"yquaw\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_yquaw\",\"compiledSrc\":\"void entry_yquaw (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"yquaw\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":8,\"y\":-15,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"smzvG\",\"src\":\"vec3 posRotator (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"name\":\"posRotator\",\"compiledFnName\":\"posRotator_smzvG\",\"compiledSrc\":\"vec3 posRotator_smzvG (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"}],\"output\":{\"nid\":\"smzvG\",\"name\":\"posRotator\",\"type\":\"vec3\"},\"pos\":{\"x\":-18.241109882549374,\"y\":-1.188907436945315,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"CcjqM\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_CcjqM\",\"compiledSrc\":\"mat3 rotateZ_CcjqM(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-21.21925027153704,\"y\":9.872756865008826,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BpTev\",\"src\":\"float timeSource () {\\n  return time;\\n}\",\"name\":\"timeSource\",\"compiledFnName\":\"timeSource_BpTev\",\"compiledSrc\":\"float timeSource_BpTev () {\\n  return time;\\n}\",\"inputs\":[],\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"},\"pos\":{\"x\":-15.794780277309513,\"y\":18.96672126709612,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"smzvG\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"},\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}]}"
+		},
+		{
+			"date": "2018-04-07T22:29:59.509Z",
+			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"QOOfC\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_QOOfC\",\"compiledSrc\":\"void entry_QOOfC (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"QOOfC\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"yquaw\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_yquaw\",\"compiledSrc\":\"void entry_yquaw (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"yquaw\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":8,\"y\":-15,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"smzvG\",\"src\":\"vec3 posRotator (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"name\":\"posRotator\",\"compiledFnName\":\"posRotator_smzvG\",\"compiledSrc\":\"vec3 posRotator_smzvG (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"}],\"output\":{\"nid\":\"smzvG\",\"name\":\"posRotator\",\"type\":\"vec3\"},\"pos\":{\"x\":-18.241109882549374,\"y\":-1.188907436945315,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"CcjqM\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_CcjqM\",\"compiledSrc\":\"mat3 rotateZ_CcjqM(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-21.21925027153704,\"y\":9.872756865008826,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BpTev\",\"src\":\"float timeSource () {\\n  return time;\\n}\",\"name\":\"timeSource\",\"compiledFnName\":\"timeSource_BpTev\",\"compiledSrc\":\"float timeSource_BpTev () {\\n  return time;\\n}\",\"inputs\":[],\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"},\"pos\":{\"x\":-15.794780277309513,\"y\":18.96672126709612,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"OdZxu\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_OdZxu\",\"compiledSrc\":\"float floatModifier_OdZxu (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"OdZxu\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":16.124987428543392,\"y\":4.49354033498842,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"smzvG\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"},\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"}},{\"input\":{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}]}"
+		},
+		{
+			"date": "2018-04-07T22:30:26.433Z",
+			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"QOOfC\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_QOOfC\",\"compiledSrc\":\"void entry_QOOfC (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"QOOfC\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"yquaw\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_yquaw\",\"compiledSrc\":\"void entry_yquaw (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"yquaw\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":8,\"y\":-15,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"smzvG\",\"src\":\"vec3 posRotator (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"name\":\"posRotator\",\"compiledFnName\":\"posRotator_smzvG\",\"compiledSrc\":\"vec3 posRotator_smzvG (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"}],\"output\":{\"nid\":\"smzvG\",\"name\":\"posRotator\",\"type\":\"vec3\"},\"pos\":{\"x\":-18.241109882549374,\"y\":-1.188907436945315,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"CcjqM\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_CcjqM\",\"compiledSrc\":\"mat3 rotateZ_CcjqM(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-21.21925027153704,\"y\":9.872756865008826,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BpTev\",\"src\":\"float timeSource () {\\n  return time;\\n}\",\"name\":\"timeSource\",\"compiledFnName\":\"timeSource_BpTev\",\"compiledSrc\":\"float timeSource_BpTev () {\\n  return time;\\n}\",\"inputs\":[],\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"},\"pos\":{\"x\":-15.794780277309513,\"y\":18.96672126709612,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"OdZxu\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_OdZxu\",\"compiledSrc\":\"float floatModifier_OdZxu (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"OdZxu\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":16.124987428543392,\"y\":4.49354033498842,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BHFBt\",\"src\":\"float floatModifier (float i1) {\\n  return sin(time * 3.0 + i1) * 3.0;\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_BHFBt\",\"compiledSrc\":\"float floatModifier_BHFBt (float i1) {\\n  return sin(time * 3.0 + i1) * 3.0;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"BHFBt\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":-12.455162703426629,\"y\":-1.178006967464781,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"smzvG\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"},\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"}},{\"input\":{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}]}"
+		},
+		{
+			"date": "2018-04-07T22:31:34.109Z",
+			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"QOOfC\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_QOOfC\",\"compiledSrc\":\"void entry_QOOfC (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"QOOfC\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"yquaw\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_yquaw\",\"compiledSrc\":\"void entry_yquaw (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"yquaw\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":8,\"y\":-15,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"smzvG\",\"src\":\"vec3 posRotator (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"name\":\"posRotator\",\"compiledFnName\":\"posRotator_smzvG\",\"compiledSrc\":\"vec3 posRotator_smzvG (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"}],\"output\":{\"nid\":\"smzvG\",\"name\":\"posRotator\",\"type\":\"vec3\"},\"pos\":{\"x\":-18.241109882549374,\"y\":-1.188907436945315,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"CcjqM\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_CcjqM\",\"compiledSrc\":\"mat3 rotateZ_CcjqM(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-21.21925027153704,\"y\":9.872756865008826,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BpTev\",\"src\":\"float timeSource () {\\n  return time;\\n}\",\"name\":\"timeSource\",\"compiledFnName\":\"timeSource_BpTev\",\"compiledSrc\":\"float timeSource_BpTev () {\\n  return time;\\n}\",\"inputs\":[],\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"},\"pos\":{\"x\":-15.794780277309513,\"y\":18.96672126709612,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"OdZxu\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_OdZxu\",\"compiledSrc\":\"float floatModifier_OdZxu (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"OdZxu\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":16.124987428543392,\"y\":4.49354033498842,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BHFBt\",\"src\":\"float floatModifier (float i1) {\\n  return sin(time * 3.0 + i1) * 3.0;\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_BHFBt\",\"compiledSrc\":\"float floatModifier_BHFBt (float i1) {\\n  return sin(time * 3.0 + i1) * 3.0;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"BHFBt\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":-12.455162703426629,\"y\":-1.178006967464781,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"zkvXJ\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_zkvXJ\",\"compiledSrc\":\"float floatModifier_zkvXJ (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"zkvXJ\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":11.621111629536443,\"y\":10.387501257145662,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"FDYmj\",\"src\":\"float floatModifier (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_FDYmj\",\"compiledSrc\":\"float floatModifier_FDYmj (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"FDYmj\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":7.39525285515956,\"y\":15.83663493989481,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"smzvG\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"},\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"}},{\"input\":{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}]}"
+		},
+		{
+			"date": "2018-04-07T22:32:29.408Z",
+			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"QOOfC\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_QOOfC\",\"compiledSrc\":\"void entry_QOOfC (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"QOOfC\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"yquaw\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_yquaw\",\"compiledSrc\":\"void entry_yquaw (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"yquaw\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":8,\"y\":-15,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"smzvG\",\"src\":\"vec3 posRotator (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"name\":\"posRotator\",\"compiledFnName\":\"posRotator_smzvG\",\"compiledSrc\":\"vec3 posRotator_smzvG (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"}],\"output\":{\"nid\":\"smzvG\",\"name\":\"posRotator\",\"type\":\"vec3\"},\"pos\":{\"x\":-18.241109882549374,\"y\":-1.188907436945315,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"CcjqM\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_CcjqM\",\"compiledSrc\":\"mat3 rotateZ_CcjqM(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-21.21925027153704,\"y\":9.872756865008826,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BpTev\",\"src\":\"float timeSource () {\\n  return time;\\n}\",\"name\":\"timeSource\",\"compiledFnName\":\"timeSource_BpTev\",\"compiledSrc\":\"float timeSource_BpTev () {\\n  return time;\\n}\",\"inputs\":[],\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"},\"pos\":{\"x\":-15.794780277309513,\"y\":18.96672126709612,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"OdZxu\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_OdZxu\",\"compiledSrc\":\"float floatModifier_OdZxu (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"OdZxu\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":16.124987428543392,\"y\":4.49354033498842,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BHFBt\",\"src\":\"float floatModifier (float i1) {\\n  return sin(time * 3.0 + i1) * 3.0;\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_BHFBt\",\"compiledSrc\":\"float floatModifier_BHFBt (float i1) {\\n  return sin(time * 3.0 + i1) * 3.0;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"BHFBt\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":-12.455162703426629,\"y\":-1.178006967464781,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"zkvXJ\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_zkvXJ\",\"compiledSrc\":\"float floatModifier_zkvXJ (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"zkvXJ\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":11.621111629536443,\"y\":10.387501257145662,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"FDYmj\",\"src\":\"float floatModifier (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_FDYmj\",\"compiledSrc\":\"float floatModifier_FDYmj (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"FDYmj\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":7.39525285515956,\"y\":15.83663493989481,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"wiNZh\",\"src\":\"vec3 vPosSource () {\\n  return vPos;\\n}\",\"name\":\"vPosSource\",\"compiledFnName\":\"vPosSource_wiNZh\",\"compiledSrc\":\"vec3 vPosSource_wiNZh () {\\n  return vPos;\\n}\",\"inputs\":[],\"output\":{\"nid\":\"wiNZh\",\"name\":\"vPosSource\",\"type\":\"vec3\"},\"pos\":{\"x\":2.3353430068924905,\"y\":17.56034049260117,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"smzvG\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"},\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"}},{\"input\":{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}]}"
+		},
+		{
+			"date": "2018-04-07T22:33:01.936Z",
+			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"QOOfC\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_QOOfC\",\"compiledSrc\":\"void entry_QOOfC (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"QOOfC\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"yquaw\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_yquaw\",\"compiledSrc\":\"void entry_yquaw (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"yquaw\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":8,\"y\":-15,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"smzvG\",\"src\":\"vec3 posRotator (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"name\":\"posRotator\",\"compiledFnName\":\"posRotator_smzvG\",\"compiledSrc\":\"vec3 posRotator_smzvG (mat3 rotateZ) {\\n    return position * rotateZ;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"}],\"output\":{\"nid\":\"smzvG\",\"name\":\"posRotator\",\"type\":\"vec3\"},\"pos\":{\"x\":-18.241109882549374,\"y\":-1.188907436945315,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"CcjqM\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_CcjqM\",\"compiledSrc\":\"mat3 rotateZ_CcjqM(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-21.21925027153704,\"y\":9.872756865008826,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BpTev\",\"src\":\"float timeSource () {\\n  return time;\\n}\",\"name\":\"timeSource\",\"compiledFnName\":\"timeSource_BpTev\",\"compiledSrc\":\"float timeSource_BpTev () {\\n  return time;\\n}\",\"inputs\":[],\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"},\"pos\":{\"x\":-15.794780277309513,\"y\":18.96672126709612,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"OdZxu\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_OdZxu\",\"compiledSrc\":\"float floatModifier_OdZxu (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"OdZxu\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":16.124987428543392,\"y\":4.49354033498842,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BHFBt\",\"src\":\"float floatModifier (float i1) {\\n  return sin(time * 3.0 + i1) * 3.0;\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_BHFBt\",\"compiledSrc\":\"float floatModifier_BHFBt (float i1) {\\n  return sin(time * 3.0 + i1) * 3.0;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"BHFBt\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":-12.455162703426629,\"y\":-1.178006967464781,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"zkvXJ\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_zkvXJ\",\"compiledSrc\":\"float floatModifier_zkvXJ (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"zkvXJ\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":11.621111629536443,\"y\":10.387501257145662,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"FDYmj\",\"src\":\"float floatModifier (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_FDYmj\",\"compiledSrc\":\"float floatModifier_FDYmj (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"FDYmj\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":7.39525285515956,\"y\":15.83663493989481,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"wiNZh\",\"src\":\"vec4 vPosSource () {\\n  return vec4(vPos, 1.0);\\n}\",\"name\":\"vPosSource\",\"compiledFnName\":\"vPosSource_wiNZh\",\"compiledSrc\":\"vec4 vPosSource_wiNZh () {\\n  return vec4(vPos, 1.0);\\n}\",\"inputs\":[],\"output\":{\"nid\":\"wiNZh\",\"name\":\"vPosSource\",\"type\":\"vec4\"},\"pos\":{\"x\":2.3353430068924905,\"y\":17.56034049260117,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"smzvG\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"},\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"}},{\"input\":{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}]}"
+		},
+		{
+			"date": "2018-04-07T22:38:39.253Z",
+			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"QOOfC\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_QOOfC\",\"compiledSrc\":\"void entry_QOOfC (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"QOOfC\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"yquaw\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_yquaw\",\"compiledSrc\":\"void entry_yquaw (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"yquaw\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":8,\"y\":-15,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"smzvG\",\"src\":\"vec3 posRotator (mat3 rotateZ, vec3 pos) {\\n    return position * rotateZ;\\n}\",\"name\":\"posRotator\",\"compiledFnName\":\"posRotator_smzvG\",\"compiledSrc\":\"vec3 posRotator_smzvG (mat3 rotateZ, vec3 pos) {\\n    return position * rotateZ;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},{\"index\":1,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"}],\"output\":{\"nid\":\"smzvG\",\"name\":\"posRotator\",\"type\":\"vec3\"},\"pos\":{\"x\":-18.241109882549374,\"y\":-1.188907436945315,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"CcjqM\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_CcjqM\",\"compiledSrc\":\"mat3 rotateZ_CcjqM(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-21.21925027153704,\"y\":9.872756865008826,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BpTev\",\"src\":\"float timeSource () {\\n  return time;\\n}\",\"name\":\"timeSource\",\"compiledFnName\":\"timeSource_BpTev\",\"compiledSrc\":\"float timeSource_BpTev () {\\n  return time;\\n}\",\"inputs\":[],\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"},\"pos\":{\"x\":-15.794780277309513,\"y\":18.96672126709612,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"OdZxu\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_OdZxu\",\"compiledSrc\":\"float floatModifier_OdZxu (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"OdZxu\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":16.124987428543392,\"y\":4.49354033498842,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BHFBt\",\"src\":\"float floatModifier (float i1) {\\n  return tan(time * 3.0 * sin(position.y * 0.01) + i1) * 3.0;\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_BHFBt\",\"compiledSrc\":\"float floatModifier_BHFBt (float i1) {\\n  return tan(time * 3.0 * sin(position.y * 0.01) + i1) * 3.0;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"BHFBt\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":-12.455162703426629,\"y\":-1.178006967464781,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"zkvXJ\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_zkvXJ\",\"compiledSrc\":\"float floatModifier_zkvXJ (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"zkvXJ\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":11.621111629536443,\"y\":10.387501257145662,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"FDYmj\",\"src\":\"float floatModifier (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_FDYmj\",\"compiledSrc\":\"float floatModifier_FDYmj (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"FDYmj\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":7.39525285515956,\"y\":15.83663493989481,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"wiNZh\",\"src\":\"vec4 vPosSource () {\\n  return vec4(vPos, 1.0);\\n}\",\"name\":\"vPosSource\",\"compiledFnName\":\"vPosSource_wiNZh\",\"compiledSrc\":\"vec4 vPosSource_wiNZh () {\\n  return vec4(vPos, 1.0);\\n}\",\"inputs\":[],\"output\":{\"nid\":\"wiNZh\",\"name\":\"vPosSource\",\"type\":\"vec4\"},\"pos\":{\"x\":2.3353430068924905,\"y\":17.56034049260117,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"smzvG\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"},\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"}},{\"input\":{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},\"output\":{\"nid\":\"wiNZh\",\"name\":\"vPosSource\",\"type\":\"vec4\"}},{\"input\":{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}]}"
+		},
+		{
+			"date": "2018-04-07T22:51:05.417Z",
+			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"QOOfC\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_QOOfC\",\"compiledSrc\":\"void entry_QOOfC (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"QOOfC\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"yquaw\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_yquaw\",\"compiledSrc\":\"void entry_yquaw (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"yquaw\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":8,\"y\":-15,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"smzvG\",\"src\":\"vec3 posRotator (mat3 rotateZ, vec3 pos) {\\n    return position * rotateZ;\\n}\",\"name\":\"posRotator\",\"compiledFnName\":\"posRotator_smzvG\",\"compiledSrc\":\"vec3 posRotator_smzvG (mat3 rotateZ, vec3 pos) {\\n    return position * rotateZ;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},{\"index\":1,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"}],\"output\":{\"nid\":\"smzvG\",\"name\":\"posRotator\",\"type\":\"vec3\"},\"pos\":{\"x\":-18.241109882549374,\"y\":-1.188907436945315,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"CcjqM\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_CcjqM\",\"compiledSrc\":\"mat3 rotateZ_CcjqM(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-21.21925027153704,\"y\":9.872756865008826,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BpTev\",\"src\":\"float timeSource () {\\n  return time;\\n}\",\"name\":\"timeSource\",\"compiledFnName\":\"timeSource_BpTev\",\"compiledSrc\":\"float timeSource_BpTev () {\\n  return time;\\n}\",\"inputs\":[],\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"},\"pos\":{\"x\":-15.794780277309513,\"y\":18.96672126709612,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"OdZxu\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_OdZxu\",\"compiledSrc\":\"float floatModifier_OdZxu (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"OdZxu\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":16.124987428543392,\"y\":4.49354033498842,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BHFBt\",\"src\":\"float floatModifier (float i1) {\\n  return sin(time * 3.0 * sin(position.y * 0.01) + i1) * 3.0;\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_BHFBt\",\"compiledSrc\":\"float floatModifier_BHFBt (float i1) {\\n  return sin(time * 3.0 * sin(position.y * 0.01) + i1) * 3.0;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"BHFBt\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":-12.455162703426629,\"y\":-1.178006967464781,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"zkvXJ\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_zkvXJ\",\"compiledSrc\":\"float floatModifier_zkvXJ (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"zkvXJ\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":11.621111629536443,\"y\":10.387501257145662,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"FDYmj\",\"src\":\"float floatModifier (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_FDYmj\",\"compiledSrc\":\"float floatModifier_FDYmj (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"FDYmj\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":7.39525285515956,\"y\":15.83663493989481,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"wiNZh\",\"src\":\"vec4 vPosSource () {\\n  return vec4(vPos, 1.0);\\n}\",\"name\":\"vPosSource\",\"compiledFnName\":\"vPosSource_wiNZh\",\"compiledSrc\":\"vec4 vPosSource_wiNZh () {\\n  return vec4(vPos, 1.0);\\n}\",\"inputs\":[],\"output\":{\"nid\":\"wiNZh\",\"name\":\"vPosSource\",\"type\":\"vec4\"},\"pos\":{\"x\":2.3353430068924905,\"y\":17.56034049260117,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"smzvG\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"},\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"}},{\"input\":{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},\"output\":{\"nid\":\"wiNZh\",\"name\":\"vPosSource\",\"type\":\"vec4\"}},{\"input\":{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}]}"
+		},
+		{
+			"date": "2018-04-07T22:51:16.459Z",
+			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"QOOfC\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_QOOfC\",\"compiledSrc\":\"void entry_QOOfC (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"QOOfC\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"yquaw\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_yquaw\",\"compiledSrc\":\"void entry_yquaw (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"yquaw\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":8,\"y\":-15,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"smzvG\",\"src\":\"vec3 posRotator (mat3 rotateZ, vec3 pos) {\\n    return position * rotateZ;\\n}\",\"name\":\"posRotator\",\"compiledFnName\":\"posRotator_smzvG\",\"compiledSrc\":\"vec3 posRotator_smzvG (mat3 rotateZ, vec3 pos) {\\n    return position * rotateZ;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},{\"index\":1,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"}],\"output\":{\"nid\":\"smzvG\",\"name\":\"posRotator\",\"type\":\"vec3\"},\"pos\":{\"x\":-18.241109882549374,\"y\":-1.188907436945315,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"CcjqM\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_CcjqM\",\"compiledSrc\":\"mat3 rotateZ_CcjqM(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-21.21925027153704,\"y\":9.872756865008826,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BpTev\",\"src\":\"float timeSource () {\\n  return time;\\n}\",\"name\":\"timeSource\",\"compiledFnName\":\"timeSource_BpTev\",\"compiledSrc\":\"float timeSource_BpTev () {\\n  return time;\\n}\",\"inputs\":[],\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"},\"pos\":{\"x\":-15.794780277309513,\"y\":18.96672126709612,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"OdZxu\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_OdZxu\",\"compiledSrc\":\"float floatModifier_OdZxu (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"OdZxu\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":16.124987428543392,\"y\":4.49354033498842,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BHFBt\",\"src\":\"float floatModifier (float i1) {\\n  return sin(time * 3.0 * sin(position.y * 0.01) + i1) * 3.0;\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_BHFBt\",\"compiledSrc\":\"float floatModifier_BHFBt (float i1) {\\n  return sin(time * 3.0 * sin(position.y * 0.01) + i1) * 3.0;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"BHFBt\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":-12.455162703426629,\"y\":-1.178006967464781,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"zkvXJ\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_zkvXJ\",\"compiledSrc\":\"float floatModifier_zkvXJ (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"zkvXJ\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":11.621111629536443,\"y\":10.387501257145662,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"FDYmj\",\"src\":\"float floatModifier (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_FDYmj\",\"compiledSrc\":\"float floatModifier_FDYmj (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"FDYmj\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":7.39525285515956,\"y\":15.83663493989481,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"wiNZh\",\"src\":\"vec4 vPosSource () {\\n  return vec4(vPos + 0.6, 1.0);\\n}\",\"name\":\"vPosSource\",\"compiledFnName\":\"vPosSource_wiNZh\",\"compiledSrc\":\"vec4 vPosSource_wiNZh () {\\n  return vec4(vPos + 0.6, 1.0);\\n}\",\"inputs\":[],\"output\":{\"nid\":\"wiNZh\",\"name\":\"vPosSource\",\"type\":\"vec4\"},\"pos\":{\"x\":2.3353430068924905,\"y\":17.56034049260117,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"smzvG\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"},\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"}},{\"input\":{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},\"output\":{\"nid\":\"wiNZh\",\"name\":\"vPosSource\",\"type\":\"vec4\"}},{\"input\":{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}]}"
+		},
+		{
+			"date": "2018-04-07T22:52:34.323Z",
+			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"QOOfC\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_QOOfC\",\"compiledSrc\":\"void entry_QOOfC (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 3.0;\\n  vPos = position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"QOOfC\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"yquaw\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_yquaw\",\"compiledSrc\":\"void entry_yquaw (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"yquaw\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":8,\"y\":-15,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"smzvG\",\"src\":\"vec3 posRotator (mat3 rotateZ, vec3 pos) {\\n    return position * rotateZ;\\n}\",\"name\":\"posRotator\",\"compiledFnName\":\"posRotator_smzvG\",\"compiledSrc\":\"vec3 posRotator_smzvG (mat3 rotateZ, vec3 pos) {\\n    return position * rotateZ;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},{\"index\":1,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"}],\"output\":{\"nid\":\"smzvG\",\"name\":\"posRotator\",\"type\":\"vec3\"},\"pos\":{\"x\":-18.241109882549374,\"y\":-1.188907436945315,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"CcjqM\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_CcjqM\",\"compiledSrc\":\"mat3 rotateZ_CcjqM(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-21.21925027153704,\"y\":9.872756865008826,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BpTev\",\"src\":\"float timeSource () {\\n  return time;\\n}\",\"name\":\"timeSource\",\"compiledFnName\":\"timeSource_BpTev\",\"compiledSrc\":\"float timeSource_BpTev () {\\n  return time;\\n}\",\"inputs\":[],\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"},\"pos\":{\"x\":-15.794780277309513,\"y\":18.96672126709612,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"OdZxu\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_OdZxu\",\"compiledSrc\":\"float floatModifier_OdZxu (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"OdZxu\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":16.124987428543392,\"y\":4.49354033498842,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"BHFBt\",\"src\":\"float floatModifier (float i1) {\\n  return sin(time * 3.0 * sin(position.y * 0.01) + i1) * 3.0;\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_BHFBt\",\"compiledSrc\":\"float floatModifier_BHFBt (float i1) {\\n  return sin(time * 3.0 * sin(position.y * 0.01) + i1) * 3.0;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"BHFBt\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":-12.455162703426629,\"y\":-1.178006967464781,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"zkvXJ\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_zkvXJ\",\"compiledSrc\":\"float floatModifier_zkvXJ (float i1) {\\n  return abs(cos(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"zkvXJ\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":11.621111629536443,\"y\":10.387501257145662,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"FDYmj\",\"src\":\"float floatModifier (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_FDYmj\",\"compiledSrc\":\"float floatModifier_FDYmj (float i1) {\\n  return abs(sin(time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"FDYmj\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":7.39525285515956,\"y\":15.83663493989481,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"wiNZh\",\"src\":\"vec4 vPosSource () {\\n  return vec4(vPos + sin(time), 1.0);\\n}\",\"name\":\"vPosSource\",\"compiledFnName\":\"vPosSource_wiNZh\",\"compiledSrc\":\"vec4 vPosSource_wiNZh () {\\n  return vec4(vPos + sin(time), 1.0);\\n}\",\"inputs\":[],\"output\":{\"nid\":\"wiNZh\",\"name\":\"vPosSource\",\"type\":\"vec4\"},\"pos\":{\"x\":2.3353430068924905,\"y\":17.56034049260117,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"smzvG\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"smzvG\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rotateZ\"},\"output\":{\"nid\":\"CcjqM\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"CcjqM\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"},\"output\":{\"nid\":\"BpTev\",\"name\":\"timeSource\",\"type\":\"float\"}},{\"input\":{\"index\":3,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},\"output\":{\"nid\":\"OdZxu\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":2,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},\"output\":{\"nid\":\"zkvXJ\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":1,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},\"output\":{\"nid\":\"FDYmj\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":0,\"nid\":\"yquaw\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},\"output\":{\"nid\":\"wiNZh\",\"name\":\"vPosSource\",\"type\":\"vec4\"}},{\"input\":{\"index\":1,\"nid\":\"QOOfC\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},\"output\":{\"nid\":\"BHFBt\",\"name\":\"floatModifier\",\"type\":\"float\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}]}"
+		}
+	]
+}

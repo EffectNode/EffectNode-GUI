@@ -14,6 +14,7 @@
           <div class="editor-bg-overlay" v-if="currentObj" @click="() => { currentObj = false }"></div>
         </transition>
 
+        <!-- <transition name="slide-in-left"> -->
         <div class="editor-area" v-if="currentObj">
           <div :key="node.nid" v-for="(node, iNode) in nodes" v-if="node.nid === currentObj.userData.node.nid">
 
@@ -21,20 +22,25 @@
 
             <button @click="() => { currentObj = false }">close</button>
             <br />
-            <textarea :style="{ color: node.error ? 'red': 'black' }"  cols="50" rows="10" v-model="node.src" @input="updateSRC({ node, iNode, nodes })" />
-            <br />
             <span :style="{ color: node.error ? 'red': 'black' }" v-if="node">{{ node.error }} <br /></span>
+            <br />
+            <textarea class="glsl-edit" :style="{ color: node.error ? 'red': 'black' }"  cols="50" rows="10" v-model="node.src" @input="updateSRC({ node, iNode, nodes })" />
             <!-- node<br/><pre>{{ node }}</pre>
             connections<br/><pre>{{ connections }}</pre> -->
+            <h1>VertexShader</h1>
+            <pre>{{ glsl.vertexShader }}</pre>
+            <h1>FragmentShader</h1>
+            <pre>{{ glsl.fragmentShader }}</pre>
           </div>
 
         </div>
+        <!-- </transition> -->
 
-        <div class="tools" v-if="!welcome">
+        <div class="tools" v-if="!welcome && !currentObj">
           <button @click="addEffectNode({ shaderType: EN.VERTEX_SHADER })">+VertexNode</button>
           <button @click="addEffectNode({ shaderType: EN.FRAGMENT_SHADER })">+FragmentNode</button>
           <br />
-          <input v-if="variationIndex && EffectNode && EffectNode.variations" v-model="variationIndex" type="range" min="0" :max="EffectNode.variations.length - 1" step="1">
+          <input v-if="EffectNode && EffectNode.variations" v-model="variationIndex" type="range" min="0" :max="EffectNode.variations.length - 1" step="1">
           <!-- <select :value="EffectNode.variations.length - 1" @input="loadVar({ iVar })">
             <option :key="iVar" v-for="(eVar, iVar) in EffectNode.variations">
               {{ eVar.date }}
@@ -56,9 +62,11 @@
             <label for=""><input type="checkbox" v-model="useBloom">use bloom</label>
             <br />
             <ol>
+              <li>Load Save: <input type="file" @change="(evt) => { restoreProject(evt); welcome = false }"></li>
               <li><button @click="hydrate({ use: 'continue' })">Continue</button></li>
-              <li><button @click="hydrate({ use: 'template1' })">Start with Clean Template</button></li>
-              <li><button @click="hydrate({ use: 'template2' })">Start with Template 2</button></li>
+              <li><button @click="hydrate({ use: 'template1' })">Clean and Start with Clean Template</button></li>
+              <li><button @click="hydrate({ use: 'template2' })">Clean and Start with Template 2</button></li>
+              <li><button @click="hydrate({ use: 'template3' })">Clean and Start with Template 3</button></li>
             </ol>
           </div>
           <div class="full xy-center" v-if="loading">
@@ -66,13 +74,9 @@
           </div>
         </div>
 
-        <div class="debug-area" v-if="currentObj">
-          <h1>VertexShader</h1>
-          <pre>{{ glsl.vertexShader }}</pre>
+        <!-- <div class="debug-area" v-if="currentObj">
 
-          <h1>FragmentShader</h1>
-          <pre>{{ glsl.fragmentShader }}</pre>
-        </div>
+        </div> -->
         <!-- CREATION -->
         <!--  -->
 
@@ -85,7 +89,7 @@
       :fov="75"
       :aspect="size.aspect"
       :near="1"
-      :far="1000"
+      :far="10000"
       :position="camPos"
       @camera="(v) => { camera = v }"
     />
@@ -138,10 +142,10 @@
         </Object3D>
       </Object3D>
 
-      <Object3D>
+      <Object3D pz="-10">
         <Points>
-          <SphereBufferGeometry :r="8" :nx="256" :ny="256" />
-          <ShaderMaterial :vs="glsl.vertexShader" :fs="glsl.fragmentShader" :uniforms="animatable" />
+          <SphereBufferGeometry :r="10" :nx="200" :ny="200" />
+          <ShaderMaterial :transparent="true" :vs="glsl.vertexShader" :fs="glsl.fragmentShader" :uniforms="animatable" />
         </Points>
       </Object3D>
 
@@ -209,6 +213,7 @@ export default {
       this.setupBloom({ dpi: window.devicePixelRatio })
       this.setupTouch()
       this.setupGLSLMaker()
+      // this.hydrate({ use: 'template1' })
     },
     detectFast () {
       var canvas = document.createElement('canvas')
@@ -517,7 +522,7 @@ export default {
         this.tryRefreshGUI()
         this.tryRefreshGLSL()
       }, () => {
-        // this.removeConnectionAtInput({ input: mesh })
+        this.removeConnectionAtInput({ input: mesh })
         this.tryRefreshGLSL()
       })
     },
@@ -670,14 +675,14 @@ export default {
         this.tryRefreshGUI()
         this.tryRefreshGLSL()
       }, () => {
-        // this.removeConnectionAtOutput({ output: mesh })
+        this.removeConnectionAtOutput({ output: mesh })
         this.tryRefreshGLSL()
       })
     },
     checkType ({ iNode, oNode, inputData, outputData }) {
       return (
-        (iNode.shaderType === oNode.shaderType) &&
-        (inputData.type === outputData.type)
+        (iNode.shaderType === oNode.shaderType)// &&
+        // (inputData.type === outputData.type)
       )
     },
     addConnectionOutputHand ({ hand, land }) {
@@ -731,6 +736,10 @@ export default {
     },
     loadVar ({ fromVar, toVar }) {
       this.$nextTick(() => {
+        if (fromVar === this.EffectNode.variations - 1) {
+          this.makeVar()
+        }
+
         let history = EN.loadVariation({ root: this.EffectNode, index: toVar })
         this.EffectNode.state = history
 
@@ -740,6 +749,10 @@ export default {
       })
     },
     makeVar () {
+      if (this.EffectNode.variations.length === 0) {
+        EN.makeVariation({ root: this.EffectNode })
+        this.variationIndex++
+      }
       EN.makeVariation({ root: this.EffectNode })
       this.variationIndex++
       EN.saveRoot({ root: this.EffectNode })
@@ -760,12 +773,13 @@ export default {
     setupGLSLMaker () {
       setInterval(() => {
         if (this.glsl.needsCompile && this.EffectNode) {
+          this.glsl.needsUpdate = false
           this.glsl = {
             ...EN.makeGLSL({ root: this.EffectNode }),
             needsUpdate: false
           }
         }
-      }, 333)
+      }, 100)
     },
     log (v) {
       console.log(v)
@@ -811,15 +825,28 @@ export default {
       return JSON.stringify(conn)
     },
     addEffectNode ({ shaderType = EN.VERTEX_SHADER }) {
-      this.nodes.push(EN.makeNode({
-        src:
-`float floatSource (float i1) {
-  return time;
+      if (shaderType === EN.VERTEX_SHADER) {
+        this.nodes.push(EN.makeNode({
+          src:
+`float floatModifier (float i1) {
+  return sin(time * 3.0 + i1) * 3.0;
 }`,
-        isEntry: false,
-        shaderType,
-        nodePos: { ...this.camera.position, y: 8, z: 0 }
-      }))
+          isEntry: false,
+          shaderType,
+          nodePos: { ...this.camera.position, y: this.camera.position.y + 12, z: 0 }
+        }))
+      } else {
+        this.nodes.push(EN.makeNode({
+          src:
+`float floatModifier (float i1) {
+  return abs(cos(time + i1));
+}`,
+          isEntry: false,
+          shaderType,
+          nodePos: { ...this.camera.position, y: this.camera.position.y + 12, z: 0 }
+        }))
+      }
+
       this.tryRefreshGUI()
       this.tryRefreshGLSL()
     },
@@ -856,7 +883,7 @@ export default {
       welcome: true,
       useBloom: false,
       currentObj: false,
-      camPos: { x: 0, y: 0, z: 25 },
+      camPos: { x: 0, y: 0, z: 35 },
       boxDragControl: false,
       toucher: false,
       size: {
@@ -953,6 +980,8 @@ export default {
   -webkit-overflow-scrolling: touch;
   max-width: 100%;
   max-height: 100%;
+
+  background-color: rgba(255,255,255,0.2);
 }
 
 .welcome-bg-overlay,
@@ -1016,5 +1045,18 @@ textarea{
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+
+.slide-in-left-enter-active, .slide-in-left-leave-active {
+  transform: translateX(0%);
+  transition: transform 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.slide-in-left-enter, .slide-in-left-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  transform: translateX(-100%);
+}
+
+.glsl-edit{
+  width: 100%;
+  max-width: 768px;
 }
 </style>

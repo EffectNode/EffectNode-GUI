@@ -172,6 +172,11 @@ export const makeNode = ({ src, oldNode, shaderType = VERTEX_SHADER, isEntry = f
 
   if (oldNode) {
     newNode.pos = oldNode.pos
+
+    newNode.output = oldNode.output
+    newNode.output.type = fnOutputType
+    newNode.output.name = fnName
+    newNode.output.nid = nid
   }
 
   newNode.inputs = argsList.reduce((accu, v) => {
@@ -209,28 +214,28 @@ export const makeTemplateNodes = ({ tid = 'template1' }) => {
   if (tid === 'template1') {
     nl.push(
       makeNode({
-        nodePos: { x: -6.5, y: -8, z: 0 },
+        nodePos: { x: -8.0, y: -15.0, z: 0 },
         shaderType: VERTEX_SHADER,
         isEntry: true,
         src:
 `void entry (vec3 pos, float x, float y, float z, float w) {
-
-  vec4 newPosition = vec4(vec3(position) + pos, w) + vec4(x, y, z, w);
-
+  vec4 newPosition = vec4(vec3(position) + vec3(pos) + vec3(x, y, z), w);
   vec4 mvPosition = modelViewMatrix * newPosition;
   vec4 outputPos = projectionMatrix * mvPosition;
   gl_Position = outputPos;
+  gl_PointSize = 3.0;
+  vPos = position;
 }`
       })
     )
     nl.push(
       makeNode({
-        nodePos: { x: 6.5, y: -8, z: 0 },
+        nodePos: { x: 8.0, y: -15.0, z: 0 },
         shaderType: FRAGMENT_SHADER,
         isEntry: true,
         src:
-`void entry (float r, float g, float b, float a) {
-  gl_FragColor = vec4(r, g, b, a);
+`void entry (vec4 color, float r, float g, float b, float a) {
+  gl_FragColor = color + vec4(r, g, b, a);
 }`
       })
     )
@@ -248,9 +253,20 @@ export const makeTemplate = ({ tid = '1' }) => {
       src: `uniform float time;`
     }
   ]
+  template.state.varyings = [
+    {
+      src: `varying vec3 vPos;`
+    }
+  ]
 
   if (tid === 'template2') {
     template = require('./Demos/Demo1.json')
+    template.state.varyings = template.state.varyings || []
+  }
+
+  if (tid === 'template3') {
+    template = require('./Demos/Demo2.json')
+    template.state.varyings = template.state.varyings || []
   }
 
   return template
@@ -361,6 +377,13 @@ export const getUniforms = ({ uniforms }) => {
   }, '')
 }
 
+export const getVaryings = ({ varyings }) => {
+  return varyings.reduce((accu, varying) => {
+    accu += varying.src + '\n'
+    return accu
+  }, '')
+}
+
 export const getEntryExecs = ({ entry, nodes, connections }) => {
   let getConnection = ({ nid, inputIndex }) => {
     return connections.find(iC => iC.input.nid === nid && iC.input.index === inputIndex)
@@ -372,11 +395,11 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
     } else if (type === 'float' && name === 'a') {
       return '1.0'
     } else if (type === 'float' && name === 'r') {
-      return '1.0'
+      return '0.0'
     } else if (type === 'float' && name === 'g') {
-      return '1.0'
+      return '0.0'
     } else if (type === 'float' && name === 'b') {
-      return '1.0'
+      return '0.0'
     } else if (type === 'float') {
       return '0.0'
     } else if (type === 'vec4') {
@@ -517,11 +540,13 @@ export const getFragmentExecutions = ({ nodes, connections }) => {
 // lol
 export const makeGLSL = ({ root }) => {
   let nodes = root.state.nodes
-  let uniforms = root.state.uniforms
-  let connections = root.state.connections
+  let uniforms = root.state.uniforms || []
+  let varyings = root.state.varyings || []
+  let connections = root.state.connections || []
   // let vertexEntries = getVertexEntries({ nodes })
 
   let Unis = getUniforms({ uniforms })
+  let Vars = getVaryings({ varyings })
 
   let vFns = getVertexFunctions({ nodes })
   let vExecs = getVertexExecutions({ nodes, connections })
@@ -540,6 +565,8 @@ VV     VV SS
 */
 // Uniforms //
 ${Unis}
+// Varyings //
+${Vars}
 // Functions //
 ${vFns}
 // Main function executions //
@@ -553,6 +580,8 @@ FFFF     SSSSS
 FF           SS
 FF       SSSSS
 */
+// Varyings //
+${Vars}
 // Uniforms //
 ${Unis}
 // Functions //
