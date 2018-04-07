@@ -135,6 +135,12 @@
         </Object3D>
       </Object3D>
 
+      <Object3D>
+        <Points>
+          <SphereBufferGeometry :r="3" :nx="256" :ny="256" />
+          <ShaderMaterial :vs="glsl.vertexShader" :fs="glsl.fragmentShader" :uniforms="animatable" />
+        </Points>
+      </Object3D>
 
     </Scene>
 
@@ -456,7 +462,7 @@ export default {
       })
     },
     tryRefreshGLSL () {
-      this.glsl.needsUpdate = true
+      this.glsl.needsCompile = true
     },
     tryRefreshGUI () {
       this.$nextTick(() => {
@@ -691,7 +697,7 @@ export default {
     },
     setupGLSLMaker () {
       setInterval(() => {
-        if (this.glsl.needsUpdate && this.EffectNode) {
+        if (this.glsl.needsCompile && this.EffectNode) {
           this.glsl = {
             ...EN.makeGLSL({ root: this.EffectNode }),
             needsUpdate: false
@@ -760,7 +766,9 @@ export default {
       if (this.trackBallControls) {
         this.trackBallControls.update()
       }
-      // this.animatable.time.value = window.performance.now() * 0.001
+
+      this.animatable.time.value = window.performance.now() * 0.001
+
       if (this.composer && this.useBloom) {
         this.composer.render()
       } else if (this.scene && this.camera && this.renderer) {
@@ -770,14 +778,17 @@ export default {
   },
   data () {
     return {
+      animatable: {
+        time: { value: 0 }
+      },
       variationIndex: null,
       Math,
       refreshToggle: true,
       EN,
       glsl: {
         needsUpdate: false,
-        vertexShadedr: ``,
-        fragmentShader: ``
+        vertexShadedr: false,
+        fragmentShader: false
       },
       loading: false,
       welcome: true,

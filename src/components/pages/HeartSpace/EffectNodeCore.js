@@ -190,7 +190,7 @@ export const makeNode = ({ src, oldNode, shaderType = VERTEX_SHADER, isEntry = f
 
 export const updateSRC = ({ node, iNode, nodes }) => {
   // let oldNode = nodes[iNode]
-  let newNode = makeNode({ src: node.src, oldNode: node })
+  let newNode = makeNode({ src: node.src, oldNode: node, shaderType: node.shaderType || FRAGMENT_SHADER })
   nodes[iNode] = newNode
 }
 
@@ -213,8 +213,13 @@ export const makeTemplateNodes = ({ tid = 'template1' }) => {
         shaderType: VERTEX_SHADER,
         isEntry: true,
         src:
-`void entry (float x, float y, float z, float w) {
-  gl_Position = vec4(x, y, z, w);
+`void entry (vec3 pos, float x, float y, float z, float w) {
+
+  vec4 newPosition = vec4(vec3(pos), w) + vec4(x, y, z, w);
+
+  vec4 mvPosition = modelViewMatrix * newPosition;
+  vec4 outputPos = projectionMatrix * mvPosition;
+  gl_Position = outputPos;
 }`
       })
     )
@@ -338,6 +343,12 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
       return 'vec3(0.0)'
     } else if (type === 'vec2') {
       return 'vec2(0.0)'
+    } else if (type === 'mat2') {
+      return 'mat2(1.0)'
+    } else if (type === 'mat3') {
+      return 'mat3(1.0)'
+    } else if (type === 'mat4') {
+      return 'mat4(1.0)'
     } else if (type === 'bool') {
       return 'false'
     }
@@ -428,7 +439,7 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
   }
   recursive(entry)
 
-  cachedComps = concatStr(cachedCompsArr)
+  cachedComps = concatStr(cachedCompsArr.slice().reverse())
 
   // cachedComps = _.uniq(cachedComps.split(';')).join(';')
 
