@@ -66,7 +66,7 @@
           </div>
         </div>
 
-        <div class="debug-area" v-if="!currentObj && !welcome">
+        <div class="debug-area" v-if="currentObj">
           <h1>VertexShader</h1>
           <pre>{{ glsl.vertexShader }}</pre>
 
