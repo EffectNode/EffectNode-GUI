@@ -148,10 +148,16 @@ export default {
         case 'float':
           return 32
         case 'vec2':
-          return 5
+          return 3
         case 'vec3':
           return 3
         case 'vec4':
+          return 3
+        case 'mat2':
+          return 4
+        case 'mat3':
+          return 4
+        case 'mat4':
           return 4
         default:
           return 32

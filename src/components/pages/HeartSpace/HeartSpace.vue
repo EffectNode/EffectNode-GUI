@@ -199,9 +199,53 @@ export default {
       })
     },
     setup () {
-      this.setupBloom({ dpi: 1.25 })
+      // let dpi = 1.25
+      let isFast = this.detectFast()
+      if (isFast) {
+        this.useBloom = true
+        this.$forceUpdate()
+        // dpi = 2.0
+      }
+      this.setupBloom({ dpi: window.devicePixelRatio })
       this.setupTouch()
       this.setupGLSLMaker()
+    },
+    detectFast () {
+      var canvas = document.createElement('canvas')
+      var gl
+      var debugInfo
+      var vendor
+      var renderer
+
+      try {
+        gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+      } catch (e) {
+      }
+
+      if (gl) {
+        debugInfo = gl.getExtension('WEBGL_debug_renderer_info')
+        vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL)
+        renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
+      }
+      console.log(debugInfo)
+      console.log(vendor)
+      console.log(renderer)
+
+      let iOSVer = (function iOSversion () {
+        if (/iP(hone|od|ad)/.test(navigator.platform)) {
+          // supports iOS 2.0 and later: <http://bit.ly/TJjs1V>
+          var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/)
+          return [parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)]
+        }
+      }())
+
+      if (
+        (renderer.toUpperCase().indexOf('ATI') !== -1 && devicePixelRatio > 1.0) ||
+        (renderer.toUpperCase().indexOf('NVIDIA') !== -1 && devicePixelRatio > 1.0) ||
+        (iOSVer && iOSVer[0] >= 11)
+      ) {
+        return true
+      }
     },
     setupTouch () {
       var touchSurface = this.$refs.toucher
@@ -264,7 +308,7 @@ export default {
       let bloomPass = this.bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85) // 1.0, 9, 0.5, 512)
       // bloomPass.renderToScreen = true;
 
-      bloomPass.threshold = Number(0.95)
+      bloomPass.threshold = Number(0.5)
       bloomPass.strength = Number(0.5)
       bloomPass.radius = Number(0.5)
 
@@ -686,12 +730,14 @@ export default {
       this.removeConnectionAtOutput({ output: event.object })
     },
     loadVar ({ fromVar, toVar }) {
-      let history = EN.loadVariation({ root: this.EffectNode, index: toVar })
-      this.EffectNode.state = history
+      this.$nextTick(() => {
+        let history = EN.loadVariation({ root: this.EffectNode, index: toVar })
+        this.EffectNode.state = history
 
-      this.$forceUpdate()
-      this.tryRefreshGUI()
-      this.tryRefreshGLSL()
+        this.$forceUpdate()
+        this.tryRefreshGUI()
+        this.tryRefreshGLSL()
+      })
     },
     makeVar () {
       EN.makeVariation({ root: this.EffectNode })
