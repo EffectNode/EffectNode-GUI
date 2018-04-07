@@ -248,6 +248,11 @@ export const makeTemplate = ({ tid = '1' }) => {
       src: `uniform float time;`
     }
   ]
+
+  if (tid === 'template2') {
+    template = require('./Demos/Demo1.json')
+  }
+
   return template
 }
 

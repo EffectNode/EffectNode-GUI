@@ -58,6 +58,7 @@
             <ol>
               <li><button @click="hydrate({ use: 'continue' })">Continue</button></li>
               <li><button @click="hydrate({ use: 'template1' })">Start with Clean Template</button></li>
+              <li><button @click="hydrate({ use: 'template2' })">Start with Template 2</button></li>
             </ol>
           </div>
           <div class="full xy-center" v-if="loading">
