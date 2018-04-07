@@ -147,8 +147,9 @@ import EffectBox from './EffectBox/EffectBox'
 /* eslint-disable */
 import * as TWEEN from '@tweenjs/tween.js'
 import * as THREE from 'three'
-import 'imports-loader?THREE=three!three/examples/js/controls/DragControls.js'
+// import 'imports-loader?THREE=three!three/examples/js/controls/DragControls.js'
 import 'imports-loader?THREE=three!./TrackTrack.js'
+import 'imports-loader?THREE=three!./DragConCon.js'
 
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer.js'
 import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass.js'
