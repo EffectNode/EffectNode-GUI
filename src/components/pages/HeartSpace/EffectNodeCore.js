@@ -215,7 +215,7 @@ export const makeTemplateNodes = ({ tid = 'template1' }) => {
         src:
 `void entry (vec3 pos, float x, float y, float z, float w) {
 
-  vec4 newPosition = vec4(vec3(pos), w) + vec4(x, y, z, w);
+  vec4 newPosition = vec4(vec3(position) + pos, w) + vec4(x, y, z, w);
 
   vec4 mvPosition = modelViewMatrix * newPosition;
   vec4 outputPos = projectionMatrix * mvPosition;
@@ -256,6 +256,7 @@ export const hydrate = ({ use }) => {
     setTimeout(() => {
       let template = makeTemplate({ tid: use })
       let root = template
+
       if (use === 'continue') {
         let dbRoot = ENdb.getRoot()
         if (!dbRoot) {
@@ -265,8 +266,40 @@ export const hydrate = ({ use }) => {
           root = dbRoot
         }
       }
+
       resolve(root)
     }, 300)
+  })
+}
+
+export const exportRoot = ({ root }) => {
+  return new Promise((resolve, reject) => {
+    var href = document.createElement('a')
+    href.download = 'EffectNode.com.json'
+    href.href = URL.createObjectURL(new Blob([JSON.stringify(root, null, '\t')]))
+    href.click()
+    resolve()
+  })
+}
+
+export const readTextFile = ({ file }) => {
+  return new Promise((resolve, reject) => {
+    var reader = new FileReader()
+    reader.onload = () => {
+      resolve(reader.result)
+    }
+    reader.readAsText(file)
+  })
+}
+
+export const JSON2OBJ = (json) => {
+  return new Promise((resolve, reject) => {
+    try {
+      let obj = JSON.parse(json)
+      resolve(obj)
+    } catch (e) {
+      reject(e)
+    }
   })
 }
 
@@ -333,7 +366,11 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
       return '1.0'
     } else if (type === 'float' && name === 'a') {
       return '1.0'
+    } else if (type === 'float' && name === 'r') {
+      return '1.0'
     } else if (type === 'float' && name === 'g') {
+      return '1.0'
+    } else if (type === 'float' && name === 'b') {
       return '1.0'
     } else if (type === 'float') {
       return '0.0'

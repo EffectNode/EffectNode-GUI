@@ -42,6 +42,8 @@
           </select> -->
 
           <button @click="makeVar()">Make Variation</button>
+          <button @click="EN.exportRoot({ root: EffectNode })">Export Proj</button>
+          <input type="file" @change="restoreProject">
         </div>
 
         <transition name="fade">
@@ -137,7 +139,7 @@
 
       <Object3D>
         <Points>
-          <SphereBufferGeometry :r="3" :nx="256" :ny="256" />
+          <SphereBufferGeometry :r="8" :nx="256" :ny="256" />
           <ShaderMaterial :vs="glsl.vertexShader" :fs="glsl.fragmentShader" :uniforms="animatable" />
         </Points>
       </Object3D>
@@ -386,6 +388,19 @@ export default {
       //     console.error('cant find output meshes')
       //   }
       // })
+    },
+    restoreProject (evt) {
+      EN
+        .readTextFile({
+          file: evt.target.files[0]
+        })
+        .then(EN.JSON2OBJ)
+        .then((o) => {
+          this.EffectNode = o
+          this.tryRefreshGUI()
+          this.tryRefreshGLSL()
+          this.variationIndex = o.variations.length - 1
+        })
     },
     getInputPos ({ conn }) {
       try {
