@@ -3,7 +3,7 @@
 
     <Mesh @attach="(v) => { box = v }" @detach="() => { }">
       <CircleBufferGeometry :r="2.5" />
-      <MeshBasicMaterial :opacity="0.5" />
+      <MeshBasicMaterial :opacity="0.0" />
     </Mesh>
 
     <Object3D @element="(v) => { group = v }">

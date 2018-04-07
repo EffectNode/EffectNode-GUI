@@ -34,9 +34,13 @@
           <button @click="addEffectNode({ shaderType: EN.VERTEX_SHADER })">+VertexNode</button>
           <button @click="addEffectNode({ shaderType: EN.FRAGMENT_SHADER })">+FragmentNode</button>
           <br />
-          <button :key="iVar" v-for="(eVar, iVar) in EffectNode.variations" @click="loadVar({ iVar })">
-            {{ eVar.date }}
-          </button>
+          <input v-if="variationIndex && EffectNode && EffectNode.variations" v-model="variationIndex" type="range" min="0" :max="EffectNode.variations.length - 1" step="1">
+          <!-- <select :value="EffectNode.variations.length - 1" @input="loadVar({ iVar })">
+            <option :key="iVar" v-for="(eVar, iVar) in EffectNode.variations">
+              {{ eVar.date }}
+            </option>
+          </select> -->
+
           <button @click="makeVar()">Make Variation</button>
         </div>
 
@@ -180,6 +184,7 @@ export default {
       this.loading = false
       this.welcome = false
       this.$nextTick(() => {
+        this.variationIndex = this.EffectNode.variations.length - 1
         this.tryRefreshGLSL()
         this.tryRefreshGUI()
       })
@@ -658,15 +663,17 @@ export default {
     outputClickObj (event) {
       this.removeConnectionAtOutput({ output: event.object })
     },
-    loadVar ({ iVar }) {
-      let history = EN.loadVariation({ root: this.EffectNode, index: iVar })
+    loadVar ({ fromVar, toVar }) {
+      let history = EN.loadVariation({ root: this.EffectNode, index: toVar })
       this.EffectNode.state = history
+
       this.$forceUpdate()
       this.tryRefreshGUI()
       this.tryRefreshGLSL()
     },
     makeVar () {
       EN.makeVariation({ root: this.EffectNode })
+      this.variationIndex++
       EN.saveRoot({ root: this.EffectNode })
       this.$forceUpdate()
     },
@@ -738,7 +745,7 @@ export default {
     addEffectNode ({ shaderType = EN.VERTEX_SHADER }) {
       this.nodes.push(EN.makeNode({
         src:
-`float floatSource () {
+`float floatSource (float i1) {
   return time;
 }`,
         isEntry: false,
@@ -763,6 +770,7 @@ export default {
   },
   data () {
     return {
+      variationIndex: null,
       Math,
       refreshToggle: true,
       EN,
@@ -795,6 +803,11 @@ export default {
     }
   },
   watch: {
+    variationIndex (toVar, fromVar) {
+      if (fromVar !== null) {
+        this.loadVar({ toVar, fromVar })
+      }
+    }
   },
   computed: {
     connections: {
