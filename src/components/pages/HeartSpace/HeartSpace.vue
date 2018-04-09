@@ -67,6 +67,7 @@
               <li><button @click="hydrate({ use: 'template1' })">Clean and Start with Clean Template</button></li>
               <li><button @click="hydrate({ use: 'template2' })">Clean and Start with Template 2</button></li>
               <li><button @click="hydrate({ use: 'template3' })">Clean and Start with Template 3</button></li>
+              <li><button @click="hydrate({ use: 'template4' })">Clean and Start with Template 4</button></li>
             </ol>
           </div>
           <div class="full xy-center" v-if="loading">

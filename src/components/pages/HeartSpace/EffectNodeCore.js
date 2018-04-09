@@ -274,6 +274,13 @@ export const makeTemplate = ({ tid = '1' }) => {
     }
   }
 
+  if (tid === 'template4') {
+    template = {
+      ...template,
+      ...require('./Demos/Demo3.json')
+    }
+  }
+
   return template
 }
 
