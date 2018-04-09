@@ -57,7 +57,7 @@ export default {
   methods: {
     makeArray ({ equations, settings }) {
       settings = settings.reduce((accu, setting) => {
-        accu[setting.k] = setting.v
+        accu[setting.k] = Number(setting.v)
         return accu
       }, {
         i: 0,
@@ -72,12 +72,7 @@ export default {
       equations = equations.reduce((accu, equation) => {
         accu[equation.k] = equation.v
         return accu
-      }, {
-      })
-
-      Object.keys(settings).forEach((item, key) => {
-        settings[key] = Number(item)
-      })
+      }, {})
 
       let array = []
       let n = settings.n

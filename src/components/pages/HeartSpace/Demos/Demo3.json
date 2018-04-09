@@ -109,8 +109,8 @@
 					"type": "void"
 				},
 				"pos": {
-					"x": 8,
-					"y": -15,
+					"x": 13.598840489455146,
+					"y": -13.88023190210898,
 					"z": 0
 				}
 			},
@@ -213,8 +213,8 @@
 					"type": "vec4"
 				},
 				"pos": {
-					"x": 3.174615144732582,
-					"y": 7.748288261059983,
+					"x": 6.941107837638762,
+					"y": 2.2512448714131192,
 					"z": 0
 				}
 			},
@@ -243,6 +243,34 @@
 				"pos": {
 					"x": -0.5375267094879059,
 					"y": 12.651552884053359,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "fragmentShader",
+				"isEntry": false,
+				"nid": "mDwLH",
+				"src": "float floatModifier (float i1) {\n  return abs(cos(vPos.z + time + i1));\n}",
+				"name": "floatModifier",
+				"compiledFnName": "floatModifier_mDwLH",
+				"compiledSrc": "float floatModifier_mDwLH (float i1) {\n  return abs(cos(vPos.z + time + i1));\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "mDwLH",
+						"direction": "in",
+						"type": "float",
+						"name": "i1"
+					}
+				],
+				"output": {
+					"nid": "mDwLH",
+					"name": "floatModifier",
+					"type": "float"
+				},
+				"pos": {
+					"x": 18.838187165821623,
+					"y": 2.1164230493550353,
 					"z": 0
 				}
 			}
@@ -292,16 +320,44 @@
 			},
 			{
 				"input": {
-					"index": 0,
+					"index": 1,
 					"nid": "AifVV",
 					"direction": "in",
-					"type": "vec4",
-					"name": "color"
+					"type": "float",
+					"name": "r"
 				},
 				"output": {
-					"nid": "YYcot",
+					"nid": "mDwLH",
 					"name": "floatModifier",
-					"type": "vec4"
+					"type": "float"
+				}
+			},
+			{
+				"input": {
+					"index": 3,
+					"nid": "AifVV",
+					"direction": "in",
+					"type": "float",
+					"name": "b"
+				},
+				"output": {
+					"nid": "mDwLH",
+					"name": "floatModifier",
+					"type": "float"
+				}
+			},
+			{
+				"input": {
+					"index": 2,
+					"nid": "AifVV",
+					"direction": "in",
+					"type": "float",
+					"name": "g"
+				},
+				"output": {
+					"nid": "mDwLH",
+					"name": "floatModifier",
+					"type": "float"
 				}
 			}
 		],
@@ -338,7 +394,7 @@
 								},
 								{
 									"k": "n",
-									"v": 10000
+									"v": "8000"
 								},
 								{
 									"k": "ii",
@@ -354,15 +410,15 @@
 								},
 								{
 									"k": "scale",
-									"v": 20
+									"v": "20"
 								},
 								{
 									"k": "k",
-									"v": 0.3
+									"v": "0.3"
 								},
 								{
 									"k": "r",
-									"v": 30
+									"v": "30"
 								}
 							],
 							"equations": [
@@ -388,7 +444,7 @@
 								},
 								{
 									"k": "z2",
-									"v": "0"
+									"v": "1"
 								}
 							],
 							"group": 3,
@@ -419,6 +475,10 @@
 		{
 			"date": "2018-04-09T02:01:33.903Z",
 			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"uqRmb\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(position) + vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 1.5;\\n  vPos = vec3(position);\\n\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_uqRmb\",\"compiledSrc\":\"void entry_uqRmb (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(position) + vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 1.5;\\n  vPos = vec3(position);\\n\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"uqRmb\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"uqRmb\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"uqRmb\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"uqRmb\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"uqRmb\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"uqRmb\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"AifVV\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_AifVV\",\"compiledSrc\":\"void entry_AifVV (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"AifVV\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":8,\"y\":-15,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"ConOw\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_ConOw\",\"compiledSrc\":\"mat3 rotateZ_ConOw(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"ConOw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"ConOw\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-18.96269257277384,\"y\":8.554181312626637,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"ejLye\",\"src\":\"float floatModifier (float i1) {\\n  return fract(time * 0.1) * 3.14 * 2.0;\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_ejLye\",\"compiledSrc\":\"float floatModifier_ejLye (float i1) {\\n  return fract(time * 0.1) * 3.14 * 2.0;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"ejLye\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"ejLye\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":-15.717536118897662,\"y\":17.59656850175513,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"YvvuQ\",\"src\":\"vec3 posMaker (mat3 rZ) {\\n  return position + rZ * position;\\n}\",\"name\":\"posMaker\",\"compiledFnName\":\"posMaker_YvvuQ\",\"compiledSrc\":\"vec3 posMaker_YvvuQ (mat3 rZ) {\\n  return position + rZ * position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"YvvuQ\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rZ\"}],\"output\":{\"nid\":\"YvvuQ\",\"name\":\"posMaker\",\"type\":\"vec3\"},\"pos\":{\"x\":-13.423548144418891,\"y\":-1.2029427037294234,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"YYcot\",\"src\":\"vec4 floatModifier () {\\n  return vec4(vPos + 0.6, 0.5);\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_YYcot\",\"compiledSrc\":\"vec4 floatModifier_YYcot () {\\n  return vec4(vPos + 0.6, 0.5);\\n}\",\"inputs\":[],\"output\":{\"nid\":\"YYcot\",\"name\":\"floatModifier\",\"type\":\"vec4\"},\"pos\":{\"x\":3.174615144732582,\"y\":7.748288261059983,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"LaVDX\",\"src\":\"float floatModifier (float i1) {\\n  return sin(time * 3.0 + i1) * 3.0;\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_LaVDX\",\"compiledSrc\":\"float floatModifier_LaVDX (float i1) {\\n  return sin(time * 3.0 + i1) * 3.0;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"LaVDX\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"LaVDX\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":-0.5375267094879059,\"y\":12.651552884053359,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"ConOw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"},\"output\":{\"nid\":\"ejLye\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":0,\"nid\":\"uqRmb\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"YvvuQ\",\"name\":\"posMaker\",\"type\":\"vec3\"}},{\"input\":{\"index\":0,\"nid\":\"YvvuQ\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"},\"output\":{\"nid\":\"ConOw\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":0,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},\"output\":{\"nid\":\"YYcot\",\"name\":\"floatModifier\",\"type\":\"vec4\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}],\"previews\":{\"index\":0,\"choices\":[{\"title\":\"Flower Line Segments\",\"uniforms\":{\"time\":{\"value\":0}},\"objType\":\"LineSegments\",\"geoType\":\"MathLineSegments\",\"attributes\":[{\"name\":\"position\",\"src\":\"attribute vec3 position;\",\"settings\":[{\"k\":\"i\",\"v\":0},{\"k\":\"n\",\"v\":10000},{\"k\":\"ii\",\"v\":0},{\"k\":\"nn\",\"v\":1},{\"k\":\"pi2\",\"v\":6.283185307179586},{\"k\":\"scale\",\"v\":20},{\"k\":\"k\",\"v\":0.3},{\"k\":\"r\",\"v\":30}],\"equations\":[{\"k\":\"x1\",\"v\":\"r * cos(k * pi2 * i / n * scale) * cos(pi2 * i / n * scale)\"},{\"k\":\"y1\",\"v\":\"r * cos(k * pi2 * i / n * scale) * sin(pi2 * i / n * scale)\"},{\"k\":\"z1\",\"v\":\"0\"},{\"k\":\"x2\",\"v\":\"1.5 * r * cos( k * pi2 * i / n * scale) * cos(pi2 * i / n * scale)\"},{\"k\":\"y2\",\"v\":\"1.5 * r * cos( k * pi2 * i / n * scale) * sin(pi2 * i / n * scale)\"},{\"k\":\"z2\",\"v\":\"0\"}],\"group\":3,\"dynamic\":false}]}]}}"
+		},
+		{
+			"date": "2018-04-09T04:54:30.263Z",
+			"stateJSON": "{\"nodes\":[{\"shaderType\":\"vertexShader\",\"isEntry\":true,\"nid\":\"uqRmb\",\"src\":\"void entry (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(position) + vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 1.5;\\n  vPos = vec3(position);\\n\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_uqRmb\",\"compiledSrc\":\"void entry_uqRmb (vec3 pos, float x, float y, float z, float w) {\\n  vec4 newPosition = vec4(vec3(position) + vec3(pos) + vec3(x, y, z), w);\\n  vec4 mvPosition = modelViewMatrix * newPosition;\\n  vec4 outputPos = projectionMatrix * mvPosition;\\n  gl_Position = outputPos;\\n  gl_PointSize = 1.5;\\n  vPos = vec3(position);\\n\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"uqRmb\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},{\"index\":1,\"nid\":\"uqRmb\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"x\"},{\"index\":2,\"nid\":\"uqRmb\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"y\"},{\"index\":3,\"nid\":\"uqRmb\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"z\"},{\"index\":4,\"nid\":\"uqRmb\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"w\"}],\"output\":{\"nid\":\"uqRmb\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":-8,\"y\":-15,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":true,\"nid\":\"AifVV\",\"src\":\"void entry (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"name\":\"entry\",\"compiledFnName\":\"entry_AifVV\",\"compiledSrc\":\"void entry_AifVV (vec4 color, float r, float g, float b, float a) {\\n  gl_FragColor = color + vec4(r, g, b, a);\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"vec4\",\"name\":\"color\"},{\"index\":1,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},{\"index\":2,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},{\"index\":3,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},{\"index\":4,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"a\"}],\"output\":{\"nid\":\"AifVV\",\"name\":\"entry\",\"type\":\"void\"},\"pos\":{\"x\":13.598840489455146,\"y\":-13.88023190210898,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"ConOw\",\"src\":\"mat3 rotateZ(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"name\":\"rotateZ\",\"compiledFnName\":\"rotateZ_ConOw\",\"compiledSrc\":\"mat3 rotateZ_ConOw(float rad) {\\n    float c = cos(rad);\\n    float s = sin(rad);\\n    return mat3(\\n        c, s, 0.0,\\n        -s, c, 0.0,\\n        0.0, 0.0, 1.0\\n    );\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"ConOw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"rad\"}],\"output\":{\"nid\":\"ConOw\",\"name\":\"rotateZ\",\"type\":\"mat3\"},\"pos\":{\"x\":-18.96269257277384,\"y\":8.554181312626637,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"ejLye\",\"src\":\"float floatModifier (float i1) {\\n  return fract(time * 0.1) * 3.14 * 2.0;\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_ejLye\",\"compiledSrc\":\"float floatModifier_ejLye (float i1) {\\n  return fract(time * 0.1) * 3.14 * 2.0;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"ejLye\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"ejLye\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":-15.717536118897662,\"y\":17.59656850175513,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"YvvuQ\",\"src\":\"vec3 posMaker (mat3 rZ) {\\n  return position + rZ * position;\\n}\",\"name\":\"posMaker\",\"compiledFnName\":\"posMaker_YvvuQ\",\"compiledSrc\":\"vec3 posMaker_YvvuQ (mat3 rZ) {\\n  return position + rZ * position;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"YvvuQ\",\"direction\":\"in\",\"type\":\"mat3\",\"name\":\"rZ\"}],\"output\":{\"nid\":\"YvvuQ\",\"name\":\"posMaker\",\"type\":\"vec3\"},\"pos\":{\"x\":-13.423548144418891,\"y\":-1.2029427037294234,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"YYcot\",\"src\":\"vec4 floatModifier () {\\n  return vec4(vPos + 0.6, 0.5);\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_YYcot\",\"compiledSrc\":\"vec4 floatModifier_YYcot () {\\n  return vec4(vPos + 0.6, 0.5);\\n}\",\"inputs\":[],\"output\":{\"nid\":\"YYcot\",\"name\":\"floatModifier\",\"type\":\"vec4\"},\"pos\":{\"x\":6.941107837638762,\"y\":2.2512448714131192,\"z\":0}},{\"shaderType\":\"vertexShader\",\"isEntry\":false,\"nid\":\"LaVDX\",\"src\":\"float floatModifier (float i1) {\\n  return sin(time * 3.0 + i1) * 3.0;\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_LaVDX\",\"compiledSrc\":\"float floatModifier_LaVDX (float i1) {\\n  return sin(time * 3.0 + i1) * 3.0;\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"LaVDX\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"LaVDX\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":-0.5375267094879059,\"y\":12.651552884053359,\"z\":0}},{\"shaderType\":\"fragmentShader\",\"isEntry\":false,\"nid\":\"mDwLH\",\"src\":\"float floatModifier (float i1) {\\n  return abs(cos(vPos.z + time + i1));\\n}\",\"name\":\"floatModifier\",\"compiledFnName\":\"floatModifier_mDwLH\",\"compiledSrc\":\"float floatModifier_mDwLH (float i1) {\\n  return abs(cos(vPos.z + time + i1));\\n}\",\"inputs\":[{\"index\":0,\"nid\":\"mDwLH\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"}],\"output\":{\"nid\":\"mDwLH\",\"name\":\"floatModifier\",\"type\":\"float\"},\"pos\":{\"x\":18.838187165821623,\"y\":2.1164230493550353,\"z\":0}}],\"connections\":[{\"input\":{\"index\":0,\"nid\":\"ConOw\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"},\"output\":{\"nid\":\"ejLye\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":0,\"nid\":\"uqRmb\",\"direction\":\"in\",\"type\":\"vec3\",\"name\":\"pos\"},\"output\":{\"nid\":\"YvvuQ\",\"name\":\"posMaker\",\"type\":\"vec3\"}},{\"input\":{\"index\":0,\"nid\":\"YvvuQ\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"i1\"},\"output\":{\"nid\":\"ConOw\",\"name\":\"rotateZ\",\"type\":\"mat3\"}},{\"input\":{\"index\":1,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"r\"},\"output\":{\"nid\":\"mDwLH\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":3,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"b\"},\"output\":{\"nid\":\"mDwLH\",\"name\":\"floatModifier\",\"type\":\"float\"}},{\"input\":{\"index\":2,\"nid\":\"AifVV\",\"direction\":\"in\",\"type\":\"float\",\"name\":\"g\"},\"output\":{\"nid\":\"mDwLH\",\"name\":\"floatModifier\",\"type\":\"float\"}}],\"uniforms\":[{\"src\":\"uniform float time;\"}],\"varyings\":[{\"src\":\"varying vec3 vPos;\"}],\"previews\":{\"index\":0,\"choices\":[{\"title\":\"Flower Line Segments\",\"uniforms\":{\"time\":{\"value\":0}},\"objType\":\"LineSegments\",\"geoType\":\"MathLineSegments\",\"attributes\":[{\"name\":\"position\",\"src\":\"attribute vec3 position;\",\"settings\":[{\"k\":\"i\",\"v\":0},{\"k\":\"n\",\"v\":\"8000\"},{\"k\":\"ii\",\"v\":0},{\"k\":\"nn\",\"v\":1},{\"k\":\"pi2\",\"v\":6.283185307179586},{\"k\":\"scale\",\"v\":\"20\"},{\"k\":\"k\",\"v\":\"0.3\"},{\"k\":\"r\",\"v\":\"30\"}],\"equations\":[{\"k\":\"x1\",\"v\":\"r * cos(k * pi2 * i / n * scale) * cos(pi2 * i / n * scale)\"},{\"k\":\"y1\",\"v\":\"r * cos(k * pi2 * i / n * scale) * sin(pi2 * i / n * scale)\"},{\"k\":\"z1\",\"v\":\"0\"},{\"k\":\"x2\",\"v\":\"1.5 * r * cos( k * pi2 * i / n * scale) * cos(pi2 * i / n * scale)\"},{\"k\":\"y2\",\"v\":\"1.5 * r * cos( k * pi2 * i / n * scale) * sin(pi2 * i / n * scale)\"},{\"k\":\"z2\",\"v\":\"1\"}],\"group\":3,\"dynamic\":false}]}]}}"
 		}
 	]
 }
