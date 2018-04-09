@@ -251,9 +251,6 @@ export const makeTemplate = ({ tid = '1' }) => {
   template.state.uniforms = [
     {
       src: `uniform float time;`
-    },
-    {
-      src: `uniform float pointSize;`
     }
   ]
   template.state.varyings = [
@@ -601,43 +598,8 @@ ${fExecs}
 
 export const makeTemplatePreviews = () => {
   return {
-    index: 1,
+    index: -1,
     choices: [
-      {
-        title: 'Flower Points',
-        uniforms: {
-          time: { value: 0 }
-        },
-        objType: 'Points',
-        geoType: 'MathPoints',
-        attributes: [
-          {
-            name: 'position',
-            src: 'attribute vec3 position;',
-            settings: [
-              { k: 'i', v: 0 },
-              { k: 'n', v: 10000 },
-              { k: 'ii', v: 0 },
-              { k: 'nn', v: 1 },
-              { k: 'pi2', v: Math.PI * 2 },
-              { k: 'scale', v: 20 },
-              { k: 'k', v: 0.3 },
-              { k: 'r', v: 30 }
-            ],
-            equations: [
-              { k: 'x1', v: 'r * cos(k * pi2 * i / n * scale) * cos(pi2 * i / n * scale)' },
-              { k: 'y1', v: 'r * cos(k * pi2 * i / n * scale) * sin(pi2 * i / n * scale)' },
-              { k: 'z1', v: '0' },
-
-              { k: 'x2', v: '1.5 * r * cos(k * pi2 * i / n * scale) * cos(pi2 * i / n * scale)' },
-              { k: 'y2', v: '1.5 * r * cos(k * pi2 * i / n * scale) * sin(pi2 * i / n * scale)' },
-              { k: 'z2', v: '0' }
-            ],
-            group: 3,
-            dynamic: false
-          }
-        ]
-      },
       {
         title: 'Flower Line Segments',
         uniforms: {

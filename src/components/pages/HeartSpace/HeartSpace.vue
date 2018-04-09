@@ -143,21 +143,21 @@
 
 
       <Object3D pz="-10">
-        <Points>
-          <!-- <TorusKnotBufferGeometry radius="10" tube="1" tubularSegments="300" radialSegments="40" /> -->
-          <SphereBufferGeometry :r="10" :nx="200" :ny="200" />
-          <ShaderMaterial :transparent="true" :vs="glsl.vertexShadedr" :fs="glsl.fragmentShader" :uniforms="animatable" />
+        <Points v-if="!preview">
+          <TorusKnotBufferGeometry radius="10" tube="1" tubularSegments="350" radialSegments="40" />
+          <!-- <SphereBufferGeometry :r="10" :nx="200" :ny="200" /> -->
+          <ShaderMaterial :transparent="true" :vs="glsl.vertexShader" :fs="glsl.fragmentShader" :uniforms="animatable" />
         </Points>
 
-        <!-- <MathObject
+        <MathObject
           v-if="preview"
           :objType="preview.objType"
           :geoType="preview.geoType"
-          :vs="glsl.vertexShadedr"
+          :vs="glsl.vertexShader"
           :fs="glsl.fragmentShader"
           :uniforms="preview.uniforms"
           :attributes="preview.attributes"
-        /> -->
+        />
       </Object3D>
 
     </Scene>
