@@ -74,9 +74,9 @@
           </div>
         </div>
 
-        <!-- <div class="debug-area" v-if="currentObj">
-
-        </div> -->
+        <div class="debug-area" v-if="true">
+          <Settings v-if="this.EffectNode && this.EffectNode.state.previews" :previews="this.EffectNode.state.previews" />
+        </div>
         <!-- CREATION -->
         <!--  -->
 
@@ -115,7 +115,6 @@
       </Object3D> -->
 
       <Object3D>
-        <!--  -->
         <!-- Nodes -->
 
         <ConnectionLine
@@ -142,11 +141,23 @@
         </Object3D>
       </Object3D>
 
+
       <Object3D pz="-10">
         <Points>
+          <!-- <TorusKnotBufferGeometry radius="10" tube="1" tubularSegments="300" radialSegments="40" /> -->
           <SphereBufferGeometry :r="10" :nx="200" :ny="200" />
-          <ShaderMaterial :transparent="true" :vs="glsl.vertexShader" :fs="glsl.fragmentShader" :uniforms="animatable" />
+          <ShaderMaterial :transparent="true" :vs="glsl.vertexShadedr" :fs="glsl.fragmentShader" :uniforms="animatable" />
         </Points>
+
+        <!-- <MathObject
+          v-if="preview"
+          :objType="preview.objType"
+          :geoType="preview.geoType"
+          :vs="glsl.vertexShadedr"
+          :fs="glsl.fragmentShader"
+          :uniforms="preview.uniforms"
+          :attributes="preview.attributes"
+        /> -->
       </Object3D>
 
     </Scene>
@@ -160,6 +171,12 @@ import _ from 'lodash'
 import * as EN from './EffectNodeCore'
 import ConnectionLine from './ConnectionLine/ConnectionLine'
 import EffectBox from './EffectBox/EffectBox'
+
+import MathEditor from './MathBufferGeometry/MathEditor'
+import MathObject from './MathBufferGeometry/MathObject'
+import MathPoints from './MathBufferGeometry/MathPoints'
+import MathLineSegments from './MathBufferGeometry/MathLineSegments'
+import Settings from './Settings/Settings.vue'
 
 /* eslint-disable */
 import * as TWEEN from '@tweenjs/tween.js'
@@ -188,7 +205,12 @@ export default {
   components: {
     ...Bundle,
     ConnectionLine,
-    EffectBox
+    EffectBox,
+    MathEditor,
+    MathObject,
+    MathPoints,
+    MathLineSegments,
+    Settings
   },
   methods: {
     async hydrate ({ use }) {
@@ -245,9 +267,9 @@ export default {
       }())
 
       if (
-        (renderer.toUpperCase().indexOf('ATI') !== -1 && devicePixelRatio > 1.0) ||
-        (renderer.toUpperCase().indexOf('NVIDIA') !== -1 && devicePixelRatio > 1.0) ||
-        (iOSVer && iOSVer[0] >= 11)
+        (window.innerWidth >= 1080 && renderer.toUpperCase().indexOf('AMD') !== -1) ||
+        (window.innerWidth >= 1080 && renderer.toUpperCase().indexOf('NVIDIA') !== -1) ||
+        (iOSVer && iOSVer[0] >= 11 && devicePixelRatio >= 1.5)
       ) {
         return true
       }
@@ -910,6 +932,13 @@ export default {
     }
   },
   computed: {
+    preview () {
+      if (this.EffectNode && this.EffectNode.state && this.EffectNode.state.previews) {
+        return this.EffectNode.state.previews.choices[this.EffectNode.state.previews.index]
+      } else {
+        return false
+      }
+    },
     connections: {
       get () {
         if (this.EffectNode && this.EffectNode.state && this.EffectNode.state.connections) {

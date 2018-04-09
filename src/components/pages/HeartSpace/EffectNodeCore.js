@@ -223,8 +223,8 @@ export const makeTemplateNodes = ({ tid = 'template1' }) => {
   vec4 mvPosition = modelViewMatrix * newPosition;
   vec4 outputPos = projectionMatrix * mvPosition;
   gl_Position = outputPos;
-  gl_PointSize = 3.0;
-  vPos = position;
+  gl_PointSize = 1.5;
+  vPos = vec3(position);
 }`
       })
     )
@@ -251,6 +251,9 @@ export const makeTemplate = ({ tid = '1' }) => {
   template.state.uniforms = [
     {
       src: `uniform float time;`
+    },
+    {
+      src: `uniform float pointSize;`
     }
   ]
   template.state.varyings = [
@@ -258,15 +261,20 @@ export const makeTemplate = ({ tid = '1' }) => {
       src: `varying vec3 vPos;`
     }
   ]
+  template.state.previews = makeTemplatePreviews()
 
   if (tid === 'template2') {
-    template = require('./Demos/Demo1.json')
-    template.state.varyings = template.state.varyings || []
+    template = {
+      ...template,
+      ...require('./Demos/Demo1.json')
+    }
   }
 
   if (tid === 'template3') {
-    template = require('./Demos/Demo2.json')
-    template.state.varyings = template.state.varyings || []
+    template = {
+      ...template,
+      ...require('./Demos/Demo2.json')
+    }
   }
 
   return template
@@ -287,7 +295,6 @@ export const hydrate = ({ use }) => {
           root = dbRoot
         }
       }
-
       resolve(root)
     }, 300)
   })
@@ -580,14 +587,92 @@ FFFF     SSSSS
 FF           SS
 FF       SSSSS
 */
-// Varyings //
-${Vars}
 // Uniforms //
 ${Unis}
+// Varyings //
+${Vars}
 // Functions //
 ${fFns}
 // Main function executions //
 ${fExecs}
     `
+  }
+}
+
+export const makeTemplatePreviews = () => {
+  return {
+    index: 1,
+    choices: [
+      {
+        title: 'Flower Points',
+        uniforms: {
+          time: { value: 0 }
+        },
+        objType: 'Points',
+        geoType: 'MathPoints',
+        attributes: [
+          {
+            name: 'position',
+            src: 'attribute vec3 position;',
+            settings: [
+              { k: 'i', v: 0 },
+              { k: 'n', v: 10000 },
+              { k: 'ii', v: 0 },
+              { k: 'nn', v: 1 },
+              { k: 'pi2', v: Math.PI * 2 },
+              { k: 'scale', v: 20 },
+              { k: 'k', v: 0.3 },
+              { k: 'r', v: 30 }
+            ],
+            equations: [
+              { k: 'x1', v: 'r * cos(k * pi2 * i / n * scale) * cos(pi2 * i / n * scale)' },
+              { k: 'y1', v: 'r * cos(k * pi2 * i / n * scale) * sin(pi2 * i / n * scale)' },
+              { k: 'z1', v: '0' },
+
+              { k: 'x2', v: '1.5 * r * cos(k * pi2 * i / n * scale) * cos(pi2 * i / n * scale)' },
+              { k: 'y2', v: '1.5 * r * cos(k * pi2 * i / n * scale) * sin(pi2 * i / n * scale)' },
+              { k: 'z2', v: '0' }
+            ],
+            group: 3,
+            dynamic: false
+          }
+        ]
+      },
+      {
+        title: 'Flower Line Segments',
+        uniforms: {
+          time: { value: 0 }
+        },
+        objType: 'LineSegments',
+        geoType: 'MathLineSegments',
+        attributes: [
+          {
+            name: 'position',
+            src: 'attribute vec3 position;',
+            settings: [
+              { k: 'i', v: 0 },
+              { k: 'n', v: 10000 },
+              { k: 'ii', v: 0 },
+              { k: 'nn', v: 1 },
+              { k: 'pi2', v: Math.PI * 2 },
+              { k: 'scale', v: 20 },
+              { k: 'k', v: 0.3 },
+              { k: 'r', v: 30 }
+            ],
+            equations: [
+              { k: 'x1', v: 'r * cos(k * pi2 * i / n * scale) * cos(pi2 * i / n * scale)' },
+              { k: 'y1', v: 'r * cos(k * pi2 * i / n * scale) * sin(pi2 * i / n * scale)' },
+              { k: 'z1', v: '0' },
+
+              { k: 'x2', v: '1.5 * r * cos(k * pi2 * i / n * scale) * cos(pi2 * i / n * scale)' },
+              { k: 'y2', v: '1.5 * r * cos(k * pi2 * i / n * scale) * sin(pi2 * i / n * scale)' },
+              { k: 'z2', v: '0' }
+            ],
+            group: 3,
+            dynamic: false
+          }
+        ]
+      }
+    ]
   }
 }

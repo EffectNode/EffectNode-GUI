@@ -29,8 +29,8 @@ export default {
       this.tryUpdateMaterial()
     })
     this.$on('geometry', (v) => {
-      var wireframe = new THREE.WireframeGeometry(v)
-      this.geometry = wireframe
+      // var wireframe = new THREE.WireframeGeometry(v)
+      this.geometry = v
       this.tryUpdateGeometry()
     })
   },

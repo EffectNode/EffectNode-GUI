@@ -1,4 +1,4 @@
-varying vec3 vPos;
+// varying vec3 vPos;
 uniform float time;
 
 mat3 rotateZ(float rad) {
@@ -12,14 +12,14 @@ mat3 rotateZ(float rad) {
 }
 
 void main (void) {
-  vPos = position;
+//   vPos = position;
   // vPos.x = vPos.x + sin(vPos.x + time);
   // vPos.x = vPos.x + cos(vPos.x + time);
   // vPos.z = vPos.z + sin(vPos.z + time);
 
-  vPos = position * rotateZ(time);
+  vec3 newPos = position * rotateZ(time);
 
-  vec4 mvPosition = modelViewMatrix * vec4(vPos, 1.0);
+  vec4 mvPosition = modelViewMatrix * vec4(newPos, 1.0);
   vec4 outputPos = projectionMatrix * mvPosition;
   gl_Position = outputPos;
   gl_PointSize = 1.0;

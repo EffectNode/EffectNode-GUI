@@ -5,18 +5,21 @@
 <script>
 import * as THREE from 'three'
 export default {
+  props: {
+    radius: { default: 1.3 },
+    tube: { default: 0.13 },
+    tubularSegments: { default: 300 },
+    radialSegments: { default: 20 },
+    p: { default: 4 },
+    q: { default: 3 }
+  },
   data () {
     return {
       geometry: false
     }
   },
   mounted () {
-    let radius = 1.3
-    let tube = 0.13
-    let tubularSegments = 300
-    let radialSegments = 20
-    let p = 4
-    let q = 3
+    let { radius, tube, tubularSegments, radialSegments, p, q } = this
     let geometry = new THREE.TorusKnotBufferGeometry(radius, tube, tubularSegments, radialSegments, p, q)
     this.$parent.$emit('geometry', geometry)
   }
