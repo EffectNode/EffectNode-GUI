@@ -43,12 +43,31 @@ export default {
     }
   },
   watch: {
-    attributes () {
-      this.makeGeo()
+    // attributes (newAttr, oldAttr) {
+    //   if (JSON.stringify(newAttr) !== JSON.stringify(oldAttr)) {
+    //     clearTimeout(this.refreshTimer)
+    //     this.refreshTimer = setTimeout(() => {
+    //       this.makeGeo()
+    //     }, 500)
+    //   }
+    // },
+    attrJSON (newAttr, oldAttr) {
+      if (JSON.stringify(newAttr) !== JSON.stringify(oldAttr)) {
+        clearTimeout(this.refreshTimer)
+        this.refreshTimer = setTimeout(() => {
+          this.makeGeo()
+        }, 1000)
+      }
+    }
+  },
+  computed: {
+    attrJSON () {
+      return JSON.stringify(this.attributes)
     }
   },
   data () {
     return {
+      refreshTimer: 0
     }
   },
   mounted () {

@@ -12,16 +12,16 @@
       <h3>Settings</h3>
       <div :key="iSetting + 'attr'" v-for="(setting, iSetting) in attr.settings">
         Key: <input type="text" :value="setting.k">
-        Value: <input type="text" v-model="setting.v" @keydown.enter="() => { forceRefresh({ preview, attrs: preview.attributes }) }"> <br />
+        Value: <input type="text" v-model="setting.v" @keydown.enter="() => { forceRefresh({ preview }) }"> <br />
       </div>
 
       <h3>Formula</h3>
       <div :key="iSetting + 'eq'" v-for="(setting, iSetting) in attr.equations">
-        Formula of {{ setting.k }}: <input class="formula" type="text" v-model="setting.v" @keydown.enter="() => { forceRefresh({ preview, attrs: preview.attributes }) }"> <br />
+        Formula of {{ setting.k }}: <input class="formula" type="text" v-model="setting.v" @keydown.enter="() => { forceRefresh({ preview }) }"> <br />
       </div>
     </div>
 
-    <button @click="forceRefresh({ preview, attrs: preview.attributes })">Force Refresh</button>
+    <button @click="forceRefresh({ preview })">Force Refresh</button>
   </div>
 </div>
 </template>
@@ -35,15 +35,16 @@ export default {
     return {
     }
   },
+  computed: {
+  },
   methods: {
     getKeys (v) {
       return Object.keys(v)
     },
-    forceRefresh: ({ preview, attrs }) => {
-      if (attrs) {
-        preview.attributes = JSON.parse(JSON.stringify(attrs))
-        this.$forceRefresh()
-      }
+    forceRefresh ({ preview }) {
+      console.log(preview)
+      preview.attributes = JSON.parse(JSON.stringify(preview.attributes))
+      this.$forceUpdate()
     }
   }
 }
