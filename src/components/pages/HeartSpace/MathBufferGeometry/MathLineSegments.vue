@@ -104,16 +104,21 @@ export default {
             settings.ii = ii
             settings.ee = ii / nn
 
-            let x1 = Parser.evaluate(equations.x1, settings)
-            let y1 = Parser.evaluate(equations.y1, settings)
-            let z1 = Parser.evaluate(equations.z1, settings)
+            Object.keys(equations).forEach((key) => {
+              let val = Parser.evaluate(equations[key], settings)
+              array.push(val)
+            })
 
-            let x2 = Parser.evaluate(equations.x2, settings)
-            let y2 = Parser.evaluate(equations.y2, settings)
-            let z2 = Parser.evaluate(equations.z2, settings)
+            // let x1 = Parser.evaluate(equations.x1, settings)
+            // let y1 = Parser.evaluate(equations.y1, settings)
+            // let z1 = Parser.evaluate(equations.z1, settings)
 
-            array.push(x1, y1, z1)
-            array.push(x2, y2, z2)
+            // let x2 = Parser.evaluate(equations.x2, settings)
+            // let y2 = Parser.evaluate(equations.y2, settings)
+            // let z2 = Parser.evaluate(equations.z2, settings)
+
+            // array.push(x1, y1, z1)
+            // array.push(x2, y2, z2)
           }
         }
       } else {
@@ -121,16 +126,21 @@ export default {
           settings.i = i
           settings.e = i / n
 
-          let x1 = Parser.evaluate(equations.x1, settings)
-          let y1 = Parser.evaluate(equations.y1, settings)
-          let z1 = Parser.evaluate(equations.z1, settings)
+          Object.keys(equations).forEach((key) => {
+            let val = Parser.evaluate(equations[key], settings)
+            array.push(val)
+          })
 
-          let x2 = Parser.evaluate(equations.x2, settings)
-          let y2 = Parser.evaluate(equations.y2, settings)
-          let z2 = Parser.evaluate(equations.z2, settings)
+          // let x1 = Parser.evaluate(equations.x1, settings)
+          // let y1 = Parser.evaluate(equations.y1, settings)
+          // let z1 = Parser.evaluate(equations.z1, settings)
 
-          array.push(x1, y1, z1)
-          array.push(x2, y2, z2)
+          // let x2 = Parser.evaluate(equations.x2, settings)
+          // let y2 = Parser.evaluate(equations.y2, settings)
+          // let z2 = Parser.evaluate(equations.z2, settings)
+
+          // array.push(x1, y1, z1)
+          // array.push(x2, y2, z2)
         }
       }
       return array

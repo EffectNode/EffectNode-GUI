@@ -16,6 +16,7 @@
 
         <!-- <transition name="slide-in-left"> -->
         <div class="editor-area" v-if="currentObj">
+
           <div :key="node.nid" v-for="(node, iNode) in nodes" v-if="node.nid === currentObj.userData.node.nid">
 
             <button v-if="!node.isEntry" @click="removeCurrentBox({ node, nodes, mesh: currentObj, iNode })">Remove me</button>
@@ -50,24 +51,28 @@
           <button @click="makeVar()">Make Variation</button>
           <button @click="EN.exportRoot({ root: EffectNode })">Export Proj</button>
           <input type="file" @change="restoreProject">
+          <br />
+          Image1 <input accept="image/*" type="file" @change="loadImage1">
+          Image2 <input accept="image/*" type="file" @change="loadImage2">
+          Image3 <input accept="image/*" type="file" @change="loadImage3">
         </div>
 
-        <transition name="fade">
+        <!-- <transition name="fade"> -->
           <div class="welcome-bg-overlay" v-if="welcome" @click="() => { }"></div>
-        </transition>
+        <!-- </transition> -->
         <div class="welcome-area" v-if="welcome">
           <div  v-if="!loading">
             Welcome to Effect Node~
             <br />
-            <label for=""><input type="checkbox" v-model="useBloom">use bloom</label>
+            <!-- <label for=""><input type="checkbox" v-model="useBloom">use bloom</label> -->
             <br />
             <ol>
-              <li>Load Save: <input type="file" @change="(evt) => { restoreProject(evt); welcome = false }"></li>
+              <!-- <li>Load Save: <input type="file" @schange="(evt) => { restoreProject(evt); welcome = false }"></li> -->
               <li><button @click="hydrate({ use: 'continue' })">Continue</button></li>
               <li><button @click="hydrate({ use: 'template1' })">Clean and Start with Clean Template</button></li>
-              <li><button @click="hydrate({ use: 'template2' })">Clean and Start with Template 2</button></li>
-              <li><button @click="hydrate({ use: 'template3' })">Clean and Start with Template 3</button></li>
-              <li><button @click="hydrate({ use: 'template4' })">Clean and Start with Template 4</button></li>
+              <!-- <li><button @click="hydrate({ use: 'template2' })">Clean and Start with Template 2</button></li> -->
+              <!-- <li><button @click="hydrate({ use: 'template3' })">Clean and Start with Template 3</button></li> -->
+              <!-- <li><button @click="hydrate({ use: 'template4' })">Clean and Start with Template 4</button></li> -->
             </ol>
           </div>
           <div class="full xy-center" v-if="loading">
@@ -75,7 +80,7 @@
           </div>
         </div>
 
-        <div class="debug-area" v-if="true">
+        <div class="debug-area" v-if="!currentObj">
           <Settings v-if="this.EffectNode && this.EffectNode.state.previews" :previews="this.EffectNode.state.previews" />
         </div>
         <!-- CREATION -->
@@ -104,7 +109,7 @@
       <!-- <Object3D pz="0">
         <Points>
           <SphereBufferGeometry />
-          <ShaderMaterial :vs="demo.vs" :fs="demo.fs" :uniforms="animatable" />
+          <ShaderMaterial :vs="demo.vs" :fs="demo.fs" :uniforms="uniforms" />
         </Points>
       </Object3D> -->
 
@@ -125,8 +130,6 @@
           :p1="getOutputPos({ conn })"
           :p2="getInputPos({ conn })"
         >
-          {{ getInputPos({ conn }) }}
-          {{ getOutputPos({ conn }) }}
         </ConnectionLine>
 
         <Object3D :key="node.nid" v-for="(node, iNode) in nodes">
@@ -142,12 +145,11 @@
         </Object3D>
       </Object3D>
 
-
       <Object3D pz="-10">
         <Points v-if="!preview">
           <TorusKnotBufferGeometry radius="10" tube="1" tubularSegments="350" radialSegments="40" />
           <!-- <SphereBufferGeometry :r="10" :nx="200" :ny="200" /> -->
-          <ShaderMaterial :transparent="true" :vs="glsl.vertexShader" :fs="glsl.fragmentShader" :uniforms="animatable" />
+          <ShaderMaterial :transparent="true" :vs="glsl.vertexShader" :fs="glsl.fragmentShader" :uniforms="uniforms" />
         </Points>
 
         <MathObject
@@ -156,7 +158,7 @@
           :geoType="preview.geoType"
           :vs="glsl.vertexShader"
           :fs="glsl.fragmentShader"
-          :uniforms="preview.uniforms"
+          :uniforms="uniforms"
           :attributes="preview.attributes"
         />
       </Object3D>
@@ -186,15 +188,17 @@ import * as THREE from 'three'
 import 'imports-loader?THREE=three!./TrackTrack.js'
 import 'imports-loader?THREE=three!./DragConCon.js'
 
-import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer.js'
-import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass.js'
-import 'imports-loader?THREE=three!three/examples/js/postprocessing/MaskPass.js'
-import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass.js'
-import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader.js'
-import 'imports-loader?THREE=three!three/examples/js/shaders/FXAAShader.js'
-import 'imports-loader?THREE=three!three/examples/js/shaders/ConvolutionShader.js'
-import 'imports-loader?THREE=three!three/examples/js/shaders/LuminosityHighPassShader.js'
-import 'imports-loader?THREE=three!three/examples/js/postprocessing/UnrealBloomPass.js'
+// Bloom Effect
+// import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer.js'
+// import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass.js'
+// import 'imports-loader?THREE=three!three/examples/js/postprocessing/MaskPass.js'
+// import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass.js'
+// import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader.js'
+// import 'imports-loader?THREE=three!three/examples/js/shaders/FXAAShader.js'
+// import 'imports-loader?THREE=three!three/examples/js/shaders/ConvolutionShader.js'
+// import 'imports-loader?THREE=three!three/examples/js/shaders/LuminosityHighPassShader.js'
+// import 'imports-loader?THREE=three!three/examples/js/postprocessing/UnrealBloomPass.js'
+// Bloom Effect
 
 // import 'imports-loader?THREE=three!three/examples/js/controls/TrackballControls.js'
 // import 'imports-loader?THREE=three!three/examples/js/controls/EditorControls.js'
@@ -225,15 +229,37 @@ export default {
         this.tryRefreshGUI()
       })
     },
+    loadImage1 (evt) {
+      this.loadImageTo({ to: 'uImage1', evt })
+    },
+    loadImage2 (evt) {
+      this.loadImageTo({ to: 'uImage2', evt })
+    },
+    loadImage3 (evt) {
+      this.loadImageTo({ to: 'uImage3', evt })
+    },
+    loadImageTo ({ to, evt }) {
+      let file = evt.target.files[0]
+      if (file) {
+        let reader = new FileReader()
+        reader.onload = () => {
+          this.uniforms[to].value = new THREE.TextureLoader().load(reader.result)
+          console.log(this.uniforms[to].value)
+        }
+        reader.readAsDataURL(file)
+      }
+    },
     setup () {
       // let dpi = 1.25
-      let isFast = this.detectFast()
-      if (isFast) {
-        this.useBloom = true
-        this.$forceUpdate()
-        // dpi = 2.0
-      }
-      this.setupBloom({ dpi: window.devicePixelRatio })
+      // let isFast = this.detectFast()
+      // if (isFast) {
+      //   this.useBloom = true
+      //   this.$forceUpdate()
+      //   // dpi = 2.0
+      // }
+      // this.setupBloom({ dpi: window.devicePixelRatio })
+      this.scene.background = new THREE.Color(0x374967)
+
       this.setupTouch()
       this.setupGLSLMaker()
       // this.hydrate({ use: 'template1' })
@@ -421,10 +447,6 @@ export default {
     },
     cleanUpBox ({ v, node, nodes }) {
       let boxMeshes = this.boxMeshes
-      // let boxIndex = boxMeshes.findIndex(a => a === v.box.nid)
-      // if (boxIndex !== -1) {
-      //   boxMeshes.splice(boxIndex, 1)
-      // }
       boxMeshes.forEach((v, k) => {
         if (v.userData.node && v.userData.node.nid === node.nid) {
           boxMeshes.splice(k, 1)
@@ -433,10 +455,6 @@ export default {
 
       let inputs = v.inputs
       inputs.forEach((eInput) => {
-        // let inputIndex = this.inputMeshes.findIndex(a => a === eInput)
-        // if (inputIndex !== -1) {
-        //   this.inputMeshes.splice(inputIndex, 1)
-        // }
         this.inputMeshes.forEach((v, k) => {
           if (v.userData.node && v.userData.node.nid === node.nid) {
             this.inputMeshes.splice(k, 1)
@@ -445,22 +463,11 @@ export default {
       })
 
       let outputMeshes = this.outputMeshes
-      // let outputIndex = outputMeshes.findIndex(a => a === v.output)
-      // if (outputIndex !== -1) {
-      //   outputMeshes.splice(outputIndex, 1)
-      // }
       outputMeshes.forEach((v, k) => {
         if (v.userData.node && v.userData.node.nid === node.nid) {
           outputMeshes.splice(k, 1)
         }
       })
-
-      // let outputs = v.output
-      // outputs.forEach((eOutput) => {
-      //    else {
-      //     console.error('cant find output meshes')
-      //   }
-      // })
     },
     restoreProject (evt) {
       EN
@@ -480,7 +487,6 @@ export default {
         let inputMesh = this.inputMeshes.filter((iM) => {
           return iM.userData && iM.userData.input && iM.userData.input.nid === conn.input.nid && iM.userData.input.index === conn.input.index
         })[0]
-        // console.log(inputMesh)
         if (inputMesh) {
           let loc = inputMesh.position.clone().setFromMatrixPosition(inputMesh.matrixWorld)
           return {
@@ -861,8 +867,8 @@ export default {
       } else {
         this.nodes.push(EN.makeNode({
           src:
-`float floatModifier (float i1) {
-  return abs(cos(time + i1));
+`vec4 textureReader () {
+  return texture2D(uImage1, (vUv - 0.5) * 0.75 + 0.5);
 }`,
           isEntry: false,
           shaderType,
@@ -879,7 +885,7 @@ export default {
         this.trackBallControls.update()
       }
 
-      this.animatable.time.value = window.performance.now() * 0.001
+      this.uniforms.time.value = window.performance.now() * 0.001
 
       if (this.composer && this.useBloom) {
         this.composer.render()
@@ -890,7 +896,10 @@ export default {
   },
   data () {
     return {
-      animatable: {
+      uniforms: {
+        uImage1: { value: new THREE.TextureLoader() },
+        uImage2: { value: new THREE.TextureLoader() },
+        uImage3: { value: new THREE.TextureLoader() },
         time: { value: 0 }
       },
       variationIndex: null,
@@ -1041,7 +1050,7 @@ export default {
 .debug-area{
   position: absolute;
   top: 0px;
-  right: 0px;
+  left: 0px;
   font-size: 12px;
   max-width: 50%;
   max-height: 80%;

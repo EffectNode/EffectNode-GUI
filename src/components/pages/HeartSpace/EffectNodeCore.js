@@ -225,6 +225,7 @@ export const makeTemplateNodes = ({ tid = 'template1' }) => {
   gl_Position = outputPos;
   gl_PointSize = 1.5;
   vPos = vec3(position);
+  vUv = uv;
 }`
       })
     )
@@ -251,11 +252,23 @@ export const makeTemplate = ({ tid = '1' }) => {
   template.state.uniforms = [
     {
       src: `uniform float time;`
+    },
+    {
+      src: `uniform sampler2D uImage1;`
+    },
+    {
+      src: `uniform sampler2D uImage2;`
+    },
+    {
+      src: `uniform sampler2D uImage3;`
     }
   ]
   template.state.varyings = [
     {
       src: `varying vec3 vPos;`
+    },
+    {
+      src: `varying vec2 vUv;`
     }
   ]
   template.state.previews = makeTemplatePreviews()
@@ -609,9 +622,9 @@ export const makeTemplatePreviews = () => {
     choices: [
       {
         title: 'Flower Line Segments',
-        uniforms: {
-          time: { value: 0 }
-        },
+        // uniforms: {
+        //   time: { value: 0 }
+        // },
         objType: 'LineSegments',
         geoType: 'MathLineSegments',
         attributes: [
@@ -635,9 +648,32 @@ export const makeTemplatePreviews = () => {
 
               { k: 'x2', v: '1.5 * r * cos(k * pi2 * i / n * scale) * cos(pi2 * i / n * scale)' },
               { k: 'y2', v: '1.5 * r * cos(k * pi2 * i / n * scale) * sin(pi2 * i / n * scale)' },
-              { k: 'z2', v: '0' }
+              { k: 'z2', v: '-7' }
             ],
             group: 3,
+            dynamic: false
+          },
+          {
+            name: 'uv',
+            src: 'attribute vec3 uv;',
+            settings: [
+              { k: 'i', v: 0 },
+              { k: 'n', v: 10000 },
+              { k: 'ii', v: 0 },
+              { k: 'nn', v: 1 },
+              { k: 'pi2', v: Math.PI * 2 },
+              { k: 'scale', v: 20 },
+              { k: 'k', v: 0.3 },
+              { k: 'r', v: 0.5 }
+            ],
+            equations: [
+              { k: 'x1', v: 'r * cos(k * pi2 * i / n * scale) * cos(pi2 * i / n * scale) + 0.5' },
+              { k: 'y1', v: 'r * cos(k * pi2 * i / n * scale) * sin(pi2 * i / n * scale) + 0.5' },
+
+              { k: 'x2', v: '1.5 * r * cos(k * pi2 * i / n * scale) * cos(pi2 * i / n * scale) + 0.5' },
+              { k: 'y2', v: '1.5 * r * cos(k * pi2 * i / n * scale) * sin(pi2 * i / n * scale) + 0.5' }
+            ],
+            group: 2,
             dynamic: false
           }
         ]

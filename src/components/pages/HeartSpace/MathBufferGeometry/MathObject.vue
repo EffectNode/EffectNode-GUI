@@ -33,14 +33,14 @@ export default {
 
     vs: {},
     fs: {},
-    // uniforms: {},
+    uniforms: {},
     attributes: {}
   },
   data () {
     return {
-      uniforms: {
-        time: { value: 0 }
-      },
+      // uniforms: {
+      //   time: { value: 0 }
+      // },
       rAFID: 0
     }
   },
@@ -55,7 +55,7 @@ export default {
   mounted () {
     var rAF = () => {
       this.rAFID = window.requestAnimationFrame(rAF)
-      this.uniforms.time.value = window.performance.now() * 0.001
+      // this.uniforms.time.value = window.performance.now() * 0.001
     }
     this.rAFID = window.requestAnimationFrame(rAF)
   },
