@@ -1,0 +1,224 @@
+{
+	"editor": 0.1,
+	"state": {
+		"nodes": [
+			{
+				"shaderType": "vertexShader",
+				"isEntry": true,
+				"nid": "GlTtl",
+				"src": "void entry (vec3 pos, float x, float y, float z, float w) {\n  vec4 newPosition = vec4(vec3(position) + vec3(pos) + vec3(x, y, z), w);\n  vec4 mvPosition = modelViewMatrix * newPosition;\n  vec4 outputPos = projectionMatrix * mvPosition;\n  gl_Position = outputPos;\n  gl_PointSize = 1.5;\n  vPos = vec3(position);\n  vUv = uv;\n}",
+				"name": "entry",
+				"compiledFnName": "entry_GlTtl",
+				"compiledSrc": "void entry_GlTtl (vec3 pos, float x, float y, float z, float w) {\n  vec4 newPosition = vec4(vec3(position) + vec3(pos) + vec3(x, y, z), w);\n  vec4 mvPosition = modelViewMatrix * newPosition;\n  vec4 outputPos = projectionMatrix * mvPosition;\n  gl_Position = outputPos;\n  gl_PointSize = 1.5;\n  vPos = vec3(position);\n  vUv = uv;\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "GlTtl",
+						"direction": "in",
+						"type": "vec3",
+						"name": "pos"
+					},
+					{
+						"index": 1,
+						"nid": "GlTtl",
+						"direction": "in",
+						"type": "float",
+						"name": "x"
+					},
+					{
+						"index": 2,
+						"nid": "GlTtl",
+						"direction": "in",
+						"type": "float",
+						"name": "y"
+					},
+					{
+						"index": 3,
+						"nid": "GlTtl",
+						"direction": "in",
+						"type": "float",
+						"name": "z"
+					},
+					{
+						"index": 4,
+						"nid": "GlTtl",
+						"direction": "in",
+						"type": "float",
+						"name": "w"
+					}
+				],
+				"output": {
+					"nid": "GlTtl",
+					"name": "entry",
+					"type": "void"
+				},
+				"pos": {
+					"x": -8,
+					"y": -15,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "fragmentShader",
+				"isEntry": true,
+				"nid": "WFAmb",
+				"src": "void entry (vec4 color, float r, float g, float b, float a) {\n  gl_FragColor = color + vec4(r, g, b, a);\n}",
+				"name": "entry",
+				"compiledFnName": "entry_WFAmb",
+				"compiledSrc": "void entry_WFAmb (vec4 color, float r, float g, float b, float a) {\n  gl_FragColor = color + vec4(r, g, b, a);\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "WFAmb",
+						"direction": "in",
+						"type": "vec4",
+						"name": "color"
+					},
+					{
+						"index": 1,
+						"nid": "WFAmb",
+						"direction": "in",
+						"type": "float",
+						"name": "r"
+					},
+					{
+						"index": 2,
+						"nid": "WFAmb",
+						"direction": "in",
+						"type": "float",
+						"name": "g"
+					},
+					{
+						"index": 3,
+						"nid": "WFAmb",
+						"direction": "in",
+						"type": "float",
+						"name": "b"
+					},
+					{
+						"index": 4,
+						"nid": "WFAmb",
+						"direction": "in",
+						"type": "float",
+						"name": "a"
+					}
+				],
+				"output": {
+					"nid": "WFAmb",
+					"name": "entry",
+					"type": "void"
+				},
+				"pos": {
+					"x": 8,
+					"y": -15,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "fragmentShader",
+				"isEntry": false,
+				"nid": "FxNBV",
+				"src": "vec4 textureReader () {\n  vec4 textColor = texture2D(text, vUv);\n\n  vec2 swifting = vUv;\n  swifting.x = swifting.x + time * 0.3;\n  swifting.x = fract(swifting.x);\n\n  swifting.y = swifting.y + time * 0.3;\n  swifting.y = fract(swifting.y);\n  vec4 pattern = texture2D(pattern, swifting);\n\n  return vec4(vec3((1.0 - textColor) * pattern), textColor.a * 1.0);\n}",
+				"name": "textureReader",
+				"compiledFnName": "textureReader_FxNBV",
+				"compiledSrc": "vec4 textureReader_FxNBV () {\n  vec4 textColor = texture2D(text, vUv);\n\n  vec2 swifting = vUv;\n  swifting.x = swifting.x + time * 0.3;\n  swifting.x = fract(swifting.x);\n\n  swifting.y = swifting.y + time * 0.3;\n  swifting.y = fract(swifting.y);\n  vec4 pattern = texture2D(pattern, swifting);\n\n  return vec4(vec3((1.0 - textColor) * pattern), textColor.a * 1.0);\n}",
+				"inputs": [],
+				"output": {
+					"nid": "FxNBV",
+					"name": "textureReader",
+					"type": "vec4"
+				},
+				"pos": {
+					"x": 12.749311580103102,
+					"y": 7.500242971728314,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "vertexShader",
+				"isEntry": false,
+				"nid": "EjrYV",
+				"src": "float floatModifier (float i1) {\n  return sin(time * 3.0 + i1) * 3.0;\n}",
+				"name": "floatModifier",
+				"compiledFnName": "floatModifier_EjrYV",
+				"compiledSrc": "float floatModifier_EjrYV (float i1) {\n  return sin(time * 3.0 + i1) * 3.0;\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "EjrYV",
+						"direction": "in",
+						"type": "float",
+						"name": "i1"
+					}
+				],
+				"output": {
+					"nid": "EjrYV",
+					"name": "floatModifier",
+					"type": "float"
+				},
+				"pos": {
+					"x": -10.459961513087682,
+					"y": 3.35572991937282,
+					"z": 0
+				}
+			}
+		],
+		"connections": [
+			{
+				"input": {
+					"index": 0,
+					"nid": "WFAmb",
+					"direction": "in",
+					"type": "vec4",
+					"name": "color"
+				},
+				"output": {
+					"nid": "FxNBV",
+					"name": "textureReader",
+					"type": "vec4"
+				}
+			},
+			{
+				"input": {
+					"index": 3,
+					"nid": "GlTtl",
+					"direction": "in",
+					"type": "float",
+					"name": "z"
+				},
+				"output": {
+					"nid": "EjrYV",
+					"name": "floatModifier",
+					"type": "float"
+				}
+			}
+		],
+		"uniforms": [
+			{
+				"val": 0,
+				"src": "uniform float time;"
+			},
+			{
+				"val": "",
+				"src": "uniform sampler2D uImage1;"
+			},
+			{
+				"preset": true,
+				"src": "uniform sampler2D text;"
+			},
+			{
+				"preset": true,
+				"src": "uniform sampler2D pattern;"
+			}
+		],
+		"varyings": [
+			{
+				"src": "varying vec3 vPos;"
+			},
+			{
+				"src": "varying vec2 vUv;"
+			}
+		]
+	},
+	"variations": []
+}

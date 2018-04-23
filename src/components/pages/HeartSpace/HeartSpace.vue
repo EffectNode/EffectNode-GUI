@@ -52,9 +52,9 @@
           <button @click="EN.exportRoot({ root: EffectNode })">Export Proj</button>
           <input type="file" @change="restoreProject">
           <br />
-          Image1 <input accept="image/*" type="file" @change="loadImage1">
-          Image2 <input accept="image/*" type="file" @change="loadImage2">
-          Image3 <input accept="image/*" type="file" @change="loadImage3">
+          uImage1 <input accept="image/*" type="file" @change="loadImage1">
+          <!-- Image2 <input accept="image/*" type="file" @change="loadImage2">
+          Image3 <input accept="image/*" type="file" @change="loadImage3"> -->
         </div>
 
         <!-- <transition name="fade"> -->
@@ -232,12 +232,12 @@ export default {
     loadImage1 (evt) {
       this.loadImageTo({ to: 'uImage1', evt })
     },
-    loadImage2 (evt) {
-      this.loadImageTo({ to: 'uImage2', evt })
-    },
-    loadImage3 (evt) {
-      this.loadImageTo({ to: 'uImage3', evt })
-    },
+    // loadImage2 (evt) {
+    //   this.loadImageTo({ to: 'uImage2', evt })
+    // },
+    // loadImage3 (evt) {
+    //   this.loadImageTo({ to: 'uImage3', evt })
+    // },
     loadImageTo ({ to, evt }) {
       let file = evt.target.files[0]
       if (file) {
@@ -262,7 +262,7 @@ export default {
 
       this.setupTouch()
       this.setupGLSLMaker()
-      // this.hydrate({ use: 'template1' })
+      this.hydrate({ use: 'template1' })
     },
     detectFast () {
       var canvas = document.createElement('canvas')

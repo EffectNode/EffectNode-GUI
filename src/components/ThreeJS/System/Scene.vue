@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style scoped>
-.mounter {
+/* .mounter {
   display: none;
-}
+} */
 </style>

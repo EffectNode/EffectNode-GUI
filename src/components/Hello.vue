@@ -8,7 +8,9 @@
 
       <h3>While you wait for our product, you can experiment our prototype.</h3>
 
-      <a href="https://shader.wonglok.com/shader-svg">Projec X SHE, Codename: ShaderNode</a>
+      <a href="./heart-space">Heart Space Prototype</a>
+      <br />
+      <a href="./mindfulness/scene/demo1">Mindfulness Prototype</a>
 
       <p>EffectNode.com is made with love in Hong Kong.</p>
 

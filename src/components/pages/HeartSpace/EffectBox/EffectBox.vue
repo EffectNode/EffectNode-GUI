@@ -21,7 +21,7 @@
         <Object3D :key="input.nid + input.index" :px="((iInput + 1 - ((node.inputs.length + 1) / 2)) / node.inputs.length) * (node.inputs.length * 2.5)" v-for="(input, iInput) in node.inputs">
           <Mesh @element="addToInputs" @clean="() => {}">
             <CircleBufferGeometry :n="getSideByIO(input)" :r="0.65" />
-            <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" />
+            <MeshBasicMaterial :color="0xbababa" :size="1.0" :sizeAttenuation="false" />
           </Mesh>
         </Object3D>
       </Object3D>
@@ -30,7 +30,7 @@
       <Object3D py="-3.5" v-if="node.output.type !== 'void'">
         <Mesh @element="(v) => { output = v }" @clean="() => { }">
           <CircleBufferGeometry :n="getSideByIO(node.output)" :r="0.65" />
-          <MeshBasicMaterial :color="0xffffff" :size="1.0" :sizeAttenuation="false" />
+          <MeshBasicMaterial :color="0xbababa" :size="1.0" :sizeAttenuation="false" />
         </Mesh>
       </Object3D>
 

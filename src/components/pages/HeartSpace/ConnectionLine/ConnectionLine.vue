@@ -42,6 +42,16 @@ export default {
     }
   },
   watch: {
+    // p1 () {
+    //   this.$nextTick(() => {
+    //     this.updateGeo()
+    //   })
+    // },
+    // p2 () {
+    //   this.$nextTick(() => {
+    //     this.updateGeo()
+    //   })
+    // },
     p1p2JSON () {
       this.updateGeo()
     }
@@ -53,24 +63,31 @@ export default {
   },
   methods: {
     updateGeo () {
-      if (this.geometry) {
-        let v0 = this.geometry.vertices[0]
-        let v1 = this.geometry.vertices[1]
-
-        let p1 = new THREE.Vector3(this.p1.x, this.p1.y, 0)
-        let p2 = new THREE.Vector3(this.p2.x, this.p2.y, 0)
-
-        v0.x = p1.x
-        v0.y = p1.y
-
-        v1.x = p2.x
-        v1.y = p2.y
-
-        // this.scene.updateMatrixWorld(true)
-
-        this.geometry.verticesNeedUpdate = true
-        this.geometry.needsUpdate = true
+      if (!this.geometry) {
+        this.geometry = new THREE.Geometry()
       }
+      let v0 = this.geometry.vertices[0]
+      let v1 = this.geometry.vertices[1]
+
+      // let p1 = new THREE.Vector3(this.p1.x, this.p1.y, 0)
+      // let p2 = new THREE.Vector3(this.p2.x, this.p2.y, 0)
+
+      // v0.x = p1.x
+      // v0.y = p1.y
+
+      // v1.x = p2.x
+      // v1.y = p2.y
+
+      v0.x = this.p1.x
+      v0.y = this.p1.y
+
+      v1.x = this.p2.x
+      v1.y = this.p2.y
+
+      this.geometry.verticesNeedUpdate = true
+      this.geometry.needsUpdate = true
+
+      // this.scene.updateMatrixWorld(true)
     }
   },
   mounted () {

@@ -53,9 +53,11 @@ export default {
     })
   },
   mounted () {
+    this.$emit('attach', this.object3d)
     this.$parent.$emit('add', this.object3d)
   },
   beforeDestroy () {
+    this.$emit('detach', this.object3d)
     this.$parent.$emit('remove', this.object3d)
   },
   methods: {

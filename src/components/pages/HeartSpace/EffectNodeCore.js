@@ -1,4 +1,5 @@
 import * as ENdb from './ENdb.js'
+import { makeRandomID } from '../MindScene/Data/MindScene.js'
 
 // import * as _ from 'lodash'
 
@@ -27,8 +28,12 @@ export const cloneState = ({ state }) => {
 export const loadVariationJSON = ({ root, index }) => {
   let variations = root.variations
   let archiveInfo = variations[index]
-  let archiveInfoJSON = archiveInfo.stateJSON
-  return (archiveInfoJSON)
+  if (archiveInfo) {
+    let archiveInfoJSON = archiveInfo.stateJSON
+    return (archiveInfoJSON)
+  } else {
+    return false
+  }
 }
 
 export const loadVariation = ({ root, index }) => {
@@ -209,15 +214,14 @@ export const makeState = () => {
   }
 }
 
-export const makeTemplateNodes = ({ tid = 'template1' }) => {
+export const makeTemplateNodes = () => {
   let nl = makeNodeList()
-  if (tid === 'template1') {
-    nl.push(
-      makeNode({
-        nodePos: { x: -8.0, y: -15.0, z: 0 },
-        shaderType: VERTEX_SHADER,
-        isEntry: true,
-        src:
+  nl.push(
+    makeNode({
+      nodePos: { x: -8.0, y: -15.0, z: 0 },
+      shaderType: VERTEX_SHADER,
+      isEntry: true,
+      src:
 `void entry (vec3 pos, float x, float y, float z, float w) {
   vec4 newPosition = vec4(vec3(position) + vec3(pos) + vec3(x, y, z), w);
   vec4 mvPosition = modelViewMatrix * newPosition;
@@ -227,43 +231,58 @@ export const makeTemplateNodes = ({ tid = 'template1' }) => {
   vPos = vec3(position);
   vUv = uv;
 }`
-      })
-    )
-    nl.push(
-      makeNode({
-        nodePos: { x: 8.0, y: -15.0, z: 0 },
-        shaderType: FRAGMENT_SHADER,
-        isEntry: true,
-        src:
+    })
+  )
+  nl.push(
+    makeNode({
+      nodePos: { x: 8.0, y: -15.0, z: 0 },
+      shaderType: FRAGMENT_SHADER,
+      isEntry: true,
+      src:
 `void entry (vec4 color, float r, float g, float b, float a) {
   gl_FragColor = color + vec4(r, g, b, a);
 }`
-      })
-    )
-  }
+    })
+  )
   return nl
 }
 
-export const makeTemplate = ({ tid = '1' }) => {
-  let template = makeRoot()
-  template.state = makeState()
-  template.state.nodes = makeTemplateNodes({ tid })
-  template.state.connections = []
-  template.state.uniforms = [
+export const makeWordTemplate = () => {
+  let wordRoot = require('./JSON/Words.json')
+  let wordJSON = JSON.stringify(wordRoot)
+
+  wordRoot.state.nodes.forEach((node) => {
+    let nid = node.nid
+    wordJSON = wordJSON.replace(new RegExp('/' + nid + '/', 'g'), makeRandomID())
+  })
+
+  return JSON.parse(wordJSON)
+}
+
+export const makeTemplate = ({ template = {} }) => {
+  let root = makeRoot()
+  root.state = makeState()
+  root.state.nodes = makeTemplateNodes()
+  root.state.connections = []
+  root.state.uniforms = [
     {
+      val: 0,
       src: `uniform float time;`
     },
     {
+      val: '',
       src: `uniform sampler2D uImage1;`
     },
     {
-      src: `uniform sampler2D uImage2;`
+      preset: true,
+      src: `uniform sampler2D text;`
     },
     {
-      src: `uniform sampler2D uImage3;`
+      preset: true,
+      src: `uniform sampler2D pattern;`
     }
   ]
-  template.state.varyings = [
+  root.state.varyings = [
     {
       src: `varying vec3 vPos;`
     },
@@ -271,30 +290,35 @@ export const makeTemplate = ({ tid = '1' }) => {
       src: `varying vec2 vUv;`
     }
   ]
-  template.state.previews = makeTemplatePreviews()
-
-  if (tid === 'template2') {
-    template = {
-      ...template,
-      ...require('./Demos/Demo1.json')
-    }
+  root.state = {
+    ...root.state,
+    ...template
   }
 
-  if (tid === 'template3') {
-    template = {
-      ...template,
-      ...require('./Demos/Demo2.json')
-    }
-  }
+  // template.state.previews = makeTemplatePreviews()
 
-  if (tid === 'template4') {
-    template = {
-      ...template,
-      ...require('./Demos/Demo3.json')
-    }
-  }
+  // if (tid === 'template2') {
+  //   template = {
+  //     ...template,
+  //     ...require('./Demos/Demo1.json')
+  //   }
+  // }
 
-  return template
+  // if (tid === 'template3') {
+  //   template = {
+  //     ...template,
+  //     ...require('./Demos/Demo2.json')
+  //   }
+  // }
+
+  // if (tid === 'template4') {
+  //   template = {
+  //     ...template,
+  //     ...require('./Demos/Demo3.json')
+  //   }
+  // }
+
+  return root
 }
 
 export const hydrate = ({ use }) => {
@@ -417,7 +441,7 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
     if (type === 'float' && name === 'w') {
       return '1.0'
     } else if (type === 'float' && name === 'a') {
-      return '1.0'
+      return '0.0'
     } else if (type === 'float' && name === 'r') {
       return '0.0'
     } else if (type === 'float' && name === 'g') {
@@ -426,6 +450,8 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
       return '0.0'
     } else if (type === 'float') {
       return '0.0'
+    } else if (type === 'vec4' && name === 'color') {
+      return 'vec4(0.5)'
     } else if (type === 'vec4') {
       return 'vec4(0.0)'
     } else if (type === 'vec3') {
@@ -536,7 +562,7 @@ export const getEntryExecs = ({ entry, nodes, connections }) => {
 }
 
 export const getVertexExecutions = ({ nodes, connections }) => {
-  let prefix = `void main (void) {\n`
+  let prefix = `void main () {\n`
   let suffix = `\n}`
 
   let vertexEntries = getVertexEntries({ nodes })
@@ -549,7 +575,7 @@ export const getVertexExecutions = ({ nodes, connections }) => {
 }
 
 export const getFragmentExecutions = ({ nodes, connections }) => {
-  let prefix = `void main (void) {\n`
+  let prefix = `void main () {\n`
   let suffix = `\n}`
 
   let fragmentEntries = getFragmentEntries({ nodes })
