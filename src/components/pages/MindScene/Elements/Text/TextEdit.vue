@@ -50,7 +50,7 @@ export default {
 <style scoped>
 .ta{
   font-size: 17px;
-  width: 100%;
+  width: calc(100% - 12px);
 }
 
 .two-sides{
