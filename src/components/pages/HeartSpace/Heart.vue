@@ -72,7 +72,7 @@ import 'imports-loader?THREE=three!./DragConCon.js'
 // import 'imports-loader?THREE=three!three/examples/js/controls/EditorControls.js'
 /* eslint-enable */
 
-// currentObj
+// ENObj
 
 export default {
   props: {
@@ -681,7 +681,7 @@ export default {
       },
       loading: false,
       // useBloom: false,
-      currentObj: false,
+      ENObj: false,
       camPos: { x: 0, y: 0, z: 35 },
       boxDragControl: false,
       toucher: false,
@@ -702,8 +702,8 @@ export default {
     }
   },
   watch: {
-    currentObj () {
-      this.$emit('ENObj', this.currentObj)
+    ENObj () {
+      this.$emit('ENObj', this.ENObj)
     }
   },
   computed: {

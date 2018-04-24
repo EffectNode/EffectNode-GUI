@@ -138,7 +138,7 @@ export default {
         this.nodes.push(EN.makeNode({
           src:
 `float floatModifier (float i1) {
-  return sin(time * 3.0 + i1) * 3.0;
+  return sin(time * 3.0 + i1 + position.x + position.y) * 1.0;
 }`,
           isEntry: false,
           shaderType,

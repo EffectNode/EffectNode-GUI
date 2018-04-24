@@ -28,6 +28,12 @@ THREE.DragDrag = function ( _objects, _camera, _domElement ) {
 
 	var scope = this;
 
+	// function activateClick () {
+	// 	_domElement.addEventListener( 'click', onDocumentClick, false );
+	// 	_domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
+	// 	_domElement.addEventListener( 'mouseup', onDocumentMouseCancel, false );
+	// }
+
 	function activate() {
 
 		_domElement.addEventListener( 'click', onDocumentClick, false );

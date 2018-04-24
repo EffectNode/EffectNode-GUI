@@ -83,7 +83,7 @@ export default {
         this.textCanvas.style = this.style
         this.textCanvas.render()
 
-        let planeGeometry = new THREE.PlaneBufferGeometry(this.canvas.width / this.scale, this.canvas.height / this.scale, 2, 2)
+        let planeGeometry = new THREE.PlaneBufferGeometry(this.canvas.width / this.scale, this.canvas.height / this.scale, 100, 100)
         this.plane.geometry = planeGeometry
         this.$nextTick(() => {
           this.material.needsUpdate = true
@@ -103,7 +103,7 @@ export default {
       this.canvas = this.textCanvas.render()
       this.textureOfCanvas = new THREE.CanvasTexture(this.canvas)
 
-      let planeGeometry = new THREE.PlaneBufferGeometry(this.canvas.width / this.scale, this.canvas.height / this.scale, 2, 2)
+      let planeGeometry = new THREE.PlaneBufferGeometry(this.canvas.width / this.scale, this.canvas.height / this.scale, 100, 100)
       this.plane = new THREE.Mesh(planeGeometry)
       this.loadMaterial()
 

@@ -62,6 +62,8 @@
       }"
     />
 
+
+
   </Scene>
 
   <PerspectiveCamera
@@ -126,6 +128,16 @@ export default {
       rAFID: 0,
       scene: false,
       camera: false
+    }
+  },
+  watch: {
+    mode () {
+      if (this.mode === 'SceneEdit') {
+        this.touchDragControl.deactivate()
+        this.touchDragControl.activate()
+      } else {
+        this.touchDragControl.deactivate()
+      }
     }
   },
   computed: {
