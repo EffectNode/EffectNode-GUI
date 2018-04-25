@@ -2,7 +2,7 @@
   <div v-if="node">
 
     <Mesh @attach="(v) => { box = v }" @detach="() => { }">
-      <CircleBufferGeometry :r="2.5" />
+      <CircleBufferGeometry :r="2.75" />
       <MeshBasicMaterial :opacity="0.0" />
     </Mesh>
 

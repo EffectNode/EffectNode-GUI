@@ -71,9 +71,9 @@ export default {
       this.variationIndex = this.root.variations.length - 1
       this.variationIndex = this.variationIndex < 0 ? 0 : this.variationIndex
     },
-    root () {
-      this.variationIndex = 0
-    },
+    // root () {
+    //   this.variationIndex = 0
+    // },
     variationIndex (toVar, fromVar) {
       this.loadVar({ toVar, fromVar })
     }
@@ -109,17 +109,19 @@ export default {
       this.tryRefreshGLSL()
     },
     loadVar ({ fromVar, toVar }) {
-      this.$nextTick(() => {
-        let history = EN.loadVariation({ root: this.root, index: toVar })
+      let history = EN.loadVariation({ root: this.root, index: toVar })
 
-        if (history) {
-          this.root.state = history
-          this.$emit('root', this.root)
-        }
+      if (history) {
+        this.root.state = history
+        this.$emit('root', {
+          ...this.root
+        })
+      }
 
-        this.tryRefreshGUI()
-        this.tryRefreshGLSL()
-      })
+      console.log(history)
+
+      this.tryRefreshGUI()
+      this.tryRefreshGLSL()
     },
 
     loadImage1 (evt) {

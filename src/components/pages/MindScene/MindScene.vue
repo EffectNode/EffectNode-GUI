@@ -5,8 +5,8 @@
   <div v-if="current.data && mode === 'SceneEdit'" class="full closer" @click="current.data = false; current.mesh = false;"></div>
   <div class="editor">
     <div v-if="current.data && mode === 'SceneEdit'" >
-      <button @click="mode = 'EffectNode'">EffectNode</button>
       <TextEdit v-if="current.data && current.data.arr === 'words'" :info="current.data" :current="current" :root="root" />
+      <button @click="mode = 'EffectNode'">Remix Item's Effect</button>
     </div>
   </div>
 
@@ -50,6 +50,11 @@
       :camera="camera"
       :scene="scene"
       ref="heart"
+
+      @root="(v) => {
+        current.data.effect = v
+        refreshGUI()
+      }"
 
       @ENObj="(v) => {
         ENObj = v
@@ -173,6 +178,9 @@ export default {
         setTimeout(() => {
           heart.tryRefreshGUI()
         }, 30)
+        setTimeout(() => {
+          heart.tryRefreshGUI()
+        }, 60)
       }
     },
     runWebGL () {

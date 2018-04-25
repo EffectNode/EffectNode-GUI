@@ -16,7 +16,7 @@
         {{ getInputPos({ conn }) }}
       </ConnectionLine>
 
-      <Object3D :key="node.nid" v-for="(node, iNode) in nodes">
+      <Object3D :key="node.nid + iNode" v-for="(node, iNode) in nodes">
         <EffectBox
           :node="node"
           :nodes="nodes"
@@ -94,15 +94,14 @@ export default {
     Settings
   },
   methods: {
-    setupRoot ({ root }) {
-      this.root = root
-      this.$nextTick(() => {
-        this.$forceUpdate()
-        this.variationIndex = this.root.variations.length - 1
-        this.tryRefreshGLSL()
-        this.tryRefreshGUI()
-      })
-    },
+    // setupRoot ({ root }) {
+    //   this.root = root
+    //   this.$nextTick(() => {
+    //     this.$forceUpdate()
+    //     this.tryRefreshGLSL()
+    //     this.tryRefreshGUI()
+    //   })
+    // },
 
     setup () {
       // let dpi = 1.25
@@ -114,9 +113,10 @@ export default {
       // }
       // this.setupBloom({ dpi: window.devicePixelRatio })
       // this.scene.background = new THREE.Color(0x374967)
-      this.setupRoot({ root: this.root })
+      // this.setupRoot({ root: this.root })
       this.setupTouch()
       this.setupGLSLInterval()
+      this.tryRefreshGUI()
       // this.hydrate({ use: 'template1' })
     },
     // detectFast () {
@@ -513,6 +513,8 @@ export default {
       node.pos.y = mesh.position.y
       node.pos.z = mesh.position.z
 
+      this.$emit('root', this.root)
+
       EN.saveRoot({ root: this.root })
       this.tryRefreshGUI()
       this.tryRefreshGLSL()
@@ -618,6 +620,7 @@ export default {
         }
       }, 100)
     },
+
     log (v) {
       console.log(v)
     },
@@ -655,6 +658,7 @@ export default {
       nodes.splice(iNode, 1)
 
       // close popup
+      this.ENObj = false
       this.$emit('ENObj', false)
       EN.saveRoot({ root: this.root })
       this.$forceUpdate()
@@ -670,7 +674,6 @@ export default {
   },
   data () {
     return {
-      variationIndex: null,
       Math,
       refreshToggle: true,
       EN,
