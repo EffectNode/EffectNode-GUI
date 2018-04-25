@@ -3,6 +3,7 @@
 
   <div class="full toucher" ref="touch-surface"></div>
   <div v-if="current.data && mode === 'SceneEdit'" class="full closer" @click="current.data = false; current.mesh = false;"></div>
+
   <div class="editor">
     <div v-if="current.data && mode === 'SceneEdit'" >
       <TextEdit v-if="current.data && current.data.arr === 'words'" :info="current.data" :current="current" :root="root" />
@@ -10,21 +11,29 @@
     </div>
   </div>
 
-  <ENEditor
-    class="editor"
-    v-if="current.data && mode === 'EffectNode' && scene"
-    :root="current.data.effect"
-    :ENObj="ENObj"
-    :camera="camera"
-    :glsl="glsl"
-    @refresh-glsl="refreshGLSL"
-    @refresh-gui="refreshGUI"
-    @remove-box="removeBox"
+  <ENClose
+    v-if="current.data && mode === 'EffectNode' && scene && !ENObj"
+    class="en-edit-close"
     @close="() => {
       mode = 'SceneEdit';
       current.data = false;
       current.mesh = false;
     }"
+  />
+
+  <div v-if="ENObj" class="full closer" @click="ENObj = false;"></div>
+
+  <ENEditor
+    class="en-edit-glsl"
+    v-if="current.data && mode === 'EffectNode' && scene && ENObj"
+    :root="current.data.effect"
+    :ENObj="ENObj"
+    :glsl="glsl"
+
+    @refresh-glsl="refreshGLSL"
+    @refresh-gui="refreshGUI"
+    @remove-box="removeEffectBox"
+
     @root="(v) => {
       current.data.effect = v
       refreshGUI()
@@ -34,6 +43,43 @@
     }"
   />
 
+  <ENCreateButtons
+    class="en-create-btns"
+    v-if="current.data && mode === 'EffectNode' && scene && !ENObj"
+    :root="current.data.effect"
+    :camera="camera"
+    @refresh-glsl="refreshGLSL"
+    @refresh-gui="refreshGUI"
+    @remove-box="removeEffectBox"
+    @root="(v) => {
+      current.data.effect = v
+      refreshGUI()
+    }"
+    @ENObj="(v) => {
+      ENObj = v
+    }"
+  />
+
+  <ENTimeMachine
+    class="en-time-machine"
+    v-if="current.data && mode === 'EffectNode' && scene && !ENObj"
+    :root="current.data.effect"
+    :ENObj="ENObj"
+    :camera="camera"
+    @refresh-glsl="refreshGLSL"
+    @refresh-gui="refreshGUI"
+    @remove-box="removeEffectBox"
+    @root="(v) => {
+      current.data.effect = v
+      refreshGUI()
+    }"
+    @ENObj="(v) => {
+      ENObj = v
+    }"
+  />
+
+
+
   <Scene @scene="(v) => { $emit('scene', v); scene = v }">
 
 
@@ -42,7 +88,6 @@
     </Object3D>
 
     <Heart
-      class="effect-node"
       v-if="touchSurface && mode === 'EffectNode' && current.data && current.data.effect && touchPanControl"
       :touchPanControl="touchPanControl"
       :root="current.data.effect"
@@ -66,8 +111,6 @@
         refreshGUI()
       }"
     />
-
-
 
   </Scene>
 
@@ -101,6 +144,9 @@ import * as EN from '../HeartSpace/EffectNodeCore.js'
 import Heart from '../HeartSpace/Heart.vue'
 
 import ENEditor from './Elements/EN/ENEditor.vue'
+import ENCreateButtons from './Elements/EN/ENCreateButtons.vue'
+import ENClose from './Elements/EN/ENClose.vue'
+import ENTimeMachine from './Elements/EN/ENTimeMachine.vue'
 
 export default {
   components: {
@@ -108,7 +154,10 @@ export default {
     TextOutlet,
     TextEdit,
     Heart,
-    ENEditor
+    ENEditor,
+    ENCreateButtons,
+    ENClose,
+    ENTimeMachine
   },
   props: {
     renderer: {},
@@ -151,7 +200,7 @@ export default {
     }
   },
   methods: {
-    removeBox (v) {
+    removeEffectBox (v) {
       let heart = this.$refs['heart']
       if (heart) {
         heart.removeCurrentBox(v)
@@ -284,22 +333,10 @@ export default {
   background-color: rgba(255,255,255,0.5);
 }
 .closer{
-  position: absolute;
+  position: fixed;
   top: 0px;
   left: 0px;
   background-color: rgba(0,0,0,0.2);
-}
-
-.effect-node{
-  position: absolute;
-  top: 0px;
-  left: 0px;
-}
-
-.tools{
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
 }
 
 .fade-enter-active, .fade-leave-active {
@@ -309,9 +346,37 @@ export default {
   opacity: 0;
 }
 
-.glsl-edit{
-  width: 100%;
-  max-width: 768px;
+.tools{
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.en-create-btns{
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.en-edit-glsl{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: rgba(255,255,255,0.5);
+  padding: 20px;
+}
+
+.en-edit-close{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+}
+
+.en-time-machine{
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
 }
 
 </style>
