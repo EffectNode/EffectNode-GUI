@@ -6,13 +6,13 @@
       Remove Text
     </button>
   </div>
-  <textarea ref="ta" autofocus="true" @input="$emit('pulse-update', info)" class="ta" :placeholder="'Please enter some text here....'" v-model="info.text" id="" cols="30" rows="10"></textarea>
+  <textarea ref="ta" autofocus="true" @input="$emit('pulse-update', info)" class="ta" :placeholder="'Please enter some text here....'" v-model="info.data.text" id="" cols="30" rows="10"></textarea>
   <br />
-  Word Box Width<input type="range" @input="$emit('pulse-update', info)" v-model="info.width" :min="100" :max="1000" :step="1">
+  Word Box Width<input type="range" @input="$emit('pulse-update', info)" v-model="info.data.width" :min="100" :max="1000" :step="1">
   <br />
   <label for="">
     Transparent Background
-    <input type="checkbox" v-model="info.transparent">
+    <input type="checkbox" v-model="info.data.transparent">
   </label>
 
 </div>

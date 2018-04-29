@@ -7,7 +7,7 @@
       <button @click="addEffectNode({ shaderType: EN.FRAGMENT_SHADER })">+FragmentNode</button>
 
       <br />
-      Image1 <input accept="image/*" type="file" @change="loadImage1">
+      uImage1 <input accept="image/*" type="file" @change="loadImage1">
     </div>
   </div>
 </template>

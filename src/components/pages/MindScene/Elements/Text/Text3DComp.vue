@@ -150,6 +150,7 @@ export default {
         this.plane.needsUpdate = true
       }
     },
+    // get extra info
     getExtra () {
       return this.effect.state.uniforms.reduce((accu, val) => {
         if (!val.preset) {

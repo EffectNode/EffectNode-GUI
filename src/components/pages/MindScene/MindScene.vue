@@ -68,7 +68,6 @@
     :camera="camera"
     @refresh-glsl="refreshGLSL"
     @refresh-gui="refreshGUI"
-    @remove-box="removeEffectBox"
     @root="(v) => {
       current.data.effect = v
       refreshGUI()

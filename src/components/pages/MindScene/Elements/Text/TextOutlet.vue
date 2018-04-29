@@ -6,10 +6,10 @@
         :fs="getGLSL({ root: info.effect }).fragmentShader"
         :effect="info.effect"
         :pos="info.pos"
-        :transparent="info.transparent"
+        :transparent="info.data.transparent"
         :placeholder="'Click to edit me.'"
-        :text="info.text"
-        :width="info.width"
+        :text="info.data.text"
+        :width="info.data.width"
         @attach="(mesh) => { attachText({ mesh, info }) }"
         @detach="(mesh) => { detachText({ mesh }) }" />
     </Object3D>

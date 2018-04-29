@@ -652,7 +652,7 @@ export default {
       })
 
       // save
-      EN.saveRoot({ root: this.root })
+      // EN.saveRoot({ root: this.root })
 
       // remove data
       nodes.splice(iNode, 1)
