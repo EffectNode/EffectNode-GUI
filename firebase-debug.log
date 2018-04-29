@@ -1,0 +1,26 @@
+[debug] [2018-04-29T21:30:16.561Z] ----------------------------------------------------------------------
+[debug] [2018-04-29T21:30:16.563Z] Command:       /Users/lok/.nvm/versions/node/v8.10.0/bin/node /Users/lok/.nvm/versions/node/v8.10.0/bin/firebase deploy --only hosting
+[debug] [2018-04-29T21:30:16.563Z] CLI Version:   3.17.6
+[debug] [2018-04-29T21:30:16.563Z] Platform:      darwin
+[debug] [2018-04-29T21:30:16.563Z] Node Version:  v8.10.0
+[debug] [2018-04-29T21:30:16.564Z] Time:          Mon Apr 30 2018 05:30:16 GMT+0800 (HKT)
+[debug] [2018-04-29T21:30:16.564Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-04-29T21:30:16.574Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-04-29T21:30:16.574Z] > authorizing via signed-in user
+[debug] [2018-04-29T21:30:16.575Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/effectnode  
+  
+ Mon Apr 30 2018 05:30:16 GMT+0800 (HKT)
+[debug] [2018-04-29T21:30:17.530Z] <<< HTTP RESPONSE 200
+[debug] [2018-04-29T21:30:17.531Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/effectnode/tokens  
+  
+ Mon Apr 30 2018 05:30:17 GMT+0800 (HKT)
+[debug] [2018-04-29T21:30:18.339Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'effectnode'...
+[info] 
+[info] i  deploying hosting
+[info] i  hosting: preparing dist directory for upload...
+[debug] [2018-04-29T21:30:21.205Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/effectnode/uploads/-LBIJ3eu8fIMeUwji-WU?fileCount=57&message=  
+  
+ Mon Apr 30 2018 05:30:21 GMT+0800 (HKT)
