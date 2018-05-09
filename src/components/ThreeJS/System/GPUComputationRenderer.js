@@ -308,7 +308,7 @@
 
         };
 
-          this.createTexture = function( sizeXTexture, sizeYTexture ) {
+        this.createTexture = function( sizeXTexture, sizeYTexture ) {
 
           sizeXTexture = sizeXTexture || sizeX;
           sizeYTexture = sizeYTexture || sizeY;
