@@ -79,26 +79,41 @@
 
   <Scene @scene="(v) => { $emit('scene', v); scene = v }">
 
-    <Object3D
-      :px="0.0" :py="0.0" :pz="-5.0"
+    <!-- <Object3D
+      :px="-10.0" :py="0.0" :pz="-5.0"
       :rx="0.0" :ry="0.0" :rz="0.0"
       :sx="0.1" :sy="0.1" :sz="0.1"
     >
-      <!-- <GPUParticles
+      <GPUParticles
         v-if="renderer && camera && scene"
         :renderer="renderer"
         :camera="camera"
         :scene="scene"
         @gpgpu="(v) => { gpgpuParticles = v }"
-      /> -->
-    </Object3D>
+      />
+    </Object3D> -->
 
-    <Object3D :pz="-5">
-      <GPUObjects
+    <!-- <Object3D :px="10.0" :pz="-5">
+      <GPUSpiral
         v-if="renderer"
         :renderer="renderer"
       />
+    </Object3D> -->
+
+    <Object3D :px="0.0" :pz="-5">
+      <GPUMath
+        v-if="renderer && touchSurface"
+        :renderer="renderer"
+        :touchSurface="touchSurface"
+      />
     </Object3D>
+
+    <!-- <Object3D :px="0.0" :pz="-5">
+      <GPUSpiral
+        v-if="renderer"
+        :renderer="renderer"
+      />
+    </Object3D> -->
 
     <Object3D :pz="-5">
       <TextOutlet ref="text-outlet" v-if="root" :root="root" :group="dragGroup" />
@@ -166,7 +181,8 @@ import ENClose from './Elements/EN/ENClose.vue'
 import ENTimeMachine from './Elements/EN/ENTimeMachine.vue'
 
 import GPUParticles from './Elements/GPUParticles/GPUParticles.vue'
-import GPUObjects from './Elements/GPUObjects/GPUObjects.vue'
+import GPUSpiral from './Elements/GPUObjects/GPUSpiral.vue'
+import GPUMath from './Elements/GPUObjects/GPUMath.vue'
 
 export default {
   components: {
@@ -179,7 +195,8 @@ export default {
     ENClose,
     ENTimeMachine,
     GPUParticles,
-    GPUObjects
+    GPUSpiral,
+    GPUMath
   },
   props: {
     renderer: {},

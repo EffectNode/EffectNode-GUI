@@ -67,22 +67,67 @@ vec3 ballify (vec3 pos, float r) {
   );
 }
 
+mat3 rotateZ(float rad) {
+    float c = cos(rad);
+    float s = sin(rad);
+    return mat3(
+        c, s, 0.0,
+        -s, c, 0.0,
+        0.0, 0.0, 1.0
+    );
+}
+
+mat3 rotateY(float rad) {
+    float c = cos(rad);
+    float s = sin(rad);
+    return mat3(
+        c, 0.0, -s,
+        0.0, 1.0, 0.0,
+        s, 0.0, c
+    );
+}
+
+mat3 rotateX(float rad) {
+    float c = cos(rad);
+    float s = sin(rad);
+    return mat3(
+        1.0, 0.0, 0.0,
+        0.0, c, s,
+        0.0, -s, c
+    );
+}
+
 uniform float time;
-uniform sampler2D lastTexture;
 uniform sampler2D startTexture;
+uniform sampler2D indexerTexture;
+uniform sampler2D simTexture;
 
 void main() {
   vec2 uv = gl_FragCoord.xy / resolution.xy;
 
+  vec4 indexer = texture2D(indexerTexture, uv);
   vec4 startPos = texture2D(startTexture, uv);
-  vec4 lastPos = texture2D(lastTexture, uv);
-  vec3 noiser = startPos.xyz;
+  vec4 simVal = texture2D(simTexture, uv);
 
-  noiser.xyz += cnoise(
-    startPos.xy + sin(time * 0.4) * 20.0
-  ) * 50.0;
+  float i = indexer.x;
+  float e = indexer.y;
 
-  vec3 updatedPos = ballify(noiser.xyz, 20.0 + rand(uv) * 0.1);
+  float k = 3.0; // winder;
+
+  float x = cnoise(vec2(time + startPos.xx + .1)) * rand(startPos.xx + .0) * 3.5 + 17.0 * (sin(PI2 * e * k) * cos(PI2 * e * k) * 1.0);
+  float y = cnoise(vec2(time + startPos.yy + .2)) * rand(startPos.yy + .1) * 3.5 + 17.0 * (sin(PI2 * e * k) * sin(PI2 * e * k) * 1.0 - 0.5);
+  float z = cnoise(vec2(time + startPos.zz + .3)) * rand(startPos.zz + .2) * 3.5 + 17.0 * (e * 2.0 - 1.0);
+
+  vec4 pt = vec4(x, y, z, 1.0);
+
+  pt.xyz = rotateX(PI * 0.5) * pt.xyz;
+
+  vec3 updatedPos = vec3(pt);
+  updatedPos = updatedPos * rotateY(time * 1.5);
+
+  updatedPos += vec3(simVal) * 0.01;
+
+  // updatedPos += ballify(updatedPos + updatedPos * cnoise(updatedPos.xy), 0.1);
 
   gl_FragColor = vec4(updatedPos, 1.0);
 }

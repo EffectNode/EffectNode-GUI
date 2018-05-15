@@ -40,7 +40,7 @@ export default {
     }
   },
   mounted () {
-    var WIDTH = 256
+    var WIDTH = 128
     var renderer = this.renderer
     var gpuCompute = this.gpuCompute = new GPUComputationRenderer(WIDTH, WIDTH, renderer)
     var pos0 = gpuCompute.createTexture()

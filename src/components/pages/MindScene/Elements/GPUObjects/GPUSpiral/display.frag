@@ -4,8 +4,9 @@ uniform float opacity;
 
 void main() {
     vec4 imgColor = texture2D(picture, vUv);
-    imgColor.a = imgColor.a * opacity;
 
     vec4 outputColor = imgColor;
+    outputColor.a = outputColor.a * opacity;
+
     gl_FragColor = outputColor;
 }
