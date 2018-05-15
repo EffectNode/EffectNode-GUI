@@ -154,9 +154,6 @@ void main() {
 
   vec3 nextPos = vec3(lastPos);
 
-//   nextPos += getDiff(nextPos, mouse * 35.0) * 5.0;
-//   nextPos = nextPos + 0.1 * nextPos * sin(e * M_PI * 2.0 + time);
-
   float x = 0.5 - rand(uv + .1);
   float y = 0.5 - rand(uv + .2);
   float z = 0.5 - rand(uv + .3);
