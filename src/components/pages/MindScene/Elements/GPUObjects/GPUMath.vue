@@ -13,7 +13,7 @@ function prepIndexer (texture, SIZE) {
   for (var j = 0; j < max; j++) {
     pixels[p + 0] = j
     pixels[p + 1] = j / (max)
-    pixels[p + 2] = j / SIZE
+    pixels[p + 2] = SIZE
     pixels[p + 3] = 1.0
     p += 4
   }
@@ -34,7 +34,7 @@ export default {
   },
   mounted () {
     var count = 0
-    let SIZE = 256
+    let SIZE = 64
 
     var gpuCompute = new GPUComputationRenderer(SIZE, SIZE, this.renderer)
 
@@ -113,8 +113,11 @@ export default {
       pingMat.uniforms.time.value = window.performance.now() * 0.0001
       pongMat.uniforms.time.value = window.performance.now() * 0.0001
 
-      gpuCompute.doRenderTarget(pongMat, pongTarget)
-      gpuCompute.doRenderTarget(pingMat, pingTarget)
+      if (count % 2 === 0) {
+        gpuCompute.doRenderTarget(pongMat, pongTarget)
+      } else {
+        gpuCompute.doRenderTarget(pingMat, pingTarget)
+      }
     }
 
     // display part
@@ -132,12 +135,13 @@ export default {
         time: { value: 0 },
         opacity: { value: 1.0 },
         posTex: { value: null },
+        indexerTexture: { value: indexerTexture },
         picture: { value: new THREE.TextureLoader().load('https://picsum.photos/200/300', (texture) => { texture.flipY = true; texture.needsUpdate = true }) },
         pointSize: { value: window.devicePixelRatio || 1.0 }
       }
     })
 
-    var points = this.points = new THREE.Points(geometry, material)
+    var points = this.points = new THREE.LineSegments(geometry, material)
     points.matrixAutoUpdate = false
     points.updateMatrix()
     points.frustumCulled = false

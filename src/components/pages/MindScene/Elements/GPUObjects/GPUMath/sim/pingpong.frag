@@ -151,17 +151,20 @@ void main() {
 
   float i = indexer.x;
   float e = indexer.y;
+  float u = indexer.z;
 
   vec3 nextPos = vec3(lastPos);
 
-  float x = 0.5 - rand(uv + .1);
-  float y = 0.5 - rand(uv + .2);
-  float z = 0.5 - rand(uv + .3);
+  float k = 1.0 + time;
+  k = 1.0 + mod(k, 5.0);
 
-  vec3 ball1 = ballify(vec3(x, y, z), 1.0);
+  float x = 0.5 - sin(e * M_PI * 2.0 * k) * sin(e * M_PI * 2.0 * k);
+  float y = sin(e * M_PI * 2.0 * k) * cos(e * M_PI * 2.0 * k);
+  float z = sin(i / u * M_PI * 2.0) * 2.0;
+
+  vec3 ball1 = vec3(x, y, z);
 
   nextPos = ballify(ball1 + nextPos, 17.0);
-
   nextPos += getDiff(nextPos, mouse * 18.0) * 50.0;
 
   gl_FragColor = vec4(nextPos, 1.0);
