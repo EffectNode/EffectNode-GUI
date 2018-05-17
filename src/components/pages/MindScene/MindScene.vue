@@ -11,6 +11,11 @@
     </div>
   </div>
 
+  <div class="debug">
+    <ACE v-model="pingPongShader" filepath="file.frag" :width="debug.w" :height="debug.h" />
+    <!-- <textarea v-model="pingPongShader" cols="100" rows="50" ></textarea> -->
+  </div>
+
   <ENClose
     v-if="current.data && mode === 'EffectNode' && scene && !ENObj"
     class="en-edit-close"
@@ -101,8 +106,9 @@
     </Object3D> -->
 
     <Object3D :px="0.0" :pz="-5">
-      <GPUMath
+      <GPUCloudSphere
         v-if="renderer && touchSurface"
+        :pingPongShader="pingPongShader"
         :renderer="renderer"
         :touchSurface="touchSurface"
       />
@@ -182,7 +188,9 @@ import ENTimeMachine from './Elements/EN/ENTimeMachine.vue'
 
 import GPUParticles from './Elements/GPUParticles/GPUParticles.vue'
 import GPUSpiral from './Elements/GPUObjects/GPUSpiral.vue'
-import GPUMath from './Elements/GPUObjects/GPUMath.vue'
+import GPUCloudSphere from './Elements/GPUObjects/GPUCloudSphere.vue'
+
+import ACE from '@/components/parts/EffectNode/ACE/ACE.vue'
 
 export default {
   components: {
@@ -196,7 +204,8 @@ export default {
     ENTimeMachine,
     GPUParticles,
     GPUSpiral,
-    GPUMath
+    GPUCloudSphere,
+    ACE
   },
   props: {
     renderer: {},
@@ -204,6 +213,11 @@ export default {
   },
   data () {
     return {
+      debug: {
+        w: 600,
+        h: window.innerHeight
+      },
+      pingPongShader: require('./Elements/GPUObjects/GPUCloudSphere/sim/pingpong.frag'),
       gpgpuParticles: false,
       glsl: false,
       EN,
@@ -355,6 +369,22 @@ export default {
 </script>
 
 <style scoped>
+.debug {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  opacity: 0.5;
+}
+.debug:hover{
+  opacity: 1.0;
+}
+
+@media screen and (max-width: 500px) {
+  .debug{
+    display: none;
+  }
+}
+
 .full{
   width: 100%;
   height: 100%;

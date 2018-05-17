@@ -22,19 +22,30 @@ function prepIndexer (texture, SIZE) {
 export default {
   props: {
     touchSurface: {},
-    renderer: {}
+    renderer: {},
+    pingPongShader: {
+      default () {
+        return require('./GPUCloudSphere/sim/pingpong.frag')
+      }
+    }
   },
   data () {
     return {
+      init () {},
       gpuCompute: false,
       getTexture: () => {},
       runSim: () => {},
       updateMouse: () => {}
     }
   },
+  watch: {
+    pingPongShader () {
+      this.init({ pingPongShader: this.pingPongShader })
+    }
+  },
   mounted () {
     var count = 0
-    let SIZE = 64
+    let SIZE = 256
 
     var gpuCompute = new GPUComputationRenderer(SIZE, SIZE, this.renderer)
 
@@ -44,18 +55,14 @@ export default {
     var pingTarget = gpuCompute.createRenderTarget()
     var pongTarget = gpuCompute.createRenderTarget()
 
-    let pingMat, pongMat, randMat
+    let pingMat, pongMat
 
-    let randShader = require('./GPUMath/sim/rand.frag')
-    let pingPongShader = require('./GPUMath/sim/pingpong.frag')
+    let pingPongShader = this.pingPongShader
 
-    let displayV = require('./GPUMath/show/display.vert')
-    let displayF = require('./GPUMath/show/display.frag')
+    let displayV = require('./GPUCloudSphere/show/display.vert')
+    let displayF = require('./GPUCloudSphere/show/display.frag')
 
     let init = ({ pingPongShader }) => {
-      randMat = gpuCompute.createShaderMaterial(randShader, {
-        indexerTexture: { value: indexerTexture }
-      })
       pingMat = gpuCompute.createShaderMaterial(pingPongShader, {
         lastTexture: { value: null },
         indexerTexture: { value: indexerTexture },
@@ -68,20 +75,14 @@ export default {
         time: { value: 0 },
         mouse: { value: new THREE.Vector3(0.0, 0.0, 0.0) }
       })
-
-      gpuCompute.doRenderTarget(randMat, pingTarget)
-      gpuCompute.doRenderTarget(randMat, pongTarget)
     }
+    this.init = init
     init({ pingPongShader })
 
     var mouser = () => {
       window.addEventListener('mousemove', (evt) => {
         let x = (evt.pageX - window.innerWidth * 0.5) / window.innerWidth
         let y = (evt.pageY - window.innerHeight * 0.5) / window.innerHeight
-        // let aRatio = window.innerWidth / window.innerHeight
-        // let bRatio = window.innerHeight / window.innerWidth
-        // let z = Math.min(aRatio, bRatio)
-
         let z = 0.0
 
         y *= -1
@@ -93,8 +94,6 @@ export default {
       this.touchSurface.addEventListener('touchmove', (evt) => {
         let x = (evt.touches[0].pageX - window.innerWidth * 0.5) / window.innerWidth
         let y = (evt.touches[0].pageY - window.innerHeight * 0.5) / window.innerHeight
-        // let aRatio = window.innerWidth / window.innerHeight
-        // let bRatio = window.innerHeight / window.innerWidth
         let z = 0.0
 
         y *= -1
@@ -126,6 +125,7 @@ export default {
       // blending: THREE.AdditiveBlending,
       // depthTest: false,
       transparent: true,
+      depthWrite: false,
       vertexShader: displayV,
       fragmentShader: displayF,
       defines: {
@@ -141,7 +141,8 @@ export default {
       }
     })
 
-    var points = this.points = new THREE.LineSegments(geometry, material)
+    var points = this.points = new THREE.Points(geometry, material)
+    // var points = this.points = new THREE.Points(geometry, material)
     points.matrixAutoUpdate = false
     points.updateMatrix()
     points.frustumCulled = false
