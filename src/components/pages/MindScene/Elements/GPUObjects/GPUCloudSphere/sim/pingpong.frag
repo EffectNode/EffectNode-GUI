@@ -321,7 +321,8 @@ void main() {
     float ny = nextPos.y;
     float nz = nextPos.z;
 
-    float roller = M_PI * 2.0 * e + time + nz * 0.5 * sin(ny * 3.0 + time);
+    float roller = M_PI * 2.0 * e + time + nz * 0.3 * sin(ny * 0.5 * nx * 0.5 + 30.0 * fract(time));
+
 
     x = 0.1 * x * sin(roller) * sin(roller);
     y = 0.1 * y * cos(roller) * cos(roller);
