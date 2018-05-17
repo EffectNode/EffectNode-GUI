@@ -310,7 +310,9 @@ export default {
       touchPanControl.noPan = false
       touchPanControl.staticMoving = false
       touchPanControl.dynamicDampingFactor = 0.234
-      touchPanControl.enabled = true
+
+      // debug
+      touchPanControl.enabled = false
 
       let touchDragControl = this.touchDragControl = new THREE.DragDrag(this.dragGroup, camera, touchSurface)
       touchDragControl.addEventListener('dragstart', this.itemDragStart)
