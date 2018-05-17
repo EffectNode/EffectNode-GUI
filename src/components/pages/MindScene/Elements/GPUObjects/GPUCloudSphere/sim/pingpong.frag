@@ -1,8 +1,6 @@
 #include <common>
 precision highp sampler2D;
 
-
-
 //  Classic Perlin 3D Noise
 //  by Stefan Gustavson
 //
@@ -149,6 +147,9 @@ uniform float tapCount;
 
 void main() {
   MATH_EQ = mod(tapCount, 12.0);
+
+  // Enforce edit
+  // MATH_EQ = 2.0;
 
   vec2 uv = gl_FragCoord.xy / resolution.xy;
 
