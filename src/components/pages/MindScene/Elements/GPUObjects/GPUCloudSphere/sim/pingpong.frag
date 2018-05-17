@@ -148,7 +148,6 @@ uniform float tapCount;
 void main() {
   MATH_EQ = mod(tapCount, 12.0);
 
-
   // Enforce edit
   // MATH_EQ = 12.0;
 

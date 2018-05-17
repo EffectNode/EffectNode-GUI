@@ -100,8 +100,10 @@ export default {
 
       var isClick = false
       this.touchSurface.addEventListener('click', () => {
-        pingMat.uniforms.tapCount.value++
-        pongMat.uniforms.tapCount.value++
+        if (!isClick) {
+          pingMat.uniforms.tapCount.value++
+          pongMat.uniforms.tapCount.value++
+        }
       }, false)
       this.touchSurface.addEventListener('touchstart', (evt) => {
         isClick = true
