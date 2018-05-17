@@ -136,7 +136,7 @@ export default {
         opacity: { value: 1.0 },
         posTex: { value: null },
         indexerTexture: { value: indexerTexture },
-        picture: { value: new THREE.TextureLoader().load('https://picsum.photos/200/300', (texture) => { texture.flipY = true; texture.needsUpdate = true }) },
+        picture: { value: new THREE.TextureLoader().load('https://picsum.photos/256/256', (texture) => { texture.flipY = true; texture.needsUpdate = true }) },
         pointSize: { value: window.devicePixelRatio || 1.0 }
       }
     })

@@ -121,9 +121,10 @@
       />
     </Object3D> -->
 
-    <Object3D :pz="-5">
+    <!-- Text Outlet -->
+    <!-- <Object3D :pz="-5">
       <TextOutlet ref="text-outlet" v-if="root" :root="root" :group="dragGroup" />
-    </Object3D>
+    </Object3D> -->
 
     <Heart
       v-if="touchSurface && mode === 'EffectNode' && current.data && current.data.effect && touchPanControl"
@@ -376,7 +377,7 @@ export default {
   opacity: 0.5;
 }
 .debug:hover{
-  opacity: 1.0;
+  opacity: 0.75;
 }
 
 @media screen and (max-width: 500px) {

@@ -1,4 +1,5 @@
 #include <common>
+#define SHAPE 10
 
 //  Classic Perlin 3D Noise
 //  by Stefan Gustavson
@@ -102,7 +103,6 @@ mat3 rotateX(float rad) {
 //   float G, eZ;
 //   const float ER = 6378150.0;
 //   const float ER2 = 6378150.0 * 6378150.0;
-
 //   eZ = ER + z;
 //   G = 9.81 * ER2 / (eZ * eZ);
 //   return G;
@@ -155,9 +155,7 @@ void main() {
 
   vec3 nextPos = vec3(lastPos);
 
-  int mode = 2;
-
-  if (mode == 1) {
+  if (SHAPE == 1) {
     float k = 1.0 + time;
     k = 1.0 + mod(k, 5.0);
 
@@ -170,7 +168,7 @@ void main() {
 
     nextPos = ballify(ball1 + nextPos, 17.0);
     nextPos += getDiff(nextPos, mouse * 18.0) * 50.0;
-  } else if (mode == 2) {
+  } else if (SHAPE == 2) {
     float x = 0.5 - rand(uv + .1);
     float y = 0.5 - rand(uv + .2);
     float z = 0.5 - rand(uv + .3);
@@ -179,8 +177,8 @@ void main() {
 
     nextPos = ballify(ball1 + nextPos, 17.0);
     nextPos += getDiff(nextPos, mouse * 17.0) * 50.0;
-  } else if (mode == 3) {
-    float k = 3.0; // winder;
+  } else if (SHAPE == 3) {
+    float k = 2.5 - mouse.y * 1.5; // winder;
 
     vec3 startPos = vec3(
       rand(uv + .1) * 4.0,
@@ -191,17 +189,107 @@ void main() {
     float x = cnoise(vec2(time + startPos.xx + .1)) * rand(startPos.xx + .0) * 3.5 + 17.0 * (sin(PI2 * e * k) * cos(PI2 * e * k) * 1.0);
     float y = cnoise(vec2(time + startPos.yy + .2)) * rand(startPos.yy + .1) * 3.5 + 17.0 * (sin(PI2 * e * k) * sin(PI2 * e * k) * 1.0 - 0.5);
     float z = cnoise(vec2(time + startPos.zz + .3)) * rand(startPos.zz + .2) * 3.5 + 17.0 * (e * 2.0 - 1.0);
-
-    vec4 pt = vec4(x, y, z, 1.0);
-
-    pt.xyz = rotateX(PI * 0.5) * pt.xyz;
+    vec3 pt = rotateX(PI * 0.5) * vec3(x, y, z);
 
     vec3 updatedPos = vec3(pt);
     nextPos = updatedPos * rotateY(time * 1.5);
 
-    //nextPos += getDiff(nextPos, mouse * 30.0) * 100.0;
+  } else if (SHAPE == 4) {
+
+    float t = M_PI * 2.0 * e * 20.0;
+
+    float x = 17.0 * sin(8.0 * t / 5.0) * cos(t);
+    float y = 17.0 * sin(8.0 * t / 5.0) * sin(t);
+    float z = rand(uv) * 1.5;
+
+    vec3 pt = vec3(x, y, z);
+    nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
+  } else if (SHAPE == 5) {
+
+    float addon = time;
+    float t = M_PI * 2.0 * e * 1.0;
+    float t2 = M_PI * 2.0 * e * 2.0;
+    float sinTheta = sin(2.5 * t + addon);
+    float sinTheta2 = sinTheta * sinTheta;
+    float cosTheta = cos(2.5 * t + addon);
+    float cosTheta4 = cosTheta * cosTheta * cosTheta * cosTheta;
+    float r1 = 0.5 - rand(uv);
+
+    float x = 17.0 * (sinTheta2 + cosTheta4) * cos(t);
+    float y = 17.0 * (sinTheta2 + cosTheta4) * sin(t);
+    float z = r1 * 7.0;
+
+    vec3 pt = vec3(x, y, z);
+    nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
+  } else if (SHAPE == 6) {
+
+    float t = M_PI * 2.0 * e * 1.0;
+
+    float r1 = rand(uv);
+    float x = 10.0 * cos(t) - 3.5 * cos(18.0 * t / 2.0);
+    float y = 10.0 * sin(t) - 3.5 * sin(18.0 * t / 2.0);
+    float z = r1 * 3.0;
+
+    vec3 pt = vec3(x, y, z);
+    nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
+  } else if (SHAPE == 7) {
+
+    float t = M_PI * 2.0 * e * 1.0;
+
+    float r1 = rand(uv);
+    float x = 17.0 * cos(t + 0.5 * sin(50.0 * t));
+    float y = 17.0 * sin(t + 0.5 * cos(50.0 * t));
+    float z = r1 * 2.0;
+
+    vec3 pt = vec3(x, y, z);
+    nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
+  } else if (SHAPE == 8) {
+
+    float t = M_PI * 2.0 * e;
+
+    float r1 = rand(uv);
+    float x = 40.0 * sin(3.5 * t) / (4.0 + t * t);
+    float y = 40.0 * cos(3.5 * t) / (4.0 + t * t);
+    float z = r1 * 1.0;
+
+    vec3 pt = vec3(x, y, z);
+    nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
+  } else if (SHAPE == 9) {
+
+    float t = M_PI * 2.0 * e;
+
+    float r1 = rand(uv);
+    float x = 15.0 * cos(5.0 * t);
+    float y = 15.0 * sin(3.0 * t);
+    float z = r1 * 1.0;
+
+    vec3 pt = vec3(x, y, z);
+    nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
+  } else if (SHAPE == 10) {
+
+    float t = M_PI * 2.0 * e;
+
+    float r1 = rand(uv + .1);
+    float r2 = rand(uv + .2);
+    float r3 = rand(uv + .3);
+
+    float lx = lastPos.x * 0.09;
+    float ly = lastPos.y * 0.09;
+    float lz = lastPos.z * 0.09;
+
+    float x = 0.5 - fract(i / u);
+    float y = 0.5 - e;
+    float z = 0.0;
+
+    vec3 pt = vec3(x * 1.3, y * 1.3, z) * 14.0;
+    // pt = ballify(pt, 14.0);
+    nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
+  } else {
+    float x = (0.5 - rand(uv + .1)) * 17.0;
+    float y = (0.5 - rand(uv + .2)) * 17.0;
+    float z = (0.5 - rand(uv + .3)) * 17.0;
+    nextPos.xyz = vec3(x, y, z);
   }
 
   gl_FragColor = vec4(nextPos, 1.0);
 }
-
