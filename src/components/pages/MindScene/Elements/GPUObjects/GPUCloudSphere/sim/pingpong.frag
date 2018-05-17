@@ -1,5 +1,5 @@
 #include <common>
-#define SHAPE 10
+#define SHAPE 1
 precision highp sampler2D;
 
 //  Classic Perlin 3D Noise
@@ -270,19 +270,40 @@ void main() {
 
     float t = M_PI * 2.0 * e;
 
-    float r1 = rand(uv + .1);
-    float r2 = rand(uv + .2);
-    float r3 = rand(uv + .3);
-
-    float lx = lastPos.x * 0.09;
-    float ly = lastPos.y * 0.09;
-    float lz = lastPos.z * 0.09;
-
     float x = 0.5 - fract(i / u);
     float y = 0.5 - e;
     float z = 0.0;
 
     vec3 pt = vec3(x * 1.3, y * -1.3, z) * 14.0;
+    // pt = ballify(pt, 14.0);
+    nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
+  } else if (SHAPE == 11) {
+
+    float t = M_PI * 2.0 * e;
+
+    float r1 = rand(uv + .1);
+    float r2 = rand(uv + .2);
+    float r3 = rand(uv + .3);
+
+    float lx = lastPos.x;
+    float ly = lastPos.y;
+    float lz = lastPos.z;
+
+    float x = 0.5 - fract(i / u);
+    float y = 0.5 - e;
+    float z = 0.0;
+
+    x *= 1.4;
+    y *= 1.4;
+
+    x = x + sin(t + time * 25.0) * 0.04;
+    y = y + cos(t + time * 25.0) * 0.04;
+    z = z + sin(t + time * 25.0) * 0.04;
+
+    x += sin(lx) * 0.0;
+
+    vec3 pt = vec3(x, y, z) * 15.0;
+
     // pt = ballify(pt, 14.0);
     nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
   } else {

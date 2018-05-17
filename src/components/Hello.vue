@@ -11,6 +11,8 @@
       <a href="./heart-space">Heart Space Prototype</a>
       <br />
       <a href="./mindfulness/scene/demo1">Mindfulness Prototype</a>
+      <br />
+      <a href="./mindfulness/lighthouse/demo1">Ugly Light House Prototype</a>
 
       <p>EffectNode.com is made with love in Hong Kong.</p>
 

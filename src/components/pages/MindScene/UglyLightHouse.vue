@@ -84,10 +84,47 @@
 
   <Scene @scene="(v) => { $emit('scene', v); scene = v }">
 
-    <!-- Text Outlet -->
-    <Object3D :pz="-5">
-      <TextOutlet ref="text-outlet" v-if="root" :root="root" :group="dragGroup" />
+    <!-- <Object3D
+      :px="-10.0" :py="0.0" :pz="-5.0"
+      :rx="0.0" :ry="0.0" :rz="0.0"
+      :sx="0.1" :sy="0.1" :sz="0.1"
+    >
+      <GPUParticles
+        v-if="renderer && camera && scene"
+        :renderer="renderer"
+        :camera="camera"
+        :scene="scene"
+        @gpgpu="(v) => { gpgpuParticles = v }"
+      />
+    </Object3D> -->
+
+    <!-- <Object3D :px="10.0" :pz="-5">
+      <GPUSpiral
+        v-if="renderer"
+        :renderer="renderer"
+      />
+    </Object3D> -->
+
+    <Object3D :px="0.0" :pz="-5">
+      <GPUCloudSphere
+        v-if="renderer && touchSurface"
+        :pingPongShader="pingPongShader"
+        :renderer="renderer"
+        :touchSurface="touchSurface"
+      />
     </Object3D>
+
+    <!-- <Object3D :px="0.0" :pz="-5">
+      <GPUSpiral
+        v-if="renderer"
+        :renderer="renderer"
+      />
+    </Object3D> -->
+
+    <!-- Text Outlet -->
+    <!-- <Object3D :pz="-5">
+      <TextOutlet ref="text-outlet" v-if="root" :root="root" :group="dragGroup" />
+    </Object3D> -->
 
     <Heart
       v-if="touchSurface && mode === 'EffectNode' && current.data && current.data.effect && touchPanControl"
@@ -150,6 +187,12 @@ import ENCreateButtons from './Elements/EN/ENCreateButtons.vue'
 import ENClose from './Elements/EN/ENClose.vue'
 import ENTimeMachine from './Elements/EN/ENTimeMachine.vue'
 
+import GPUParticles from './Elements/GPUParticles/GPUParticles.vue'
+import GPUSpiral from './Elements/GPUObjects/GPUSpiral.vue'
+import GPUCloudSphere from './Elements/GPUObjects/GPUCloudSphere.vue'
+
+import ACE from '@/components/parts/EffectNode/ACE/ACE.vue'
+
 export default {
   components: {
     ...Bundle,
@@ -159,7 +202,11 @@ export default {
     ENEditor,
     ENCreateButtons,
     ENClose,
-    ENTimeMachine
+    ENTimeMachine,
+    GPUParticles,
+    GPUSpiral,
+    GPUCloudSphere,
+    ACE
   },
   props: {
     renderer: {},
@@ -263,6 +310,9 @@ export default {
       touchPanControl.noPan = false
       touchPanControl.staticMoving = false
       touchPanControl.dynamicDampingFactor = 0.234
+
+      // debug
+      touchPanControl.enabled = false
 
       let touchDragControl = this.touchDragControl = new THREE.DragDrag(this.dragGroup, camera, touchSurface)
       touchDragControl.addEventListener('dragstart', this.itemDragStart)

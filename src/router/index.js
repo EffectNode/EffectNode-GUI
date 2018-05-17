@@ -6,6 +6,7 @@ import HeartSpace from '@/components/pages/HeartSpace/HeartSpace.vue'
 
 import Mindfulness from '@/components/pages/MindScene/Mindfulness.vue'
 import MindScene from '@/components/pages/MindScene/MindScene.vue'
+import UglyLightHouse from '@/components/pages/MindScene/UglyLightHouse.vue'
 // import ENScene from '@/components/pages/MindScene/ENScene.vue'
 import WelcomeScene from '@/components/pages/MindScene/WelcomeScene.vue'
 
@@ -54,6 +55,11 @@ export default new Router({
           path: 'scene/:msid',
           name: 'MindScene',
           component: MindScene
+        },
+        {
+          path: 'lighthouse/:lid',
+          name: 'UglyLightHouse',
+          component: UglyLightHouse
         }
       ]
     }
