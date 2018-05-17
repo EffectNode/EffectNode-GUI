@@ -64,14 +64,14 @@ export default {
 
     let init = ({ pingPongShader }) => {
       pingMat = gpuCompute.createShaderMaterial(pingPongShader, {
-        inc: { value: 0 },
+        tapCount: { value: 0 },
         lastTexture: { value: null },
         indexerTexture: { value: indexerTexture },
         time: { value: 0 },
         mouse: { value: new THREE.Vector3(0.0, 0.0, 0.0) }
       })
       pongMat = gpuCompute.createShaderMaterial(pingPongShader, {
-        inc: { value: 0 },
+        tapCount: { value: 0 },
         lastTexture: { value: null },
         indexerTexture: { value: indexerTexture },
         time: { value: 0 },
@@ -94,8 +94,8 @@ export default {
 
       var isClick = false
       this.touchSurface.addEventListener('click', () => {
-        pingMat.uniforms.inc.value++
-        pongMat.uniforms.inc.value++
+        pingMat.uniforms.tapCount.value++
+        pongMat.uniforms.tapCount.value++
       }, false)
       this.touchSurface.addEventListener('touchstart', (evt) => {
         isClick = true
@@ -105,8 +105,8 @@ export default {
       }, false)
       this.touchSurface.addEventListener('touchend', (evt) => {
         if (isClick) {
-          pingMat.uniforms.inc.value++
-          pongMat.uniforms.inc.value++
+          pingMat.uniforms.tapCount.value++
+          pongMat.uniforms.tapCount.value++
         }
       }, false)
       this.touchSurface.addEventListener('touchmove', (evt) => {

@@ -104,6 +104,10 @@ export default {
 </script>
 
 <style scoped>
+* {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 .debug {
   position: absolute;
   top: 0px;

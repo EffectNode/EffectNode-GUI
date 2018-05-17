@@ -1,8 +1,6 @@
 #include <common>
 precision highp sampler2D;
-float MATH_EQ = 1.0;
 
-uniform float inc;
 
 
 //  Classic Perlin 3D Noise
@@ -140,14 +138,17 @@ vec3 resDiff (in vec3 lastPos, in vec3 mouse) {
   return diff;
 }
 
+float MATH_EQ = 1.0;
+
 uniform float time;
 uniform sampler2D lastTexture;
 uniform sampler2D indexerTexture;
 
 uniform vec3 mouse;
+uniform float tapCount;
 
 void main() {
-  MATH_EQ = mod(inc, 12.0);
+  MATH_EQ = mod(tapCount, 12.0);
 
   vec2 uv = gl_FragCoord.xy / resolution.xy;
 
