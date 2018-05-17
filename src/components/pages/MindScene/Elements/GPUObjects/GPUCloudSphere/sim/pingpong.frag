@@ -149,7 +149,7 @@ void main() {
   MATH_EQ = mod(tapCount, 12.0);
 
   // Enforce edit
-  // MATH_EQ = 2.0;
+  // MATH_EQ = 12.0;
 
   vec2 uv = gl_FragCoord.xy / resolution.xy;
 
@@ -316,7 +316,20 @@ void main() {
     float x = (0.5 - rand(uv + .1)) * 17.0;
     float y = (0.5 - rand(uv + .2)) * 17.0;
     float z = (0.5 - rand(uv + .3)) * 17.0;
-    nextPos.xyz = vec3(x, y, z);
+
+    float nx = nextPos.x;
+    float ny = nextPos.y;
+    float nz = nextPos.z;
+
+    float roller = M_PI * 2.0 * e + time + nz * 0.5 * sin(ny * 3.0 + time);
+
+    x = 0.1 * x * sin(roller) * sin(roller);
+    y = 0.1 * y * cos(roller) * cos(roller);
+    z = 0.1 * z * sin(roller) * cos(roller);
+
+    nextPos.xyz = vec3(nx + x, ny + y, nz + z);
+    nextPos += getDiff(nextPos, mouse * 30.0) * 50.0;
+    nextPos = ballify(nextPos, 17.0);
   }
 
   gl_FragColor = vec4(nextPos, 1.0);

@@ -63,15 +63,21 @@ export default {
     let displayF = require('./GPUCloudSphere/show/display.frag')
 
     let init = ({ pingPongShader }) => {
+      let lastTap = 0
+
+      if (pingMat) {
+        lastTap = pingMat.uniforms.tapCount.value
+      }
+
       pingMat = gpuCompute.createShaderMaterial(pingPongShader, {
-        tapCount: { value: 0 },
+        tapCount: { value: lastTap || 0 },
         lastTexture: { value: null },
         indexerTexture: { value: indexerTexture },
         time: { value: 0 },
         mouse: { value: new THREE.Vector3(0.0, 0.0, 0.0) }
       })
       pongMat = gpuCompute.createShaderMaterial(pingPongShader, {
-        tapCount: { value: 0 },
+        tapCount: { value: lastTap || 0 },
         lastTexture: { value: null },
         indexerTexture: { value: indexerTexture },
         time: { value: 0 },
