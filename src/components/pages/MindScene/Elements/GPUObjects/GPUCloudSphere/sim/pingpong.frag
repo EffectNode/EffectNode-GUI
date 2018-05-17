@@ -1,5 +1,6 @@
 #include <common>
 #define SHAPE 10
+precision highp sampler2D;
 
 //  Classic Perlin 3D Noise
 //  by Stefan Gustavson
@@ -281,7 +282,7 @@ void main() {
     float y = 0.5 - e;
     float z = 0.0;
 
-    vec3 pt = vec3(x * 1.3, y * 1.3, z) * 14.0;
+    vec3 pt = vec3(x * 1.3, y * -1.3, z) * 14.0;
     // pt = ballify(pt, 14.0);
     nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
   } else {
