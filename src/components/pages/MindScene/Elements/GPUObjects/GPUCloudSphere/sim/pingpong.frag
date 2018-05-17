@@ -148,6 +148,7 @@ uniform float tapCount;
 void main() {
   MATH_EQ = mod(tapCount, 12.0);
 
+
   // Enforce edit
   // MATH_EQ = 12.0;
 
@@ -312,7 +313,7 @@ void main() {
 
     // pt = ballify(pt, 14.0);
     nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
-  } else {
+  } else if (MATH_EQ == 11.0) {
     float x = (0.5 - rand(uv + .1)) * 17.0;
     float y = (0.5 - rand(uv + .2)) * 17.0;
     float z = (0.5 - rand(uv + .3)) * 17.0;
@@ -331,6 +332,12 @@ void main() {
     nextPos.xyz = vec3(nx + x, ny + y, nz + z);
     nextPos += getDiff(nextPos, mouse * 30.0) * 50.0;
     nextPos = ballify(nextPos, 17.0);
+  } else {
+    float x = (0.5 - rand(uv + .1)) * 17.0;
+    float y = (0.5 - rand(uv + .2)) * 17.0;
+    float z = (0.5 - rand(uv + .3)) * 17.0;
+
+    nextPos.xyz = vec3(x,y,z);
   }
 
   gl_FragColor = vec4(nextPos, 1.0);
