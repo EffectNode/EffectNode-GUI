@@ -1,6 +1,9 @@
 #include <common>
-#define SHAPE 1
 precision highp sampler2D;
+float MATH_EQ = 1.0;
+
+uniform float inc;
+
 
 //  Classic Perlin 3D Noise
 //  by Stefan Gustavson
@@ -144,6 +147,7 @@ uniform sampler2D indexerTexture;
 uniform vec3 mouse;
 
 void main() {
+  MATH_EQ = mod(inc, 12.0);
 
   vec2 uv = gl_FragCoord.xy / resolution.xy;
 
@@ -156,7 +160,7 @@ void main() {
 
   vec3 nextPos = vec3(lastPos);
 
-  if (SHAPE == 1) {
+  if (MATH_EQ == 0.0) {
     float k = 1.0 + time;
     k = 1.0 + mod(k, 5.0);
 
@@ -169,7 +173,7 @@ void main() {
 
     nextPos = ballify(ball1 + nextPos, 17.0);
     nextPos += getDiff(nextPos, mouse * 18.0) * 50.0;
-  } else if (SHAPE == 2) {
+  } else if (MATH_EQ == 1.0) {
     float x = 0.5 - rand(uv + .1);
     float y = 0.5 - rand(uv + .2);
     float z = 0.5 - rand(uv + .3);
@@ -178,7 +182,7 @@ void main() {
 
     nextPos = ballify(ball1 + nextPos, 17.0);
     nextPos += getDiff(nextPos, mouse * 17.0) * 50.0;
-  } else if (SHAPE == 3) {
+  } else if (MATH_EQ == 2.0) {
     float k = 2.5 - mouse.y * 1.5; // winder;
 
     vec3 startPos = vec3(
@@ -195,7 +199,7 @@ void main() {
     vec3 updatedPos = vec3(pt);
     nextPos = updatedPos * rotateY(time * 1.5);
 
-  } else if (SHAPE == 4) {
+  } else if (MATH_EQ == 3.0) {
 
     float t = M_PI * 2.0 * e * 20.0;
 
@@ -205,7 +209,7 @@ void main() {
 
     vec3 pt = vec3(x, y, z);
     nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
-  } else if (SHAPE == 5) {
+  } else if (MATH_EQ == 4.0) {
 
     float addon = time;
     float t = M_PI * 2.0 * e * 1.0;
@@ -222,7 +226,7 @@ void main() {
 
     vec3 pt = vec3(x, y, z);
     nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
-  } else if (SHAPE == 6) {
+  } else if (MATH_EQ == 5.0) {
 
     float t = M_PI * 2.0 * e * 1.0;
 
@@ -233,7 +237,7 @@ void main() {
 
     vec3 pt = vec3(x, y, z);
     nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
-  } else if (SHAPE == 7) {
+  } else if (MATH_EQ == 6.0) {
 
     float t = M_PI * 2.0 * e * 1.0;
 
@@ -244,7 +248,7 @@ void main() {
 
     vec3 pt = vec3(x, y, z);
     nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
-  } else if (SHAPE == 8) {
+  } else if (MATH_EQ == 7.0) {
 
     float t = M_PI * 2.0 * e;
 
@@ -255,7 +259,7 @@ void main() {
 
     vec3 pt = vec3(x, y, z);
     nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
-  } else if (SHAPE == 9) {
+  } else if (MATH_EQ == 8.0) {
 
     float t = M_PI * 2.0 * e;
 
@@ -266,7 +270,7 @@ void main() {
 
     vec3 pt = vec3(x, y, z);
     nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
-  } else if (SHAPE == 10) {
+  } else if (MATH_EQ == 9.0) {
 
     float t = M_PI * 2.0 * e;
 
@@ -277,7 +281,7 @@ void main() {
     vec3 pt = vec3(x * 1.3, y * -1.3, z) * 14.0;
     // pt = ballify(pt, 14.0);
     nextPos.xyz = rotateZ(time) * rotateY(mouse.x) * rotateX(-mouse.y) * pt;
-  } else if (SHAPE == 11) {
+  } else if (MATH_EQ == 10.0) {
 
     float t = M_PI * 2.0 * e;
 

@@ -45,7 +45,7 @@ export default {
   },
   mounted () {
     var count = 0
-    let SIZE = 256
+    let SIZE = window.innerWidth >= 500 ? 256 : 192
 
     var gpuCompute = new GPUComputationRenderer(SIZE, SIZE, this.renderer)
 
@@ -64,12 +64,14 @@ export default {
 
     let init = ({ pingPongShader }) => {
       pingMat = gpuCompute.createShaderMaterial(pingPongShader, {
+        inc: { value: 0 },
         lastTexture: { value: null },
         indexerTexture: { value: indexerTexture },
         time: { value: 0 },
         mouse: { value: new THREE.Vector3(0.0, 0.0, 0.0) }
       })
       pongMat = gpuCompute.createShaderMaterial(pingPongShader, {
+        inc: { value: 0 },
         lastTexture: { value: null },
         indexerTexture: { value: indexerTexture },
         time: { value: 0 },
@@ -84,14 +86,31 @@ export default {
         let x = (evt.pageX - window.innerWidth * 0.5) / window.innerWidth
         let y = (evt.pageY - window.innerHeight * 0.5) / window.innerHeight
         let z = 0.0
-
         y *= -1
 
         pingMat.uniforms.mouse.value.copy({ x, y, z })
         pongMat.uniforms.mouse.value.copy({ x, y, z })
       }, false)
 
+      var isClick = false
+      this.touchSurface.addEventListener('click', () => {
+        pingMat.uniforms.inc.value++
+        pongMat.uniforms.inc.value++
+      }, false)
+      this.touchSurface.addEventListener('touchstart', (evt) => {
+        isClick = true
+        setTimeout(() => {
+          isClick = false
+        }, 111)
+      }, false)
+      this.touchSurface.addEventListener('touchend', (evt) => {
+        if (isClick) {
+          pingMat.uniforms.inc.value++
+          pongMat.uniforms.inc.value++
+        }
+      }, false)
       this.touchSurface.addEventListener('touchmove', (evt) => {
+        evt.preventDefault()
         let x = (evt.touches[0].pageX - window.innerWidth * 0.5) / window.innerWidth
         let y = (evt.touches[0].pageY - window.innerHeight * 0.5) / window.innerHeight
         let z = 0.0
