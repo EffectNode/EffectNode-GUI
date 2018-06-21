@@ -1,0 +1,266 @@
+{
+	"editor": 0.1,
+	"state": {
+		"nodes": [
+			{
+				"shaderType": "vertexShader",
+				"isEntry": true,
+				"nid": "Bmhig",
+				"src": "void entry (vec3 pos, float x, float y, float z, float w) {\n  vec4 newPosition = vec4(vec3(position) + vec3(pos) + vec3(x, y, z), w);\n  vec4 mvPosition = modelViewMatrix * newPosition;\n  vec4 outputPos = projectionMatrix * mvPosition;\n  gl_Position = outputPos;\n  gl_PointSize = 1.5;\n  vPos = vec3(position);\n  vUv = uv;\n}",
+				"name": "entry",
+				"compiledFnName": "entry_Bmhig",
+				"compiledSrc": "void entry_Bmhig (vec3 pos, float x, float y, float z, float w) {\n  vec4 newPosition = vec4(vec3(position) + vec3(pos) + vec3(x, y, z), w);\n  vec4 mvPosition = modelViewMatrix * newPosition;\n  vec4 outputPos = projectionMatrix * mvPosition;\n  gl_Position = outputPos;\n  gl_PointSize = 1.5;\n  vPos = vec3(position);\n  vUv = uv;\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "Bmhig",
+						"direction": "in",
+						"type": "vec3",
+						"name": "pos"
+					},
+					{
+						"index": 1,
+						"nid": "Bmhig",
+						"direction": "in",
+						"type": "float",
+						"name": "x"
+					},
+					{
+						"index": 2,
+						"nid": "Bmhig",
+						"direction": "in",
+						"type": "float",
+						"name": "y"
+					},
+					{
+						"index": 3,
+						"nid": "Bmhig",
+						"direction": "in",
+						"type": "float",
+						"name": "z"
+					},
+					{
+						"index": 4,
+						"nid": "Bmhig",
+						"direction": "in",
+						"type": "float",
+						"name": "w"
+					}
+				],
+				"output": {
+					"nid": "Bmhig",
+					"name": "entry",
+					"type": "void"
+				},
+				"pos": {
+					"x": -8,
+					"y": -15,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "fragmentShader",
+				"isEntry": true,
+				"nid": "sKiAP",
+				"src": "void entry (vec4 color, float r, float g, float b, float a) {\n  gl_FragColor = color + vec4(r, g, b, a);\n}",
+				"name": "entry",
+				"compiledFnName": "entry_sKiAP",
+				"compiledSrc": "void entry_sKiAP (vec4 color, float r, float g, float b, float a) {\n  gl_FragColor = color + vec4(r, g, b, a);\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "sKiAP",
+						"direction": "in",
+						"type": "vec4",
+						"name": "color"
+					},
+					{
+						"index": 1,
+						"nid": "sKiAP",
+						"direction": "in",
+						"type": "float",
+						"name": "r"
+					},
+					{
+						"index": 2,
+						"nid": "sKiAP",
+						"direction": "in",
+						"type": "float",
+						"name": "g"
+					},
+					{
+						"index": 3,
+						"nid": "sKiAP",
+						"direction": "in",
+						"type": "float",
+						"name": "b"
+					},
+					{
+						"index": 4,
+						"nid": "sKiAP",
+						"direction": "in",
+						"type": "float",
+						"name": "a"
+					}
+				],
+				"output": {
+					"nid": "sKiAP",
+					"name": "entry",
+					"type": "void"
+				},
+				"pos": {
+					"x": 8,
+					"y": -15,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "vertexShader",
+				"isEntry": false,
+				"nid": "ilqyl",
+				"src": "float floatModifier (float i1) {\n  return sin(time * 3.0 + i1) * 0.5;\n}",
+				"name": "floatModifier",
+				"compiledFnName": "floatModifier_ilqyl",
+				"compiledSrc": "float floatModifier_ilqyl (float i1) {\n  return sin(time * 3.0 + i1) * 0.5;\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "ilqyl",
+						"direction": "in",
+						"type": "float",
+						"name": "i1"
+					}
+				],
+				"output": {
+					"nid": "ilqyl",
+					"name": "floatModifier",
+					"type": "float"
+				},
+				"pos": {
+					"x": -10.687203719170881,
+					"y": 0.7807779919523552,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "fragmentShader",
+				"isEntry": false,
+				"nid": "vwenY",
+				"src": "vec4 textureReader () {\n  return texture2D(uImage1, (vUv - 0.5) * 0.75 + 0.5 + 0.5 * sin(time * 3.0));\n}",
+				"name": "textureReader",
+				"compiledFnName": "textureReader_vwenY",
+				"compiledSrc": "vec4 textureReader_vwenY () {\n  return texture2D(uImage1, (vUv - 0.5) * 0.75 + 0.5 + 0.5 * sin(time * 3.0));\n}",
+				"inputs": [],
+				"output": {
+					"nid": "vwenY",
+					"name": "textureReader",
+					"type": "vec4"
+				},
+				"pos": {
+					"x": 9.136728568203077,
+					"y": -0.21595368545330806,
+					"z": 0
+				}
+			},
+			{
+				"shaderType": "vertexShader",
+				"isEntry": false,
+				"nid": "jFIde",
+				"src": "float floatModifier (float i1) {\n  return sin(time * 3.0 + i1) * sin(position.y * 0.1) * 1.0;\n}",
+				"name": "floatModifier",
+				"compiledFnName": "floatModifier_jFIde",
+				"compiledSrc": "float floatModifier_jFIde (float i1) {\n  return sin(time * 3.0 + i1) * sin(position.y * 0.1) * 1.0;\n}",
+				"inputs": [
+					{
+						"index": 0,
+						"nid": "jFIde",
+						"direction": "in",
+						"type": "float",
+						"name": "i1"
+					}
+				],
+				"output": {
+					"nid": "jFIde",
+					"name": "floatModifier",
+					"type": "float"
+				},
+				"pos": {
+					"x": -16.94447843557662,
+					"y": -0.21595367876979055,
+					"z": 0
+				}
+			}
+		],
+		"connections": [
+			{
+				"input": {
+					"index": 0,
+					"nid": "sKiAP",
+					"direction": "in",
+					"type": "vec4",
+					"name": "color"
+				},
+				"output": {
+					"nid": "vwenY",
+					"name": "textureReader",
+					"type": "vec4"
+				}
+			},
+			{
+				"input": {
+					"index": 1,
+					"nid": "Bmhig",
+					"direction": "in",
+					"type": "float",
+					"name": "x"
+				},
+				"output": {
+					"nid": "jFIde",
+					"name": "floatModifier",
+					"type": "float"
+				}
+			},
+			{
+				"input": {
+					"index": 3,
+					"nid": "Bmhig",
+					"direction": "in",
+					"type": "float",
+					"name": "z"
+				},
+				"output": {
+					"nid": "ilqyl",
+					"name": "floatModifier",
+					"type": "float"
+				}
+			}
+		],
+		"uniforms": [
+			{
+				"val": 0,
+				"src": "uniform float time;"
+			},
+			{
+				"val": "",
+				"src": "uniform sampler2D uImage1;"
+			},
+			{
+				"preset": true,
+				"src": "uniform sampler2D text;"
+			},
+			{
+				"preset": true,
+				"src": "uniform sampler2D pattern;"
+			}
+		],
+		"varyings": [
+			{
+				"src": "varying vec3 vPos;"
+			},
+			{
+				"src": "varying vec2 vUv;"
+			}
+		]
+	},
+	"variations": []
+}

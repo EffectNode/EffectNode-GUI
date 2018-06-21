@@ -5,7 +5,7 @@
       @mouseover="$emit('tooltip', { name: 'Open File' })" @mouseout="$emit('tooltip', false)"
       class="browse-btn" :class="{ 'using': mode === 'browse' }" @click="toggleMode">Browse</div>
       <Draggable class="opened-files" v-model="openedFiles" :move="onDragTabs">
-        <div class="tab" :class="{ 'active': isTabActive(tab.path) }" @click="selectFile(tab.path)" :key="tab.path + iTab" v-for="(tab, iTab) in openedFiles">{{ tab.path }} <img class="cross" src="./img/cross.svg" @click="removeTab(tab, iTab, openedFiles)" /></div>
+        <div class="tab" :class="{ 'active': isTabActive(tab.path) }" @click="selectFile(tab.path)" :key="tab.path + iTab" v-for="(tab, iTab) in openedFiles"><img class="cross" src="./img/cross.svg" @click="removeTab(tab, iTab, openedFiles)" /> {{ tab.path }} </div>
       </Draggable>
     </div>
     <div class="content-row">
@@ -27,7 +27,7 @@
       <div
         class="code-editor"
       >
-        <keep-alive
+        <div
           v-for="(openFile) in openedFiles"
           :key="openFile.path"
         >
@@ -44,7 +44,7 @@
             :height="height + 'px'"
           >
           </Component>
-        </keep-alive>
+        </div>
       </div>
       <div class="previewer">
         <Previewer :output="output" />
@@ -189,7 +189,7 @@ export default {
         this.needsCompile = false
         this.$emit('compile')
       }
-    }, 3000)
+    }, 1500)
   },
   beforeDestroy () {
     clearTimeout(this.dirtyCheckerTimer)
@@ -243,7 +243,7 @@ export default {
 }
 
 .tab .cross{
-  margin-left: 4px;
+  margin-right: 4px;
   transition: transform 1s;
 }
 .tab .cross:hover{

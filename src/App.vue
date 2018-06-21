@@ -21,6 +21,21 @@ export default {
   font-family: 'InterUI-Bold';
   src: url('./assets/interui-font/Inter-UI-Bold.woff');
 }
+
+
+@font-face {
+  font-family: 'Trivial-Regular, Trivial';
+  src: url('./assets/trivial/Trivial-Regular.ttf');
+}
+@font-face {
+  font-family: 'Trivial-Light, Trivial';
+  src: url('./assets/trivial/Trivial-Thin.ttf');
+}
+@font-face {
+  font-family: 'Trivial-Bold, Trivial';
+  src: url('./assets/trivial/Trivial-Bold.ttf');
+}
+
 body {
   font-family: 'InterUI';
 }

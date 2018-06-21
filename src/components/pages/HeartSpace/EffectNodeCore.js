@@ -259,7 +259,7 @@ export const makeWordTemplate = () => {
   return JSON.parse(wordJSON)
 }
 
-export const makeTemplate = ({ template = {} }) => {
+export const makeTemplate = ({ tid = {} }) => {
   let root = makeRoot()
   root.state = makeState()
   root.state.nodes = makeTemplateNodes()
@@ -290,33 +290,13 @@ export const makeTemplate = ({ template = {} }) => {
       src: `varying vec2 vUv;`
     }
   ]
-  root.state = {
-    ...root.state,
-    ...template
+
+  if (tid === 'template2') {
+    root = {
+      ...root,
+      ...require('./Demos/rabbit.json')
+    }
   }
-
-  // template.state.previews = makeTemplatePreviews()
-
-  // if (tid === 'template2') {
-  //   template = {
-  //     ...template,
-  //     ...require('./Demos/Demo1.json')
-  //   }
-  // }
-
-  // if (tid === 'template3') {
-  //   template = {
-  //     ...template,
-  //     ...require('./Demos/Demo2.json')
-  //   }
-  // }
-
-  // if (tid === 'template4') {
-  //   template = {
-  //     ...template,
-  //     ...require('./Demos/Demo3.json')
-  //   }
-  // }
 
   return root
 }
@@ -327,15 +307,16 @@ export const hydrate = ({ use }) => {
       let template = makeTemplate({ tid: use })
       let root = template
 
-      if (use === 'continue') {
-        let dbRoot = ENdb.getRoot()
-        if (!dbRoot) {
-          ENdb.setRoot(template)
-          root = template
-        } else {
-          root = dbRoot
-        }
-      }
+      // if (use === 'continue') {
+      //   let dbRoot = ENdb.getRoot()
+      //   if (!dbRoot) {
+      //     ENdb.setRoot(template)
+      //     root = template
+      //   } else {
+      //     root = dbRoot
+      //   }
+      // }
+
       resolve(root)
     }, 300)
   })

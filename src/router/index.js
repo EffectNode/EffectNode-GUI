@@ -9,6 +9,7 @@ import MindScene from '@/components/pages/MindScene/MindScene.vue'
 import UglyLightHouse from '@/components/pages/MindScene/UglyLightHouse.vue'
 // import ENScene from '@/components/pages/MindScene/ENScene.vue'
 import WelcomeScene from '@/components/pages/MindScene/WelcomeScene.vue'
+import CustomAnimation from '@/components/pages/CustomAnimation/CustomAnimation.vue'
 
 Vue.use(Router)
 
@@ -19,6 +20,11 @@ export default new Router({
       path: '/',
       name: 'Hello',
       component: Hello
+    },
+    {
+      path: '/tca',
+      name: 'tca',
+      component: CustomAnimation
     },
     {
       path: '/test',
@@ -62,6 +68,10 @@ export default new Router({
           component: UglyLightHouse
         }
       ]
+    },
+    {
+      path: '*',
+      redirect: '/'
     }
   ]
 })

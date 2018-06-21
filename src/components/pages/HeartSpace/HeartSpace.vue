@@ -146,13 +146,15 @@
       </Object3D>
 
       <Object3D pz="-10">
-        <Points v-if="!preview">
-          <TorusKnotBufferGeometry radius="10" tube="1" tubularSegments="350" radialSegments="40" />
-          <!-- <SphereBufferGeometry :r="10" :nx="200" :ny="200" /> -->
-          <ShaderMaterial :transparent="true" :vs="glsl.vertexShader" :fs="glsl.fragmentShader" :uniforms="uniforms" />
-        </Points>
 
-        <MathObject
+        <Rabbit v-if="!preview" :transparent="true" :glsl="glsl" :uniforms="uniforms" />
+        <!-- <Points v-if="!preview"> -->
+          <!-- <TorusKnotBufferGeometry radius="10" tube="1" tubularSegments="350" radialSegments="40" /> -->
+          <!-- <SphereBufferGeometry :r="10" :nx="200" :ny="200" /> -->
+          <!-- <ShaderMaterial :transparent="true" :vs="glsl.vertexShader" :fs="glsl.fragmentShader" :uniforms="uniforms" /> -->
+        <!-- </Points> -->
+
+        <!-- <MathObject
           v-if="preview"
           :objType="preview.objType"
           :geoType="preview.geoType"
@@ -160,7 +162,7 @@
           :fs="glsl.fragmentShader"
           :uniforms="uniforms"
           :attributes="preview.attributes"
-        />
+        /> -->
       </Object3D>
 
     </Scene>
@@ -180,6 +182,8 @@ import MathObject from './MathBufferGeometry/MathObject'
 import MathPoints from './MathBufferGeometry/MathPoints'
 import MathLineSegments from './MathBufferGeometry/MathLineSegments'
 import Settings from './Settings/Settings.vue'
+
+import Rabbit from './Objects/Rabbit.vue'
 
 /* eslint-disable */
 import * as TWEEN from '@tweenjs/tween.js'
@@ -215,7 +219,8 @@ export default {
     MathObject,
     MathPoints,
     MathLineSegments,
-    Settings
+    Settings,
+    Rabbit
   },
   methods: {
     async hydrate ({ use }) {
@@ -262,7 +267,7 @@ export default {
 
       this.setupTouch()
       this.setupGLSLMaker()
-      this.hydrate({ use: 'template1' })
+      this.hydrate({ use: 'template2' })
     },
     detectFast () {
       var canvas = document.createElement('canvas')
@@ -897,7 +902,7 @@ export default {
   data () {
     return {
       uniforms: {
-        uImage1: { value: new THREE.TextureLoader() },
+        uImage1: { value: new THREE.TextureLoader().load(require('./Objects/star.png')) },
         uImage2: { value: new THREE.TextureLoader() },
         uImage3: { value: new THREE.TextureLoader() },
         time: { value: 0 }

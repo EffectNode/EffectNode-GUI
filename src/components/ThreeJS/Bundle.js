@@ -10,6 +10,8 @@ export default {
   // Refractor: require('./System/Refractor.vue').default,
   Raycaster: require('./System/Raycaster.vue').default,
 
+  PlaneHelper: require('./Helpers/PlaneHelper.vue').default,
+
   Object3D: require('./Element/Object3D.vue').default,
   LineSegments: require('./Element/LineSegments.vue').default,
   Mesh: require('./Element/Mesh.vue').default,

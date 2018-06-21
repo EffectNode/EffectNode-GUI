@@ -171,7 +171,6 @@ export default {
         w: 600,
         h: window.innerHeight
       },
-      pingPongShader: require('./Elements/GPUObjects/GPUCloudSphere/sim/pingpong.frag'),
       gpgpuParticles: false,
       glsl: false,
       EN,

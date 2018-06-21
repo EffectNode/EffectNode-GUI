@@ -53,6 +53,7 @@ export default {
           fragmentShader: this.fs || this.$options.props.fs.default
         })
         this.$parent.$emit('material', this.material)
+        this.$emit('material', this.material)
       } catch (e) {
         console.log(e)
       }
