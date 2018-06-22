@@ -318,13 +318,30 @@ self.onmessage = ({ data }) => {
         done();
       }
     }
+    preload(deps, function () {});
     preload(deps, function() {
       requireJSRequire(['@/main.js'], function () {
         setTimeout(() => {
-          (window.opener || window.top).postMessage({ type: 'requirejs-ready' }, window.location.origin);
+
+          window.addEventListener('message', (e) => {
+            // is from main window to this iframe window
+            if (
+              (e.source === window.top) &&
+              e.data &&
+              e.data.type
+            ) {
+              console.log('iFrame Got Main Message: ', e.data)
+              console.log('iFrame Dispatching Custom Event: ', e.data)
+              let customEvent = new CustomEvent(e.data.type, { detail: e.data });
+              window.dispatchEvent(customEvent);
+            }
+          });
+
+          (window.opener || window.top).postMessage({ type: 'iframe-system-ready', detail: { status: 'ok' } }, window.location.origin);
         }, 10);
       });
-    })
+    });
+
   }
   new OMG_${rand}();
 }());

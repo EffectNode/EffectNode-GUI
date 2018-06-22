@@ -105,9 +105,9 @@
     <!-- Child -->
     <ul v-show="open" v-if="isFolder">
       <TreeItem
-        v-for="(model, index) in model.children"
+        v-for="(subModel, index) in model.children"
         :key="index"
-        :model="model">
+        :model="subModel">
       </TreeItem>
     </ul>
   </li>

@@ -127,7 +127,8 @@ export default {
     },
     format () {
       if (window.confirm('delete all time machine records and rest factory settings?') && window.confirm('are you sure?')) {
-        this.$emit('load-root', require('./samples/animation.json'))
+        // this.$emit('load-root', require('./samples/animation.json'))
+        this.$emit('load-root', require('./samples/single-page.json'))
       }
     },
     loadTimeMachine (evt) {

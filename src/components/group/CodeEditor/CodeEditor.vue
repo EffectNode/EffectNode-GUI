@@ -46,6 +46,7 @@
           </Component>
         </div>
       </div>
+
       <div class="previewer">
         <Previewer :output="output" />
       </div>
@@ -189,7 +190,7 @@ export default {
         this.needsCompile = false
         this.$emit('compile')
       }
-    }, 1500)
+    }, 3000)
   },
   beforeDestroy () {
     clearTimeout(this.dirtyCheckerTimer)

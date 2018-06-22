@@ -28,7 +28,6 @@ import 'imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js'
   },
   data () {
     return {
-      group: false,
       material: false,
       obj: false
     }
@@ -38,7 +37,6 @@ import 'imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js'
       var group = new THREE.Object3D()
 
       let obj = this.obj
-      if (!this.obj) { return }
 
       if (this.group) {
         this.$parent.$emit('remove', this.group)
@@ -48,6 +46,7 @@ import 'imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js'
           let newObj = new THREE.Mesh(oo.geometry, this.material)
           newObj.scale.copy({ x: 20, y: 20, z: 20 })
           newObj.position.y = -15
+          // newObj.rotation.y = Math.PI * 2 / 360 * -35
           group.add(newObj)
         }
       })
@@ -64,6 +63,7 @@ import 'imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js'
       this.runLoader()
     })
     /* eslint-enable */
+
     // let { radius, tube, tubularSegments, radialSegments, p, q } = this
     // let geometry = new THREE.TorusKnotBufferGeometry(radius, tube, tubularSegments, radialSegments, p, q)
   }

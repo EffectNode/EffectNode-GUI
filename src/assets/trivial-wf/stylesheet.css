@@ -1,0 +1,70 @@
+@font-face {
+    font-family: 'Trivial';
+    src: local('Trivial Bold'), local('Trivial-Bold'),
+        url('Trivial-Bold.woff2') format('woff2'),
+        url('Trivial-Bold.woff') format('woff'),
+        url('Trivial-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Trivial';
+    src: local('Trivial Regular'), local('Trivial-Regular'),
+        url('Trivial-Regular.woff2') format('woff2'),
+        url('Trivial-Regular.woff') format('woff'),
+        url('Trivial-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Trivial';
+    src: local('Trivial Thin'), local('Trivial-Thin'),
+        url('Trivial-Thin.woff2') format('woff2'),
+        url('Trivial-Thin.woff') format('woff'),
+        url('Trivial-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Trivial';
+    src: local('Trivial Heavy'), local('Trivial-Heavy'),
+        url('Trivial-Heavy.woff2') format('woff2'),
+        url('Trivial-Heavy.woff') format('woff'),
+        url('Trivial-Heavy.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Trivial';
+    src: local('Trivial Light'), local('Trivial-Light'),
+        url('Trivial-Light.woff2') format('woff2'),
+        url('Trivial-Light.woff') format('woff'),
+        url('Trivial-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Trivial';
+    src: local('Trivial ExtraLight'), local('Trivial-ExtraLight'),
+        url('Trivial-ExtraLight.woff2') format('woff2'),
+        url('Trivial-ExtraLight.woff') format('woff'),
+        url('Trivial-ExtraLight.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Trivial';
+    src: local('Trivial UltraLight'), local('Trivial-UltraLight'),
+        url('Trivial-UltraLight.woff2') format('woff2'),
+        url('Trivial-UltraLight.woff') format('woff'),
+        url('Trivial-UltraLight.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+}
+

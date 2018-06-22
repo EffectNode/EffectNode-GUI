@@ -43,7 +43,7 @@
 
     <Tooltip v-show="tooltip" :tooltip="tooltip" />
 
-    <ExecEnv ref="exec" :files="doc.files" @src="onCompileComplete"/>
+    <ExecEnv ref="exec" :files="doc.files" @src="onCompileComplete" />
 
   </div>
 </template>
