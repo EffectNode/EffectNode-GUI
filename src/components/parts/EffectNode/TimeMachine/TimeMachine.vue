@@ -153,7 +153,7 @@ export default {
       this.$nextTick(() => {
         this.timeTravelIndex = 0 // this.rootDoc.backups.length - 1
 
-        var json = JSON.stringify(this.rootDoc)
+        var json = JSON.stringify(this.rootDoc, null, '\t')
         var url = URL.createObjectURL(new Blob([json]), { type: 'application/json' })
         var anchor = document.createElement('a')
         anchor.href = url

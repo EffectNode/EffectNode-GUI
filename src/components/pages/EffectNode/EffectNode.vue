@@ -3,8 +3,8 @@
 
     <StatusBar class="statusbar-top">
       <div slot="left">
-        <button @click="state.mode = 'SceneEditor'">SceneEditor</button>
-        <button @click="state.mode = 'CodeEditor'">CodeEditor</button>
+        <!-- <button @click="state.mode = 'SceneEditor'">SceneEditor</button>
+        <button @click="state.mode = 'CodeEditor'">CodeEditor</button> -->
       </div>
       <div slot="right">
         <TimeMachine
@@ -75,14 +75,14 @@ export default {
       // dirtyTimer: 0,
       // needsCompile: false,
       state: {
-        mode: 'CodeEditor' // CodeEditor / SceneEditor
-      },
-      root: {
-        // basic data structure
+        mode: 'CodeEditor', // CodeEditor / SceneEditor
         output: {
           html: '',
           js: ''
-        },
+        }
+      },
+      root: {
+        // basic data structure
         now: {
           currentFilePath: '@/index.html',
           openedFiles: [
@@ -128,10 +128,10 @@ export default {
     },
     output: {
       get () {
-        return this.root.output
+        return this.state.output
       },
       set (v) {
-        this.root.output = v
+        this.state.output = v
         return v
       }
     }
