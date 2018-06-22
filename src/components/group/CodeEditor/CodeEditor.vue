@@ -48,7 +48,7 @@
       </div>
 
       <div class="previewer">
-        <Previewer :output="output" />
+        <Previewer :output="output" :defaultSize="'iphonex-chrome'" />
       </div>
     </div>
 
@@ -259,9 +259,12 @@ export default {
   position: absolute;
   top: 0px;
   right: 0px;
+  display: flex;
 
+  /*
   width: 650px;
   height: 300px;
+  */
 }
 
 </style>

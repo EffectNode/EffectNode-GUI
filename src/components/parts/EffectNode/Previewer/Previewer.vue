@@ -1,7 +1,12 @@
 <template>
   <div class="box">
-    <span v-if="iframeURL === 'about:blank'">Loading...</span>
-    <iframe ref="iframer" class="iframe" v-if="useFrame" :src="iframeURL" sandbox="allow-scripts allow-same-origin allow-modals" frameborder="0" ></iframe>
+    <select class="select" v-model="selected">
+      <option :value="size.id" :key="size.id" v-for="size in sizes">{{ size.name }}</option>
+    </select>
+    Scale: {{ this.sizer.scale.toFixed(2) }}x
+    <div :style="getRect()">
+      <iframe ref="iframer" :style="getScaler()" class="iframe" v-if="useFrame" :src="iframeURL" sandbox="allow-scripts allow-same-origin allow-modals" frameborder="0" ></iframe>
+    </div>
   </div>
 </template>
 
@@ -15,15 +20,75 @@ export default {
           js: ''
         }
       }
+    },
+    defaultSize: {
+      default: 'ipad-v'
     }
   },
   data () {
     return {
+      selected: this.defaultSize,
+      sizes: [
+        {
+          id: 'iphonex-chrome',
+          name: 'iPhone X Chrome',
+          width: 375,
+          height: 677,
+          scale: 1.0
+        },
+        {
+          id: 'safari-414',
+          name: 'iPhone 8+',
+          width: 414,
+          height: 630,
+          scale: 1.0
+        },
+        {
+          id: 'safari-375',
+          name: 'iPhone 8',
+          width: 375,
+          height: 562,
+          scale: 1.0
+        },
+        {
+          id: 'safari-320',
+          name: 'iPhone SE',
+          width: 320,
+          height: 463,
+          scale: 1.0
+        },
+        {
+          id: 'ipad-v',
+          name: 'iPad Safari Vertical',
+          width: 768,
+          height: 1024,
+          scale: 500 / 768
+        },
+        {
+          id: 'ipad-h',
+          name: 'iPad Safari Horizontal',
+          width: 1024,
+          height: 768,
+          scale: 500 / 1024
+        }
+      ],
       useFrame: true,
       iframeURL: 'about:blank'
     }
   },
+  computed: {
+    sizer () {
+      return this.sizes.find(s => s.id === this.selected) || this.sizes.find(s => s.id === 'safari-414')
+    }
+  },
   watch: {
+    selected () {
+      this.useFrame = false
+      this.$nextTick(() => {
+        this.useFrame = true
+      })
+      // this.sendData({ type: 'resize', detail: {} })
+    },
     output () {
       this.loadFrame()
     }
@@ -64,6 +129,22 @@ export default {
     })
   },
   methods: {
+    getRect () {
+      let scale = this.sizer.scale
+      return {
+        width: this.sizer.width * scale + 'px',
+        height: this.sizer.height * scale + 'px'
+      }
+    },
+    getScaler () {
+      let scale = this.sizer.scale
+      return {
+        width: (this.sizer.width) + 'px',
+        height: (this.sizer.height) + 'px',
+        transformOrigin: '0% 0%',
+        transform: `scale(${scale})`
+      }
+    },
     sendData (data) {
       let sandboxedFrame = this.$refs['iframer']
       if (!data.type) {
@@ -93,10 +174,8 @@ export default {
 .box{
   width: 100%;
   height: 100%;
-  outline: #939393 solid 1px;
 }
 .iframe{
-  width: 100%;
-  height: 100%;
+  outline: #939393 solid 1px;
 }
 </style>
