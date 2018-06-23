@@ -168,6 +168,10 @@ export default {
       }
       console.log('Main Send iFrame Message: ', data)
       sandboxedFrame.contentWindow.postMessage({ type: data.type, detail: data.detail }, this.iframeURL)
+
+      this.wins.forEach((w) => {
+        w.postMessage({ type: data.type, detail: data.detail }, window.location.origin)
+      })
     },
     loadFrame () {
       var url = this.makeURL(this.output.html)

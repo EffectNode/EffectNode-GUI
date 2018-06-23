@@ -18,7 +18,7 @@
           <img @mouseover="$emit('tooltip', { name: 'Take Project Snapshot' })" @mouseout="$emit('tooltip', false)" @click="clickSnapShot" src="./img/floppy.svg" class="icon-img hover-magnify" />
           <!-- <img @mouseover="$emit('tooltip', { name: 'Project Version' })" @mouseout="$emit('tooltip', false)" src="./img/time.svg" class="icon-img version" /> -->
           <select @mouseover="$emit('tooltip', { name: 'TimeStamp' })" @mouseout="$emit('tooltip', false)" ref="version-select" class="select" @input="() => {}" v-model="timeTravelIndex">
-            <option :key="backup.date" :value="iBackup" v-for="(backup, iBackup) in backups">
+            <option :key="backup.date + iBackup" :value="iBackup" v-for="(backup, iBackup) in backups">
               {{ fromNow(backup.date) }}
             </option>
           </select>

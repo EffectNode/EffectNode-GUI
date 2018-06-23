@@ -47,7 +47,7 @@ export default {
       let jsFile = (this.doc.files || []).find(f => f.path === '@/root-data.js')
 
       let src =
-`import root from '@/root.json'
+`import root from '@/root.readonly.json'
 
 export const state = {
   root: {

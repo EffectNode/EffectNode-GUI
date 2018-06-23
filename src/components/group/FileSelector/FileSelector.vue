@@ -102,7 +102,8 @@ export default {
   },
   methods: {
     checkMove (evt) {
-      return !this.checkProtectedItem(evt.draggedContext.element.path)
+      return true
+      // return !this.checkProtectedItem(evt.draggedContext.element.path)
     },
     confirmRemoveFile (path) {
       if (window.confirm('delete?\n\n' + path)) {

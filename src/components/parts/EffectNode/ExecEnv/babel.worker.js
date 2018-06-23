@@ -328,7 +328,11 @@ self.onmessage = ({ data }) => {
           window.addEventListener('message', (e) => {
             // is from main window to this iframe window
             if (
-              (e.source === window.top) &&
+              (
+                (e.source.location.origin === window.location.origin) ||
+                (e.source === window.top)
+              )
+              &&
               e.data &&
               e.data.type
             ) {
