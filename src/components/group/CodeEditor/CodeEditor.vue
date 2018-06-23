@@ -9,6 +9,7 @@
       </Draggable>
     </div>
     <div class="content-row">
+
       <div class="file-selector">
         <keep-alive>
           <FileSelector

@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <Tooltip v-show="tooltip" :tooltip="tooltip" />
+    <Tooltip v-if="isBigEnough" v-show="tooltip" :tooltip="tooltip" />
 
     <ExecEnv ref="exec" :files="doc.files" @src="onCompileComplete" />
 
@@ -70,6 +70,7 @@ export default {
   },
   data () {
     return {
+      isBigEnough: window.innerWidth >= 767,
       tooltip: false,
 
       // dirtyTimer: 0,
