@@ -38,7 +38,7 @@
           $emit('open-file', file.path);
         "
       >
-        Edit
+        Open
       </div>
       <div
         v-if="!checkProtectedItem(file.path)"
@@ -162,6 +162,10 @@ export default {
       if (src === '@/index.html') {
         return true
       } else if (src === '@/main.js') {
+        return true
+      } else if (src === '@/root-data.js') {
+        return true
+      } else if (src === '@/root.readonly.json') {
         return true
       } else if (src === '@/router.js') {
         return true

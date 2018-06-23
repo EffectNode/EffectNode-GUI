@@ -12,7 +12,7 @@
           :output="output"
           @travel="travel"
           @load-root="loadRoot"
-          @compile="$emit('compile')"
+          @compile="(v) => { $emit('compile', v) }"
           @just-save="saveProject"
           @tooltip="(v) => { tooltip = v }"
         />
@@ -70,6 +70,7 @@ export default {
   },
   data () {
     return {
+      compileNowTimer: false,
       isBigEnough: window.innerWidth >= 767,
       tooltip: false,
 
@@ -163,6 +164,7 @@ export default {
     },
     onCompileComplete (src) {
       this.output = src
+      this.compileNowTimer = false
       this.saveProject()
     },
     hydrate () {
@@ -174,25 +176,35 @@ export default {
         } else {
           window.localStorage.setItem('alpha-root', JSON.stringify(this.root))
         }
-        this.$emit('compile')
+        this.$nextTick(() => {
+          this.$emit('compile')
+        })
       }, 100)
     },
     saveProject: debounce(function () {
       window.localStorage.setItem('alpha-root', JSON.stringify(this.root))
-    }, 333),
+    }, 333.333),
     setup () {
-      this.$on('compile', () => {
+      this.$on('compile', (v) => {
+        this.output.isLoading = true
         // this.needsCompile = true
-        this.compileLater()
+        this.compileLater(v)
         this.saveProject()
       })
     },
-    compileLater: debounce(function () {
-      this.compileNow()
-    }, 888),
-    compileNow () {
+    compileLater (v) {
+      if (!this.compileNowTimer) {
+        this.compileNow(v)
+      } else {
+        clearTimeout(this.compileNowTimer)
+        this.compileNowTimer = setTimeout(() => {
+          this.compileNow(v)
+        }, 3000)
+      }
+    },
+    compileNow (v) {
       if (this.$refs['exec']) {
-        this.$refs['exec'].compile()
+        this.$refs['exec'].compile(v)
       }
     },
     autoRun () {

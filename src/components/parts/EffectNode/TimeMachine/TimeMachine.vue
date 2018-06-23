@@ -120,7 +120,7 @@ export default {
   methods: {
     exportJS () {
       this.downloadJS = true
-      this.$emit('compile')
+      this.$emit('compile', { minify: true })
     },
     fromNow (date) {
       return moment(new Date(date)).fromNow() + ' ' + moment(new Date(date)).format('MMM Do YYYY, h:mm:ss a')

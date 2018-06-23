@@ -1,48 +1,24 @@
 {
 	"now": {
-		"currentFilePath": "@/shader/Fling/vs.vert",
+		"currentFilePath": "@/pages/PALMS.vue",
 		"openedFiles": [
 			{
-				"path": "@/shader/Fling/vs.vert"
+				"path": "@/root.js"
 			},
 			{
-				"path": "@/router.js"
-			},
-			{
-				"path": "@/archive/sample.vue"
-			},
-			{
-				"path": "@/pages/PALMS.vue"
-			},
-			{
-				"path": "@/style.css"
-			},
-			{
-				"path": "@/index.html"
-			},
-			{
-				"path": "@/general-tools.js"
-			},
-			{
-				"path": "@/shader/Simple/vs.vert"
+				"path": "@/root.json"
 			},
 			{
 				"path": "@/main.js"
 			},
 			{
-				"path": "@/webgl/Bundle.js"
+				"path": "@/index.html"
 			},
 			{
-				"path": "@/webgl/Geo/BoxBufferGeometry.vue"
+				"path": "@/style.css"
 			},
 			{
-				"path": "@/app.vue"
-			},
-			{
-				"path": "@/webgl/Geo/SphereBufferGeometry.vue"
-			},
-			{
-				"path": "@/pages/Sample.vue"
+				"path": "@/pages/PALMS.vue"
 			}
 		],
 		"files": [
@@ -52,7 +28,7 @@
 			},
 			{
 				"path": "@/style.css",
-				"src": "@import url('https://fonts.googleapis.com/css?family=Sedgwick+Ave');\n\nhtml, body {\n  width: 100%;\n  height: 100%;\n  margin: 0px;\n  padding: 0px;\n}\nhtml, body, #app {\n  box-sizing: border-box;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  font-family: 'Sedgwick Ave', Arial, cursive;\n}\n.full{\n  width: 100%;\n  height: 100%;\n}\n"
+				"src": "@import url('https://fonts.googleapis.com/css?family=Quicksand');\n\nhtml, body {\n  width: 100%;\n  height: 100%;\n  margin: 0px;\n  padding: 0px;\n}\nhtml, body, #app {\n  box-sizing: border-box;\n  width: 100%;\n  height: 100%;\n  overflow: hidden;\n  font-family: 'Quicksand', sans-serif;\n}\n.full{\n  width: 100%;\n  height: 100%;\n}\n"
 			},
 			{
 				"path": "@/main.js",
@@ -88,7 +64,7 @@
 			},
 			{
 				"path": "@/pages/PALMS.vue",
-				"src": "<template>\n  <div class=\"full\">\n\n    <Renderer\n      class=\"pos-rel full\"\n      ref=\"renderer\"\n      :size=\"size\"\n      @renderer=\"(v) => { renderer = v }\"\n    >\n    </Renderer>\n    \n    <!-- <div class=\"full touch-surface\" @click=\"wonder\">\n      12345\n    </div> -->\n    \n    <div class=\"full layer\" ref=\"domScroller\" @scroll=\"onScroll\">\n      <div ref=\"domContent\">\n        <b>PolyU Led 3D Projects</b>\n        <div class=\"taller\"></div>\n        Oh My 3D Math Tools\n        <div class=\"taller\"></div>\n        323\n        <div class=\"taller\"></div>\n        323\n      </div>\n    </div>\n    \n    <PerspectiveCamera\n      :fov=\"75\"\n      :aspect=\"size.aspect\"\n      :near=\"1\"\n      :far=\"1000\"\n      :position=\"{ x: 0, y: 0, z: 15 }\"\n      \n      @camera=\"(v) => { camera = v; }\"\n    />\n\n    <Scene @scene=\"(v) => { scene = v }\">\n      <Object3D pz=\"10\">\n        <PointLight />\n      </Object3D>\n      \n      <Object3D @element=\"(v) => { scroller = v }\">\n        <Object3D :py=\"0\">\n          <Points>\n            <BoxBufferGeometry />\n            <ShaderMaterial :vs=\"simple.vs\" :fs=\"simple.fs\" :uniforms=\"animatable\" />\n          </Points>\n        </Object3D>\n        <Object3D :py=\"-10 * 2.0\" :pz=\"-30\" >\n          <Points>\n            <BoxBufferGeometry />\n            <ShaderMaterial :vs=\"simple.vs\" :fs=\"simple.fs\" :uniforms=\"animatable\" />\n          </Points>\n        </Object3D>\n        <Object3D :py=\"-20 * 2.0\">\n          <Points>\n            <BoxBufferGeometry />\n            <ShaderMaterial :vs=\"simple.vs\" :fs=\"simple.fs\" :uniforms=\"animatable\" />\n          </Points>\n        </Object3D>\n        \n        <Object3D :py=\"-30 * 2.0\" :pz=\"-30\" >\n          <Points>\n            <BoxBufferGeometry />\n            <ShaderMaterial :vs=\"simple.vs\" :fs=\"simple.fs\" :uniforms=\"animatable\" />\n          </Points>\n        </Object3D>\n        \n        <Object3D :py=\"-40 * 2.0\" :pz=\"0\" >\n          <Points>\n            <BoxBufferGeometry />\n            <ShaderMaterial :vs=\"simple.vs\" :fs=\"simple.fs\" :uniforms=\"animatable\" />\n          </Points>\n        </Object3D>\n        \n      </Object3D>\n      \n      \n    </Scene>\n\n  </div>\n</template>\n\n<script>\nimport Bundle from '@/webgl/Bundle.js';\nimport simpleVS from '@/shader/Simple/vs.vert'\nimport simpleFS from '@/shader/Simple/fs.frag'\n\nexport default {\n  components: {\n    ...Bundle\n  },\n  computed: {\n  },\n  methods: {\n    renderWebGL () {\n      this.animatable.time.value = window.performance.now() * 0.001;\n      \n      if (this.scene && this.camera && this.renderer) {\n        this.renderer.render(this.scene, this.camera)\n      }\n    },\n    wonder () {\n      window.alert('click')\n    },\n    onScroll (evt) {\n      var scroller = this.$refs['domScroller'];\n      var scrollerRect = scroller.getBoundingClientRect();\n      var content = this.$refs['domContent'];\n      var contentRect = content.getBoundingClientRect();\n      var contentLength = contentRect.height;\n      var scrollerHeight = scrollerRect.height;\n      \n      var scrollAmount = evt.target.scrollTop;\n      var scroll100pa = contentLength - scrollerHeight;\n      \n      var progress = scrollAmount / scroll100pa;\n      \n      // console.log(progress);\n      \n      if (this.scroller) {\n        this.scroller.position.y = progress * 40 * 2.0;\n      }\n      \n      // console.table([\n      //  contentRect,\n      //  scrollerRect\n      // ]);\n    }\n  },\n  data () {\n    return {\n      PI: Math.PI,\n      scroller: false,\n      animatable: {\n        time: { value: 0 }\n      },\n      simple: {\n        vs: simpleVS,\n        fs: simpleFS\n      },\n      size: {\n        width: window.innerWidth,\n        height: window.innerHeight,\n        aspect: window.innerWidth / window.innerHeight\n      },\n      renderer: false,\n      scene: false,\n      camera: false\n    }\n  },\n  created () {\n    \n  },\n  mounted () {\n    var self = this\n    function loop () {\n      self.rAFID = window.requestAnimationFrame(loop)\n      self.renderWebGL()\n    }\n    self.rAFID = window.requestAnimationFrame(loop)\n  }\n}\n</script>\n\n<style scoped>\n.taller{\n  height: 100vh;\n}\n.pos-rel{\n  position: relative;\n}\n.full{\n  width: 100%;\n  height: 100%;\n}\n.renderer{\n  position: absolute;\n  top: 0px;\n  left: 0px;\n}\n.layer {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  overflow: auto;\n  -webkit-overflow-scrolling: touch;\n}\n.touch-surface{\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  z-index: 100;\n}\n\n</style>\n"
+				"src": "<template>\n  <div class=\"full\">\n\n    <Renderer\n      class=\"pos-rel full\"\n      ref=\"renderer\"\n      :size=\"size\"\n      @renderer=\"(v) => { renderer = v }\"\n    >\n    </Renderer>\n    \n    <!-- \n    <div class=\"full touch-surface\" @click=\"wonder\">\n      12345\n    </div> \n    -->\n    \n    <div class=\"full layer\" ref=\"domScroller\" @scroll=\"onScroll\">\n      <div ref=\"domContent\">\n        \n        <b>3D Projects by LokLok</b>\n        \n        <div class=\"taller\"></div>\n        Oh My 3D Math Tools\n        \n        <div class=\"taller\"></div>\n        323\n        \n        <div class=\"taller\"></div>\n        323\n        \n        <div class=\"taller\"></div>\n        323\n      </div>\n    </div>\n    \n    <PerspectiveCamera\n      :fov=\"75\"\n      :aspect=\"size.aspect\"\n      :near=\"1\"\n      :far=\"1000\"\n      :position=\"{ x: 0, y: 0, z: 20 }\"\n      \n      @camera=\"(v) => { camera = v; }\"\n    />\n\n    <Scene @scene=\"(v) => { scene = v }\">\n      <Object3D pz=\"10\">\n        <PointLight />\n      </Object3D>\n      \n      <Object3D :py=\"progress * 40 * 1.4\">\n        \n        <Object3D :rx=\"progress * PI * 2.0\" :px=\"-5.553\" :py=\"10 * -1 * -1.3\" :pz=\"-10\">\n          <Points>\n            <BoxBufferGeometry />\n            <ShaderMaterial :vs=\"simple.vs\" :fs=\"simple.fs\" :uniforms=\"animatable\" />\n          </Points>\n        </Object3D>\n        \n        <Object3D :ry=\"progress * PI * 2.0\" :px=\"5.553\" :py=\"10 * 0 * -1.3\" :pz=\"-10\">\n          <Points>\n            <BoxBufferGeometry />\n            <ShaderMaterial :vs=\"simple.vs\" :fs=\"simple.fs\" :uniforms=\"animatable\" />\n          </Points>\n        </Object3D>\n        \n        <Object3D :rx=\"progress * PI * 2.0\" :px=\"-5.553\" :py=\"10 * 1 * -1.3\" :pz=\"-10\">\n          <Points>\n            <BoxBufferGeometry />\n            <ShaderMaterial :vs=\"simple.vs\" :fs=\"simple.fs\" :uniforms=\"animatable\" />\n          </Points>\n        </Object3D>\n        \n        <Object3D :rz=\"progress * PI * 2.0\" :rx=\"progress * PI * 2.0\"  :px=\"5.553\" :py=\"10 * 2 * -1.3\" :pz=\"-10\">\n          <Points>\n            <BoxBufferGeometry />\n            <ShaderMaterial :vs=\"simple.vs\" :fs=\"simple.fs\" :uniforms=\"animatable\" />\n          </Points>\n        </Object3D>\n\n\n      </Object3D>\n      \n    </Scene>\n\n  </div>\n</template>\n\n<script>\nimport Bundle from '@/webgl/Bundle.js';\nimport simpleVS from '@/shader/Simple/vs.vert'\nimport simpleFS from '@/shader/Simple/fs.frag'\n\nimport * as RA from '@/root.js'\n\nexport default {\n  components: {\n    ...Bundle\n  },\n  methods: {\n    renderWebGL () {\n      this.animatable.time.value = window.performance.now() * 0.0001;\n      \n      if (this.scene && this.camera && this.renderer) {\n        this.renderer.render(this.scene, this.camera)\n      }\n    },\n    wonder () {\n      window.alert('click')\n    },\n    onScroll (evt) {\n      var scroller = this.$refs['domScroller'];\n      var scrollerRect = scroller.getBoundingClientRect();\n      \n      var content = this.$refs['domContent'];\n      var contentRect = content.getBoundingClientRect();\n      \n      var contentLength = contentRect.height;\n      var scrollerHeight = scrollerRect.height;\n      \n      var scrollAmount = evt.target.scrollTop;\n      var scroll100pa = contentLength - scrollerHeight;\n\n      var progress = scrollAmount / scroll100pa;\n      \n      if (this.progress !== progress) {\n        this.progress = progress;\n      }\n    }\n  },\n  computed: {\n  },\n  data () {\n    return {\n      RA,\n      progress: 0,\n      PI: Math.PI,\n      animatable: {\n        time: { value: 0 }\n      },\n      animatable2: {\n        time: { value: 0 }\n      },\n      simple: {\n        vs: simpleVS,\n        fs: simpleFS\n      },\n      size: {\n        width: window.innerWidth,\n        height: window.innerHeight,\n        aspect: window.innerWidth / window.innerHeight\n      },\n      renderer: false,\n      scene: false,\n      camera: false\n    }\n  },\n  created () {\n    \n  },\n  mounted () {\n    window.addEventListener('resize', () => {\n      this.size = {\n        width: window.innerWidth,\n        height: window.innerHeight,\n        aspect: window.innerWidth / window.innerHeight\n      }\n    })\n    \n    var self = this\n    function loop () {\n      self.rAFID = window.requestAnimationFrame(loop)\n      self.renderWebGL()\n    }\n    self.rAFID = window.requestAnimationFrame(loop)\n  }\n}\n</script>\n\n<style scoped>\n.taller{\n  height: 100vh;\n}\n.pos-rel{\n  position: relative;\n}\n.full{\n  width: 100%;\n  height: 100%;\n}\n.renderer{\n  position: absolute;\n  top: 0px;\n  left: 0px;\n}\n.layer {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  overflow: auto;\n  -webkit-overflow-scrolling: touch;\n}\n.touch-surface{\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  z-index: 100;\n}\n\n</style>\n"
 			},
 			{
 				"path": "@/webgl/Bundle.js",
@@ -177,9 +153,17 @@
 			{
 				"path": "@/archive/sample.vue",
 				"src": "<template>\n  <div class=\"full\">\n\n    <Renderer\n      class=\"pos-rel full\"\n      ref=\"renderer\"\n      :size=\"size\"\n      @renderer=\"(v) => { renderer = v }\"\n    >\n    \n    </Renderer>\n    \n    <!-- <div class=\"full touch-surface\" @click=\"wonder\">\n      12345\n    </div> -->\n    \n    <div class=\"full layer\">\n      12345\n    </div>\n\n    <PerspectiveCamera\n      :fov=\"75\"\n      :aspect=\"size.aspect\"\n      :near=\"1\"\n      :far=\"1000\"\n      :position=\"{ x: 0, y: 0, z: 10 }\"\n      \n      @camera=\"(v) => { camera = v; }\"\n    />\n\n    <Scene @scene=\"(v) => { scene = v }\">\n      <Object3D pz=\"10\">\n        <PointLight />\n      </Object3D>\n      \n      <Object3D pz=\"0\">\n        <Points>\n          <SphereBufferGeometry />\n          <ShaderMaterial :vs=\"simple.vs\" :fs=\"simple.fs\" :uniforms=\"animatable\" />\n        </Points>\n      </Object3D>\n      \n    </Scene>\n\n  </div>\n</template>\n\n<script>\nimport Bundle from '@/webgl/Bundle.js';\nimport simpleVS from '@/shader/Fling/vs.vert'\nimport simpleFS from '@/shader/Simple/fs.frag'\n\nexport default {\n  components: {\n    ...Bundle\n  },\n  computed: {\n  },\n  methods: {\n    renderWebGL () {\n      this.animatable.time.value = window.performance.now() * 0.001;\n      \n      if (this.scene && this.camera && this.renderer) {\n        this.renderer.render(this.scene, this.camera)\n      }\n    },\n    wonder () {\n      window.alert('click')\n    }\n  },\n  data () {\n    return {\n      animatable: {\n        time: { value: 0 }\n      },\n      simple: {\n        vs: simpleVS,\n        fs: simpleFS\n      },\n      size: {\n        width: window.innerWidth,\n        height: window.innerHeight,\n        aspect: window.innerWidth / window.innerHeight\n      },\n      renderer: false,\n      scene: false,\n      camera: false\n    }\n  },\n  created () {\n    \n  },\n  mounted () {\n    var self = this\n    function loop () {\n      self.rAFID = window.requestAnimationFrame(loop)\n      self.renderWebGL()\n    }\n    self.rAFID = window.requestAnimationFrame(loop)\n  }\n}\n</script>\n\n<style scoped>\n.pos-rel{\n  position: relative;\n}\n.full{\n  width: 100%;\n  height: 100%;\n}\n.renderer{\n  position: absolute;\n  top: 0px;\n  left: 0px;\n}\n.layer {\n  position: absolute;\n  top: 0px;\n  left: 0px;\n}\n.touch-surface{\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  z-index: 100;\n}\n</style>\n"
+			},
+			{
+				"path": "@/root.json",
+				"src": "{\n  \"note\": \"do not edit\"\n}"
+			},
+			{
+				"path": "@/root.js",
+				"src": "import root from '@/root.json'\n\nvar newData = {}\n\nwindow.addEventListener('root-data', (evt) => {\n  var data = evt.detail\n  newdata = data\n}, false)\n\nconst api = {\n  get root () {\n    return {\n      ...root,\n      ...newData\n    }\n  }\n}\n\nexport default api"
 			}
 		],
-		"date": "Sat Jun 23 2018 08:58:03 GMT+0800 (Hong Kong Standard Time)"
+		"date": "Sat Jun 23 2018 15:33:50 GMT+0800 (Hong Kong Standard Time)"
 	},
 	"backups": []
 }

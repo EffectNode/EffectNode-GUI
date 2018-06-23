@@ -4,11 +4,16 @@
       <div
       @mouseover="$emit('tooltip', { name: 'Open File' })" @mouseout="$emit('tooltip', false)"
       class="browse-btn" :class="{ 'using': mode === 'browse' }" @click="toggleMode">Browse</div>
+      <div class="browse-btn" :class="{ 'using': mode === 'gui-data' }" @click="mode = 'gui-data'">GUI Data</div>
       <Draggable class="opened-files" v-model="openedFiles" :move="onDragTabs">
         <div class="tab" :class="{ 'active': isTabActive(tab.path) }" @click="selectFile(tab.path)" :key="tab.path + iTab" v-for="(tab, iTab) in openedFiles"><img class="cross" src="./img/cross.svg" @click="removeTab(tab, iTab, openedFiles)" /> {{ tab.path }} </div>
       </Draggable>
     </div>
     <div class="content-row">
+
+      <div>
+        <GUIData @just-save="$emit('just-save')" :uiVisible="mode === 'gui-data'" :doc="doc" v-if="$refs['viewer']" :sendData="$refs['viewer'].sendData" />
+      </div>
 
       <div class="file-selector">
         <keep-alive>
@@ -36,9 +41,10 @@
             :is="'ACE'"
             v-if="mode === 'edit' && currentFile && openFile.path === currentFilePath"
             v-model="currentFile.src"
+            :readOnly="currentFile.readOnly"
             :filepath="openFile.path"
             @open="() => { mode = 'browse' }"
-            @save="() => { $emit('just-save'); $emit('compile-now') }"
+            @save="() => { $emit('just-save'); $emit('compile') }"
             @input="() => { needsCompile = true; }"
             theme="chrome"
             width="100%"
@@ -49,7 +55,7 @@
       </div>
 
       <div class="previewer">
-        <Previewer :output="output" :defaultSize="'iphonex-chrome'" />
+        <Previewer ref="viewer" :output="output" :defaultSize="'iphonex-chrome'" />
       </div>
     </div>
 
@@ -59,7 +65,10 @@
 <script>
 import ACE from '@/components/parts/EffectNode/ACE/ACE.vue'
 import Previewer from '@/components/parts/EffectNode/Previewer/Previewer.vue'
+
 import FileSelector from '@/components/group/FileSelector/FileSelector.vue'
+
+import GUIData from '@/components/group/GUIData/GUIData.vue'
 import Draggable from 'vuedraggable'
 
 export default {
@@ -67,7 +76,8 @@ export default {
     Draggable,
     ACE,
     FileSelector,
-    Previewer
+    Previewer,
+    GUIData
   },
   props: {
     currentFilePath: {
@@ -191,10 +201,17 @@ export default {
         this.needsCompile = false
         this.$emit('compile')
       }
-    }, 3000)
+    }, 10000)
+
+    setInterval(() => {
+      if (this.dirtyCheckerTimer) {
+        this.$emit('just-save')
+      }
+    }, 1000)
   },
   beforeDestroy () {
     clearTimeout(this.dirtyCheckerTimer)
+    this.dirtyCheckerTimer = false
   }
 }
 </script>

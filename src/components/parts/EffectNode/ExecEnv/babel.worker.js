@@ -290,8 +290,10 @@ self.onmessage = ({ data }) => {
     var rand = makeid()
 
     var reqJS = requirejsSrc
-    reqJS = minify({ js: requirejsSrc })
-    entry = minify({ js: entry })
+    if (data.minify) {
+      reqJS = minify({ js: requirejsSrc })
+      entry = minify({ js: entry })
+    }
 
     var result = `
 
@@ -336,6 +338,12 @@ self.onmessage = ({ data }) => {
               window.dispatchEvent(customEvent);
             }
           });
+
+          window.addEventListener('root-data', (evt) => {
+            let detail = evt.detail
+            let data = detail.detail
+            console.log('iFrame Got Root Data:', data)
+          }, false);
 
           (window.opener || window.top).postMessage({ type: 'iframe-system-ready', detail: { status: 'ok' } }, window.location.origin);
         }, 10);

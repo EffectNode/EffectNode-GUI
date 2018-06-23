@@ -3,7 +3,11 @@
     <select class="select" v-model="selected">
       <option :value="size.id" :key="size.id" v-for="size in sizes">{{ size.name }}</option>
     </select>
-    Scale: {{ this.sizer.scale.toFixed(2) }}x
+    Scale: {{ this.sizer.scale.toFixed(2) }}
+    <button @click="openWindows">window</button>
+
+    <span v-show="output.isLoading">Loading...</span>
+
     <div :style="getRect()">
       <iframe ref="iframer" :style="getScaler()" class="iframe" v-if="useFrame" :src="iframeURL" sandbox="allow-scripts allow-same-origin allow-modals" frameborder="0" ></iframe>
     </div>
@@ -27,6 +31,7 @@ export default {
   },
   data () {
     return {
+      wins: [],
       selected: this.defaultSize,
       sizes: [
         {
@@ -94,6 +99,9 @@ export default {
     }
   },
   mounted () {
+    window.addEventListener('unload', () => {
+      this.wins.forEach(w => w.close())
+    })
     this.loadFrame()
     let sandboxedFrame = this.$refs['iframer']
     window.addEventListener('message', (e) => {
@@ -124,6 +132,8 @@ export default {
             type: 'main-system-ready',
             detail: { status: 'ok' }
           })
+          let customEvent = new CustomEvent('main-system-ready', { detail: { status: 'ok' } })
+          window.dispatchEvent(customEvent)
         }
       }
     })
@@ -162,6 +172,10 @@ export default {
     loadFrame () {
       var url = this.makeURL(this.output.html)
       this.iframeURL = url
+      this.wins.forEach((w) => { w.location = url })
+    },
+    openWindows () {
+      this.wins.push(window.open(this.iframeURL))
     },
     makeURL (html) {
       return window.URL.createObjectURL(new Blob([html], { type: 'text/html' }))
@@ -176,6 +190,6 @@ export default {
   height: 100%;
 }
 .iframe{
-  outline: #939393 solid 1px;
+  border: #939393 solid 1px;
 }
 </style>

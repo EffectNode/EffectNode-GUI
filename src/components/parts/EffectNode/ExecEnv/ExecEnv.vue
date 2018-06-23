@@ -72,10 +72,15 @@ export default {
         return []
       }
     },
-    compile () {
+    compile (v) {
+      let minify = false
+      if (v) {
+        minify = v.minify
+      }
       ExecAPI.compile({
         deps: this.getDeps(this.files),
-        files: this.files
+        files: this.files,
+        minify
       })
     }
   },

@@ -27,6 +27,7 @@ require(['emmet/emmet'], function (data) {
 export default {
   template: '',
   props: {
+    readOnly: {},
     value: {},
     filepath: {
       type: String,
@@ -55,6 +56,9 @@ export default {
         var ext = path.split('.').pop()
 
         if (ext === 'js') {
+          ans = 'javascript'
+        }
+        if (ext === 'json') {
           ans = 'javascript'
         }
         if (ext === 'vue') {
@@ -139,6 +143,10 @@ export default {
       editor.session.setValue(this.value, 1)
       editor.session.setOptions({ tabSize: 2, useSoftTabs: true })
       editor.session.setOption('useWorker', false)
+
+      if (this.filepath.indexOf('readonly') !== -1) {
+        editor.setReadOnly(true)
+      }
 
       editor.on('change', function () {
         var content = editor.getValue()
