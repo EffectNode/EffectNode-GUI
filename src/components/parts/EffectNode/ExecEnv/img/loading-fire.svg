@@ -1,0 +1,28 @@
+
+<svg width="84px" height="126px" viewBox="0 0 84 126" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-10.6%" y="-5.7%" width="121.2%" height="115.9%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD" transform="translate(-1204.000000, -398.000000)">
+            <g id="Group" transform="translate(1204.000000, 398.000000)">
+                <g id="iconmonstr-whats-hot-1" filter="url(#filter-1)" transform="translate(14.000000, 32.000000)" fill="#858585">
+                    <path d="M20.625,0 C22.8616667,26.3594781 0,35.4344132 0,58.6515804 C0,74.4218009 11.253,87.8820379 33,87.9993704 C54.747,88.1167029 66,71.8148195 66,55.1609387 C66,39.9773807 58.4393333,25.6591498 44.176,16.7565468 C47.564,26.3154784 43.054,35.0457493 38.6723333,38.0523944 C38.929,25.8168153 34.5473333,7.65961187 20.625,0 Z M37.8986667,47.6663256 C51.667,62.2925543 43.2116667,80.6660895 32.153,80.6660895 C25.4246667,80.6660895 21.9633333,76.0277894 22,71.2171572 C22.0696667,62.296221 32.0356667,62.2888877 37.8986667,47.6663256 Z" id="Shape"></path>
+                </g>
+                <g id="iconmonstr-cursor-5-(1)" fill="#000000" fill-opacity="0.5" fill-rule="nonzero">
+                    <path d="M3.21311475,6.39506173 L19.7377049,19.9305247 L9.41851163,19.9305247 L3.21311475,27.8641975 L3.21311475,6.39506173 Z M0,0 L0,37 L10.7628889,23.125 L28,23.125 L0,0 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

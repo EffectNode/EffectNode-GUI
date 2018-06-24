@@ -87,13 +87,13 @@ export default {
     }
   },
   watch: {
-    selected () {
-      this.useFrame = false
-      this.$nextTick(() => {
-        this.useFrame = true
-      })
-      // this.sendData({ type: 'resize', detail: {} })
-    },
+    // selected () {
+    //   this.useFrame = false
+    //   this.$nextTick(() => {
+    //     this.useFrame = true
+    //   })
+    //   // this.sendData({ type: 'resize', detail: {} })
+    // },
     output () {
       this.loadFrame()
     }
@@ -194,6 +194,9 @@ export default {
   height: 100%;
 }
 .iframe{
-  border: #939393 solid 1px;
+  border: #bababa solid 1px;
+  box-sizing: border-box;
+  margin-right: 10px;
+  margin-top: 10px;
 }
 </style>

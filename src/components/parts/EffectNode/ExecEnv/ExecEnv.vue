@@ -36,6 +36,9 @@ export default {
       console.log('done-compiling', evt.data)
       this.$emit('src', evt.data)
     }
+    window.addEventListener('main-system-ready', () => {
+        window.document.documentElement.classList.remove('loading')
+    }, false)
 
     this.clean = ExecAPI.setUp({ onWorkerDone })
     if (this.init) {
@@ -77,6 +80,8 @@ export default {
       if (v) {
         minify = v.minify
       }
+      window.document.documentElement.classList.add('loading')
+
       ExecAPI.compile({
         deps: this.getDeps(this.files),
         files: this.files,
@@ -90,6 +95,11 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+html.loading *{
+  cursor: url('./img/loading-fire.svg'), progress;
+}
+html *{
+  cursor: url('./img/arrow.svg'), auto;
+}
 </style>

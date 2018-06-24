@@ -1,3 +1,14 @@
+/*
+"@babel/standalone": "^7.0.0-beta.32",
+"@tweenjs/tween.js": "^17.2.0",
+"babel-plugin-minify-constant-folding": "^0.3.0",
+"babel-plugin-syntax-dynamic-import": "^6.18.0",
+"babel-plugin-transform-es2015-modules-umd": "^6.24.1",
+"babel-plugin-transform-object-rest-spread": "^6.26.0",
+"babel-preset-minify": "^0.3.0",
+"babel-standalone": "^6.26.0",
+*/
+
 import WorkWorkWork from './babel.worker.js'
 var worker = new WorkWorkWork()
 

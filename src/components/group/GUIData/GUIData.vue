@@ -1,6 +1,8 @@
 <template>
-  <div>
+  <div class="gui-data">
     <div v-if="uiVisible && root">
+
+      <Collection />
 
       <textarea v-model="root.note" @input="commitObj(root)" cols="30" rows="10"></textarea>
       <!-- {{ root }} -->
@@ -10,11 +12,15 @@
 </template>
 
 <script>
+import Collection from './Collection.vue'
 export default {
   props: {
     doc: {},
     sendData: {},
     uiVisible: {}
+  },
+  components: {
+    Collection
   },
   data () {
     return {
@@ -117,4 +123,7 @@ window.addEventListener('root-data', (evt) => {
 </script>
 
 <style scoped>
+.gui-data{
+  margin: 8px;
+}
 </style>

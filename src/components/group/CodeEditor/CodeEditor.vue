@@ -43,6 +43,7 @@
             v-model="currentFile.src"
             :readOnly="currentFile.readOnly"
             :filepath="openFile.path"
+            @close="closeFile"
             @open="() => { mode = 'browse' }"
             @save="() => { $emit('just-save'); $emit('compile') }"
             @input="() => { needsCompile = true; }"
