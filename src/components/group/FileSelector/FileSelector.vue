@@ -306,5 +306,8 @@ input:focus{
   text-decoration: underline;
 }
 
+.handle{
+  cursor: url('./img/drag-hand.svg'),pointer;
+}
 
 </style>

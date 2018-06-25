@@ -1,0 +1,29 @@
+
+<svg width="54px" height="116px" viewBox="0 0 54 116" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M19.8333333,34 C19.8333333,37.128 17.2946667,39.6666667 14.1666667,39.6666667 C11.0386667,39.6666667 8.5,37.128 8.5,34 C8.5,30.872 11.0386667,28.3333333 14.1666667,28.3333333 C17.2946667,28.3333333 19.8333333,30.872 19.8333333,34 Z M11.3333333,23.069 C12.2428333,22.8338333 13.1835,22.6666667 14.1666667,22.6666667 C15.1498333,22.6666667 16.0905,22.8338333 17,23.069 L17,17 L28.3333333,17 L14.1666667,0 L0,17 L11.3333333,17 L11.3333333,23.069 Z M17,44.931 C16.0905,45.1661667 15.1498333,45.3333333 14.1666667,45.3333333 C13.1835,45.3333333 12.2428333,45.1661667 11.3333333,44.931 L11.3333333,51 L0,51 L14.1666667,68 L28.3333333,51 L17,51 L17,44.931 Z" id="path-1"></path>
+        <filter x="-24.7%" y="-7.4%" width="149.4%" height="120.6%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD" transform="translate(-1110.000000, -580.000000)" fill-rule="nonzero">
+            <g id="Group-3" transform="translate(1110.000000, 580.000000)">
+                <g id="iconmonstr-cursor-5-(1)-copy" fill="#858585">
+                    <path d="M3.21311475,6.39506173 L19.7377049,19.9305247 L9.41851163,19.9305247 L3.21311475,27.8641975 L3.21311475,6.39506173 Z M0,0 L0,37 L10.7628889,23.125 L28,23.125 L0,0 Z" id="Shape"></path>
+                </g>
+                <g id="iconmonstr-cursor-21" transform="translate(22.000000, 42.000000)">
+                    <g id="Shape">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                        <use fill-opacity="0.5" fill="#000000" fill-rule="evenodd" xlink:href="#path-1"></use>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

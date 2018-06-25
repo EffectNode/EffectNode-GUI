@@ -2,7 +2,14 @@
   <div class="gui-data">
     <div v-if="uiVisible && root">
 
-      <Collection />
+      <Collection
+        :root="root"
+        @send="commitObj(root)"
+      />
+
+      <div class="hr"></div>
+
+
 
       <textarea v-model="root.note" @input="commitObj(root)" cols="30" rows="10"></textarea>
       <!-- {{ root }} -->
@@ -126,4 +133,17 @@ window.addEventListener('root-data', (evt) => {
 .gui-data{
   margin: 8px;
 }
+
+
+.hr{
+  margin-top: 18px;
+  margin-bottom: 38px;
+  height: 3px;
+  border-top: black solid 1px;
+  border-bottom: black solid 1px;
+
+  width: 100%;
+  max-width: 650px;
+}
+
 </style>

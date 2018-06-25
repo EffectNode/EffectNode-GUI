@@ -3,12 +3,12 @@
     <select class="select" v-model="selected">
       <option :value="size.id" :key="size.id" v-for="size in sizes">{{ size.name }}</option>
     </select>
-    Scale: {{ this.sizer.scale.toFixed(2) }}
-    <button @click="openWindows">window</button>
+    Scale: {{ this.sizer.scale.toFixed(1) }}x
+    <button @click="openWindows">open window</button>
 
     <span v-show="output.isLoading">Loading...</span>
 
-    <div :style="getRect()">
+    <div class="iframe-box" :style="getRect()">
       <iframe ref="iframer" :style="getScaler()" class="iframe" v-if="useFrame" :src="iframeURL" sandbox="allow-scripts allow-same-origin allow-modals" frameborder="0" ></iframe>
     </div>
   </div>
@@ -190,13 +190,10 @@ export default {
 
 <style scoped>
 .box{
-  width: 100%;
-  height: 100%;
-}
-.iframe{
-  border: #bababa solid 1px;
-  box-sizing: border-box;
   margin-right: 10px;
   margin-top: 10px;
+}
+.iframe-box{
+  border: #bababa solid 1px;
 }
 </style>

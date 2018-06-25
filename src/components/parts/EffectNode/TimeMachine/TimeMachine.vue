@@ -126,9 +126,13 @@ export default {
       return moment(new Date(date)).fromNow() + ' ' + moment(new Date(date)).format('MMM Do YYYY, h:mm:ss a')
     },
     format () {
-      if (window.confirm('delete all time machine records and rest factory settings?') && window.confirm('are you sure?')) {
+      if (window.confirm('delete all time machine records and rest factory settings?') && window.confirm('are you sure?') && window.confirm('Final confirm. this is irreversible.')) {
         // this.$emit('load-root', require('./samples/animation.json'))
         this.$emit('load-root', require('./samples/single-page.json'))
+        this.$nextTick(() => {
+          this.$emit('just-save')
+          this.takeSnapshot()
+        })
       }
     },
     loadTimeMachine (evt) {

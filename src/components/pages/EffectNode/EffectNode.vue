@@ -152,6 +152,10 @@ export default {
     loadRoot (root) {
       console.log('load-root')
       this.root = root
+
+      this.$nextTick(() => {
+        this.saveProject()
+      })
     },
     travel (v) {
       this.$nextTick(() => {
