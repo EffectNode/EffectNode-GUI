@@ -13,6 +13,9 @@ export default {
       default () {
         return new THREE.Color(Math.random() * 0xffffff)
       }
+    },
+    doubleSide: {
+      default: false
     }
   },
   watch: {
@@ -26,7 +29,11 @@ export default {
     }
   },
   mounted () {
-    this.material = new THREE.MeshBasicMaterial({ color: this.color, transparent: true, opacity: this.opacity })
+    let config = { color: this.color, transparent: true, opacity: this.opacity }
+    if (this.doubleSide) {
+      config.side = THREE.DoubleSide
+    }
+    this.material = new THREE.MeshBasicMaterial(config)
     this.$parent.$emit('material', this.material)
   }
 }

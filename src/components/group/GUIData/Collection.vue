@@ -15,9 +15,12 @@
 </template>
 
 <script>
+
 import * as GUIData from './GUIData.js'
 export default {
   props: {
+  },
+  components: {
   },
   data () {
     return {
@@ -28,12 +31,6 @@ export default {
   methods: {
     createCollection () {
 
-    },
-    delayStyle (i) {
-      return {
-        'transition-delay': i * 0.15 + 's',
-        'transition-timing-function': `cubic-bezier(0.075, 0.82, 0.165, 1)`
-      }
     },
     toggleView () {
       this.view = !this.view
@@ -70,7 +67,8 @@ export default {
 }
 .gui-data-subtitle,
 .gui-data-subtitle .data-desc{
-  transition: all 0.2s;
+  transition: all 1s;
+  transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 .gui-data-subtitle:hover{
   color: rgb(0, 204, 255);
@@ -92,6 +90,11 @@ export default {
 }
 .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+
+.rotater{
+  width: 200px;
+  height: 200px;
 }
 
 

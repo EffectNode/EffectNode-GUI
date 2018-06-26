@@ -132,6 +132,7 @@ export default {
         this.$nextTick(() => {
           this.$emit('just-save')
           this.takeSnapshot()
+          this.$emit('compile')
         })
       }
     },

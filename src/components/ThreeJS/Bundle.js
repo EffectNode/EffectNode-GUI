@@ -31,6 +31,7 @@ export default {
   SphereBufferGeometry: require('./Geo/SphereBufferGeometry.vue').default,
   BoxBufferGeometry: require('./Geo/BoxBufferGeometry.vue').default,
   PlaneBufferGeometry: require('./Geo/PlaneBufferGeometry.vue').default,
+  RingBufferGeometry: require('./Geo/RingBufferGeometry.vue').default,
 
   dummy: {}
 }

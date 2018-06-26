@@ -109,7 +109,7 @@ export const getEntryDirectly = ({ root, cID, eID }) => {
     throw new Error('needs eID')
   }
   let db = getCollectionById({ root, cID }) || { entries: [] }
-  return db.entries.find(e => e.id === eID)
+  return db.entries.find(e => e.eID === eID)
 }
 
 export const deletEntry = ({ root, cID, eID }) => {

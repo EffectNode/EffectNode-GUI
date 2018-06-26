@@ -9,7 +9,17 @@
 
       <div class="hr"></div>
 
+      <input type="range" :min="-PI" :max="PI" step="0.0001" v-model="root.rotation.x" @input="root.rotation.x = Number(root.rotation.x); commitObj(root)" />
+      <input type="number" :min="-PI" :max="PI" step="0.0001" v-model="root.rotation.x" @input="root.rotation.x = Number(root.rotation.x); commitObj(root)" />
+      x <br />
+      <input type="range" :min="-PI" :max="PI" step="0.0001" v-model="root.rotation.y" @input="root.rotation.y = Number(root.rotation.y); commitObj(root)" />
+      <input type="number" :min="-PI" :max="PI" step="0.0001" v-model="root.rotation.y" @input="root.rotation.y = Number(root.rotation.y); commitObj(root)" />
+      y <br />
+      <input type="range" :min="-PI" :max="PI" step="0.0001" v-model="root.rotation.z" @input="root.rotation.z = Number(root.rotation.z); commitObj(root)" />
+      <input type="number" :min="-PI" :max="PI" step="0.0001" v-model="root.rotation.z" @input="root.rotation.z = Number(root.rotation.z); commitObj(root)" />
+      z <br />
 
+      <!-- <Rotater style="width: 200px; height: 200px;" @rotation="(v) => { root.rotation = v; commitObj(root); }" /> -->
 
       <textarea v-model="root.note" @input="commitObj(root)" cols="30" rows="10"></textarea>
       <!-- {{ root }} -->
@@ -19,6 +29,8 @@
 </template>
 
 <script>
+import Rotater from './Rotater/Rotater.vue'
+
 import Collection from './Collection.vue'
 export default {
   props: {
@@ -27,10 +39,12 @@ export default {
     uiVisible: {}
   },
   components: {
-    Collection
+    Collection,
+    Rotater
   },
   data () {
     return {
+      PI: Math.PI,
       root: false,
       JSON
     }

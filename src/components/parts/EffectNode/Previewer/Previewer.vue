@@ -9,7 +9,7 @@
     <span v-show="output.isLoading">Loading...</span>
 
     <div class="iframe-box" :style="getRect()">
-      <iframe ref="iframer" :style="getScaler()" class="iframe" v-if="useFrame" :src="iframeURL" sandbox="allow-scripts allow-same-origin allow-modals" frameborder="0" ></iframe>
+      <iframe ref="iframer" :style="getScaler()" class="iframe" v-if="useFrame" :src="iframeURL" sandbox="allow-scripts allow-same-origin allow-modals allow-presentation" frameborder="0" ></iframe>
     </div>
   </div>
 </template>
