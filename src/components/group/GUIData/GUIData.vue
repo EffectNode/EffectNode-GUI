@@ -1,27 +1,32 @@
 <template>
   <div class="gui-data">
-    <div v-if="uiVisible && root">
+    <div v-if="uiVisible && guiRootState">
 
       <Collection
-        :root="root"
-        @send="commitObj(root)"
+        :root="guiRootState"
+        @send="commitObj(guiRootState)"
       />
 
       <div class="hr"></div>
 
-      <input type="range" :min="-PI" :max="PI" step="0.0001" v-model="root.rotation.x" @input="root.rotation.x = Number(root.rotation.x); commitObj(root)" />
-      <input type="number" :min="-PI" :max="PI" step="0.0001" v-model="root.rotation.x" @input="root.rotation.x = Number(root.rotation.x); commitObj(root)" />
-      x <br />
-      <input type="range" :min="-PI" :max="PI" step="0.0001" v-model="root.rotation.y" @input="root.rotation.y = Number(root.rotation.y); commitObj(root)" />
-      <input type="number" :min="-PI" :max="PI" step="0.0001" v-model="root.rotation.y" @input="root.rotation.y = Number(root.rotation.y); commitObj(root)" />
-      y <br />
-      <input type="range" :min="-PI" :max="PI" step="0.0001" v-model="root.rotation.z" @input="root.rotation.z = Number(root.rotation.z); commitObj(root)" />
-      <input type="number" :min="-PI" :max="PI" step="0.0001" v-model="root.rotation.z" @input="root.rotation.z = Number(root.rotation.z); commitObj(root)" />
-      z <br />
+      <input type="range" :min="-PI" :max="PI" step="0.0001" v-model="guiRootState.x" @input="guiRootState.x = Number(guiRootState.x); commitObj(guiRootState)" />
+      <input type="number" :min="-PI" :max="PI" step="0.0001" v-model="guiRootState.x" @input="guiRootState.x = Number(guiRootState.x); commitObj(guiRootState)" />
+      x
+      <br />
 
-      <!-- <Rotater style="width: 200px; height: 200px;" @rotation="(v) => { root.rotation = v; commitObj(root); }" /> -->
+      <input type="range" :min="-PI" :max="PI" step="0.0001" v-model="guiRootState.y" @input="guiRootState.y = Number(guiRootState.y); commitObj(guiRootState)" />
+      <input type="number" :min="-PI" :max="PI" step="0.0001" v-model="guiRootState.y" @input="guiRootState.y = Number(guiRootState.y); commitObj(guiRootState)" />
+      y
+      <br />
 
-      <textarea v-model="root.note" @input="commitObj(root)" cols="30" rows="10"></textarea>
+      <input type="range" :min="-PI" :max="PI" step="0.0001" v-model="guiRootState.z" @input="guiRootState.z = Number(guiRootState.z); commitObj(guiRootState)" />
+      <input type="number" :min="-PI" :max="PI" step="0.0001" v-model="guiRootState.z" @input="guiRootState.z = Number(guiRootState.z); commitObj(guiRootState)" />
+      z
+      <br />
+
+      <!-- <Rotater style="width: 200px; height: 200px;" @rotation="(v) => { root.rotation = v; commitObj(guiRootState); }" /> -->
+      <textarea v-model="guiRootState.note" @input="commitObj(guiRootState)" cols="30" rows="10"></textarea>
+
       <!-- {{ root }} -->
       <!-- <pre>{{ doc }}</pre> -->
     </div>
@@ -45,7 +50,7 @@ export default {
   data () {
     return {
       PI: Math.PI,
-      root: false,
+      guiRootState: false,
       JSON
     }
   },
@@ -72,7 +77,6 @@ export default {
     },
     provideJSFile () {
       let jsFile = (this.doc.files || []).find(f => f.path === '@/root-data.js')
-
       let src =
 `import root from '@/root.readonly.json'
 
@@ -129,12 +133,12 @@ window.addEventListener('root-data', (evt) => {
     }
   },
   mounted () {
-    this.root = this.provideData()
+    this.guiRootState = this.provideData()
   },
   watch: {
     doc () {
-      this.root = this.provideData()
-      this.commitObj(this.root)
+      this.guiRootState = this.provideData()
+      this.commitObj(this.guiRootState)
     }
   },
   computed: {

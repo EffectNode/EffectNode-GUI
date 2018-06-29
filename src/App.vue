@@ -107,7 +107,9 @@ export default {
     font-style: normal;
 }
 
-
+.enforce-chi{
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif !important;
+}
 
 body {
   font-family: 'InterUI';

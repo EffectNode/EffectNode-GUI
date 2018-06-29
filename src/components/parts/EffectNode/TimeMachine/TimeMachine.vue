@@ -27,11 +27,11 @@
       </div>
     </div>
 
-    <div class="label">
+    <!-- <div class="label">
       <div class="v-center">
         <img @mouseover="$emit('tooltip', { name: 'Delete and Reset All?', reverseX: -150 })" @mouseout="$emit('tooltip', false)" @click="format" src="./img/nuke.svg" class="icon-img hover-magnify" />
       </div>
-    </div>
+    </div> -->
 
   </div>
 </template>

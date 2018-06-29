@@ -201,14 +201,15 @@ export default {
       if (this.needsCompile) {
         this.needsCompile = false
         this.$emit('compile')
+        this.$emit('just-save')
       }
-    }, 10000)
+    }, 8 * 1000)
 
     setInterval(() => {
       if (this.dirtyCheckerTimer) {
         this.$emit('just-save')
       }
-    }, 1000)
+    }, 5 * 1000)
   },
   beforeDestroy () {
     clearTimeout(this.dirtyCheckerTimer)

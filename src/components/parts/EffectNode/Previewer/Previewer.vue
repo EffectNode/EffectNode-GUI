@@ -163,6 +163,9 @@ export default {
       if (!data.detail) {
         throw new Error('require event detail')
       }
+      if (!sandboxedFrame) {
+        return
+      }
       if (!sandboxedFrame.contentWindow) {
         return
       }
