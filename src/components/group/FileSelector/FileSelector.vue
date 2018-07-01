@@ -164,10 +164,6 @@ export default {
         return true
       } else if (src === '@/main.js') {
         return true
-      } else if (src === '@/root-data.js') {
-        return true
-      } else if (src === '@/root.readonly.json') {
-        return true
       } else if (src === '@/router.js') {
         return true
       } else if (src === '@/style.css') {

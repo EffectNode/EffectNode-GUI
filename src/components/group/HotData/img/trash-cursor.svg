@@ -1,0 +1,28 @@
+
+<svg width="82px" height="111px" viewBox="0 0 82 111" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-12.4%" y="-7.4%" width="125.3%" height="120.6%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD" transform="translate(-907.000000, -782.000000)" fill-rule="nonzero">
+            <g id="Group-4-Copy-2" transform="translate(907.000000, 782.000000)" fill="#858585">
+                <g id="iconmonstr-cursor-5-(1)-copy-3">
+                    <path d="M3.21311475,6.39506173 L19.7377049,19.9305247 L9.41851163,19.9305247 L3.21311475,27.8641975 L3.21311475,6.39506173 Z M0,0 L0,37 L10.7628889,23.125 L28,23.125 L0,0 Z" id="Shape"></path>
+                </g>
+            </g>
+            <g id="iconmonstr-trash-can-2-(1)" filter="url(#filter-1)" transform="translate(928.000000, 819.000000)" fill="#000000" fill-opacity="0.5">
+                <path d="M19.8333333,53.8333333 C19.8333333,55.3973333 18.564,56.6666667 17,56.6666667 C15.436,56.6666667 14.1666667,55.3973333 14.1666667,53.8333333 L14.1666667,25.5 C14.1666667,23.936 15.436,22.6666667 17,22.6666667 C18.564,22.6666667 19.8333333,23.936 19.8333333,25.5 L19.8333333,53.8333333 Z M31.1666667,53.8333333 C31.1666667,55.3973333 29.8973333,56.6666667 28.3333333,56.6666667 C26.7693333,56.6666667 25.5,55.3973333 25.5,53.8333333 L25.5,25.5 C25.5,23.936 26.7693333,22.6666667 28.3333333,22.6666667 C29.8973333,22.6666667 31.1666667,23.936 31.1666667,25.5 L31.1666667,53.8333333 Z M42.5,53.8333333 C42.5,55.3973333 41.2306667,56.6666667 39.6666667,56.6666667 C38.1026667,56.6666667 36.8333333,55.3973333 36.8333333,53.8333333 L36.8333333,25.5 C36.8333333,23.936 38.1026667,22.6666667 39.6666667,22.6666667 C41.2306667,22.6666667 42.5,23.936 42.5,25.5 L42.5,53.8333333 Z M56.6666667,5.66666667 L56.6666667,11.3333333 L0,11.3333333 L0,5.66666667 L16.1811667,5.66666667 C18.7311667,5.66666667 20.8023333,2.55283333 20.8023333,0 L35.8615,0 C35.8615,2.55283333 37.9298333,5.66666667 40.4826667,5.66666667 L56.6666667,5.66666667 Z M48.1666667,17 L48.1666667,62.3333333 L8.5,62.3333333 L8.5,17 L2.83333333,17 L2.83333333,68 L53.8333333,68 L53.8333333,17 L48.1666667,17 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

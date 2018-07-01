@@ -1,18 +1,20 @@
 <template>
   <div>
+
     <div class="tabs-row" ref="tabs-row">
       <div
       @mouseover="$emit('tooltip', { name: 'Open File' })" @mouseout="$emit('tooltip', false)"
       class="browse-btn" :class="{ 'using': mode === 'browse' }" @click="toggleMode">Browse</div>
-      <div class="browse-btn" :class="{ 'using': mode === 'gui-data' }" @click="mode = 'gui-data'">GUI Data</div>
+      <div class="browse-btn" :class="{ 'using': mode === 'hot-data' }" @click="mode = 'hot-data'">Hot Data</div>
       <Draggable class="opened-files" v-model="openedFiles" :move="onDragTabs">
         <div class="tab" :class="{ 'active': isTabActive(tab.path) }" @click="selectFile(tab.path)" :key="tab.path + iTab" v-for="(tab, iTab) in openedFiles"><img class="cross" src="./img/cross.svg" @click="removeTab(tab, iTab, openedFiles)" /> {{ tab.path }} </div>
       </Draggable>
     </div>
+
     <div class="content-row">
 
       <div>
-        <GUIData @just-save="$emit('just-save')" :uiVisible="mode === 'gui-data'" :doc="doc" v-if="$refs['viewer']" :sendData="$refs['viewer'].sendData" />
+        <HotData ref="hotdata" @just-save="$emit('just-save')" :doc="doc" v-if="mode === 'hot-data' && $refs['viewer']" :sendData="$refs['viewer'].sendData" />
       </div>
 
       <div class="file-selector">
@@ -46,7 +48,7 @@
             @close="closeFile"
             @open="() => { mode = 'browse' }"
             @save="() => { $emit('just-save'); $emit('compile') }"
-            @input="() => { needsCompile = true; }"
+            @input="() => { needsCompile = true; autoSendInfo({ file: currentFile }) }"
             theme="chrome"
             width="100%"
             :height="height + 'px'"
@@ -69,7 +71,7 @@ import Previewer from '@/components/parts/EffectNode/Previewer/Previewer.vue'
 
 import FileSelector from '@/components/group/FileSelector/FileSelector.vue'
 
-import GUIData from '@/components/group/GUIData/GUIData.vue'
+import HotData from '@/components/group/HotData/HotData.vue'
 import Draggable from 'vuedraggable'
 
 export default {
@@ -78,7 +80,7 @@ export default {
     ACE,
     FileSelector,
     Previewer,
-    GUIData
+    HotData
   },
   props: {
     currentFilePath: {
@@ -99,7 +101,7 @@ export default {
   },
   data () {
     return {
-      mode: 'edit', // browse or edit
+      mode: 'hot-data', // browse or edit or hot-data
       height: window.innerHeight * 0.7,
       dirtyCheckerTimer: 0,
       needsCompile: false
@@ -130,6 +132,19 @@ export default {
     }
   },
   methods: {
+    autoSendInfo ({ file }) {
+      if (file.path === '@/hot-data.hydrate.json') {
+        let file = (this.doc.files || []).find(f => f.path === '@/hot-data.hydrate.json')
+        let viewer = this.$refs['viewer']
+        if (file && viewer) {
+          viewer.sendData({
+            type: 'hot-data-root',
+            detail: JSON.parse(file.src)
+          })
+          this.$emit('just-save')
+        }
+      }
+    },
     onDragTabs (evt) {
       if (evt.draggedContext.element.path) {
         this.selectFile(evt.draggedContext.element.path)

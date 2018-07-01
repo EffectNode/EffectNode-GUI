@@ -1,0 +1,27 @@
+
+<svg width="46px" height="114px" viewBox="0 0 46 114" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M17,5.66666667 L22.6666667,5.66666667 L22.6666667,0 L17,0 C14.8155,0 12.8406667,0.852833333 11.3333333,2.21 C9.826,0.852833333 7.85116667,0 5.66666667,0 L0,0 L0,5.66666667 L5.66666667,5.66666667 C7.2335,5.66666667 8.5,6.936 8.5,8.5 L8.5,31.1666667 L2.83333333,31.1666667 L2.83333333,36.8333333 L8.5,36.8333333 L8.5,59.5 C8.5,61.064 7.2335,62.3333333 5.66666667,62.3333333 L0,62.3333333 L0,68 L5.66666667,68 C7.85116667,68 9.826,67.1471667 11.3333333,65.79 C12.8406667,67.1471667 14.8155,68 17,68 L22.6666667,68 L22.6666667,62.3333333 L17,62.3333333 C15.4331667,62.3333333 14.1666667,61.064 14.1666667,59.5 L14.1666667,36.8333333 L19.8333333,36.8333333 L19.8333333,31.1666667 L14.1666667,31.1666667 L14.1666667,8.5 C14.1666667,6.936 15.4331667,5.66666667 17,5.66666667 Z" id="path-1"></path>
+        <filter x="-30.9%" y="-7.4%" width="161.8%" height="120.6%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD" transform="translate(-764.000000, -713.000000)" fill-rule="nonzero">
+            <g id="iconmonstr-cursor-28" transform="translate(783.000000, 753.000000)">
+                <g id="Shape">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill-opacity="0.5" fill="#000000" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+            </g>
+            <g id="iconmonstr-cursor-5-(1)-copy-4" transform="translate(764.000000, 713.000000)" fill="#858585">
+                <path d="M3.21311475,6.39506173 L19.7377049,19.9305247 L9.41851163,19.9305247 L3.21311475,27.8641975 L3.21311475,6.39506173 Z M0,0 L0,37 L10.7628889,23.125 L28,23.125 L0,0 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -9,18 +9,21 @@
   </h2>
 
   <div :key="sample.sampleID" v-for="sample in samples">
-    Name: {{ sample.name }} <button @click="addProject(sample)">Make</button>
+    Name: {{ sample.name }} <button @click="addProject({ projectJSON: sample.projectJSON, name: sample.name })">Copy from this template</button>
   </div>
 
   <h2>
     My Projects
   </h2>
-
+  <h3 v-if="projects.length === 0">
+    You dont have any project yet.
+    Please cooy from a template to get started.
+  </h3>
   <ul>
     <li :key="project.id" v-for="project in projects">
-      Name: <input type="text" v-model="project.name" @input="saveToDB({ project })">
-      <button @click="loadProject({ project })">Load</button>
-      <button @click="cloneProject({ project })">Clone this</button>
+      Name: <input type="text" v-model="project.name" @input="updateToDB({ project })">
+      <button @click="loadProject({ project })">Edit this project</button>
+      <button @click="cloneProject({ project })">Clone this project</button>
 
       <br />
       Last Updated: {{ new Date(project.dateUpdated).toDateString() }} - {{ new Date(project.dateUpdated).toTimeString() }}
@@ -63,12 +66,13 @@ export default {
 
       if (confirm1 && confirm2 && confirm3) {
         await db.projects.delete(project.id)
-        this.refreshDexi()
+        await this.syncDexi()
       }
     },
-    async refreshDexi () {
+    async syncDexi () {
       let arr = await db.projects.toArray()
       this.projects = arr
+      this.$forceUpdate()
     },
     async addProject ({ projectJSON, name }) {
       await db.projects.put({
@@ -77,7 +81,7 @@ export default {
         dateUpdated: new Date(),
         dateCreated: new Date()
       })
-      this.refreshDexi()
+      await this.syncDexi()
     },
     async cloneProject ({ project }) {
       await db.projects.put({
@@ -86,12 +90,15 @@ export default {
         dateUpdated: new Date(),
         dateCreated: new Date()
       })
-      this.refreshDexi()
+      await this.syncDexi()
     },
-    async saveToDB ({ project }) {
+    async updateToDB ({ project }) {
       await db.projects.update(project.id, project)
     },
-    loadProject ({ project }) {
+    async loadProject ({ project }) {
+      if (!project) {
+        return
+      }
       this.$emit('load-root', JSON.parse(project.projectJSON))
 
       this.$emit('save-method', ({ projectJSON }) => {
@@ -104,8 +111,10 @@ export default {
       })
     }
   },
-  mounted () {
-    this.refreshDexi()
+  async mounted () {
+    await this.syncDexi()
+    // debug
+    this.loadProject({ project: this.projects[0] })
   }
 }
 </script>

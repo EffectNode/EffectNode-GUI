@@ -144,11 +144,11 @@ export default {
       editor.session.setOptions({ tabSize: 2, useSoftTabs: true })
       editor.session.setOption('useWorker', false)
 
-      if (this.filepath.indexOf('readonly') !== -1) {
-        editor.setReadOnly(true)
-      }
+      // if (this.filepath.indexOf('readonly') !== -1) {
+      //   editor.setReadOnly(true)
+      // }
 
-      editor.on('change', function () {
+      editor.getSession().on('change', function () {
         var content = editor.getValue()
         vm.$emit('input', content)
         vm.contentBackup = content

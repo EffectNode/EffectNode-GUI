@@ -1,0 +1,28 @@
+
+<svg width="102px" height="118px" viewBox="0 0 102 118" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-9.3%" y="-7.4%" width="118.7%" height="120.6%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD" transform="translate(-907.000000, -602.000000)">
+            <g id="Group-4" transform="translate(907.000000, 602.000000)">
+                <g id="iconmonstr-cursor-5-(1)-copy-3" fill="#858585" fill-rule="nonzero">
+                    <path d="M3.21311475,6.39506173 L19.7377049,19.9305247 L9.41851163,19.9305247 L3.21311475,27.8641975 L3.21311475,6.39506173 Z M0,0 L0,37 L10.7628889,23.125 L28,23.125 L0,0 Z" id="Shape"></path>
+                </g>
+                <g id="iconmonstr-archive-box-thin" filter="url(#filter-1)" transform="translate(23.000000, 44.000000)" fill="#000000" fill-opacity="0.5">
+                    <path d="M74.1818182,18.5454545 L71.0909091,18.5454545 L71.0909091,68 L3.09090909,68 L3.09090909,18.5454545 L0,18.5454545 L0,0 L74.1818182,0 L74.1818182,18.5454545 Z M68,18.5454545 L6.18181818,18.5454545 L6.18181818,64.9090909 L68,64.9090909 L68,18.5454545 Z M49.4545455,43.2727273 L24.7272727,43.2727273 L24.7272727,30.9090909 L49.4545455,30.9090909 L49.4545455,43.2727273 Z M46.3636364,34 L27.8181818,34 L27.8181818,40.1818182 L46.3636364,40.1818182 L46.3636364,34 Z M71.0909091,3.09090909 L3.09090909,3.09090909 L3.09090909,15.4545455 L71.0909091,15.4545455 L71.0909091,3.09090909 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

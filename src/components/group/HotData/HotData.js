@@ -26,33 +26,71 @@ export const collectionTypes = [
   }
 ]
 
-export const createCollection = ({ cID, name, desc, cType }) => {
+export const makeID = () => {
+  return '_' + Math.random().toString(36).substr(2, 9)
+}
+
+export const createCollection = ({ cID, desc }) => {
   if (!cID) {
     throw new Error('cannot miss cID')
   }
+
   return {
-    cType,
-    name,
     cID,
     desc,
     entries: []
   }
 }
 
+export const emptyCollectionTrash = ({ root }) => {
+  root.cTrash = []
+  return root.cTrash
+}
+
+export const getTrashedCollections = ({ root }) => {
+  if (!root.cTrash) {
+    root.cTrash = []
+  }
+  return root.cTrash
+}
+
+export const getCollectionTrash = ({ root, cID }) => {
+  let collection = getCollectionById({ root, cID })
+  if (!collection.eTrash) {
+    collection.eTrash = []
+  }
+  collection.eTrash = collection.eTrash
+  return collection.eTrash
+}
+
+export const fillRoot = ({ root }) => {
+  if (!root.dbs) {
+    root.dbs = []
+  }
+  if (!root.cTrash) {
+    root.cTrash = []
+  }
+  return root.dbs
+}
+
+export const getCollections = ({ root }) => {
+  fillRoot({ root })
+  return root.dbs
+}
+
 export const addCollection = ({ root, collection }) => {
-  root.dbs = root.dbs || []
+  fillRoot({ root })
   root.dbs.push(collection)
   return root
 }
 
 export const getCollectionById = ({ root, cID }) => {
-  root.dbs = root.dbs || []
+  fillRoot({ root })
   return root.dbs.find(c => c.cID === cID)
 }
 
 export const removeCollection = ({ root, cID }) => {
-  root.dbs = root.dbs || []
-
+  fillRoot({ root })
   var index = root.dbs.findIndex((db) => db.cID === cID)
   if (index > -1) {
     let itemToBeTrashed = root.dbs[index]
@@ -60,7 +98,7 @@ export const removeCollection = ({ root, cID }) => {
     root.cTrash = root.cTrash || []
     root.cTrash.push(itemToBeTrashed)
   } else {
-    throw new Error('cann ot find collection')
+    throw new Error('cannot find collection')
   }
 }
 
@@ -71,7 +109,8 @@ export const restoreCollection = ({ root, cID }) => {
   if (!itemToBeRestored) {
     throw new Error('cannot find collection')
   }
-
+  var cleanIndex = root.cTrash.findIndex(ct => ct.cID === cID)
+  root.cTrash.splice(cleanIndex, 1)
   addCollection({ root, collection: itemToBeRestored })
   return itemToBeRestored
 }
@@ -117,8 +156,9 @@ export const deletEntry = ({ root, cID, eID }) => {
   var index = db.entries.findIndex((e) => e.eID === eID)
   if (index > -1) {
     let itemToBeTrashed = db.entries[index]
-    root.eTrash = root.eTrash || []
-    root.eTrash.push(itemToBeTrashed)
+
+    let eTrash = getCollectionTrash({ root, cID })
+    eTrash.push(itemToBeTrashed)
     db.entries.splice(index, 1)
   } else {
     throw new Error('cannot find item')
@@ -126,12 +166,15 @@ export const deletEntry = ({ root, cID, eID }) => {
 }
 
 export const restoreEntry = ({ root, cID, eID }) => {
-  root.eTrash = root.eTrash || []
-  var itemToBeRestored = root.eTrash.find(t => t.eID === eID)
+  let eTrash = getCollectionTrash({ root, cID })
+  var itemToBeRestored = eTrash.find(t => t.eID === eID)
 
   if (!itemToBeRestored) {
     throw new Error('cannot find item')
   }
+
+  var restoreIndex = eTrash.findIndex(t => t.eID === eID)
+  eTrash.splice(restoreIndex, 1)
 
   addEntry({ root, cID, entry: itemToBeRestored })
   return itemToBeRestored
