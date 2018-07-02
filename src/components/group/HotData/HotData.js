@@ -1,26 +1,26 @@
-export const collectionTypes = [
+export const entryTypes = [
   {
-    cType: 'effect-node',
+    eType: 'effect-node',
     name: 'Effect Nodes',
     desc: 'Drag and Drop Effect Code Remixer'
   },
   {
-    cType: 'glsl',
+    eType: 'glsl',
     name: 'Shader Code',
     desc: 'Custom Effect Code GLSL'
   },
   {
-    cType: '3d-layout',
+    eType: '3d-layout',
     name: '3D Layout',
     desc: 'Helper for making 3D Layout'
   },
   {
-    cType: 'article',
+    eType: 'article',
     name: 'Article',
     desc: 'Write Article with Markdown Language'
   },
   {
-    cType: 'json-data',
+    eType: 'json-data',
     name: 'Simple Data',
     desc: 'a JSON Store'
   }
@@ -47,6 +47,11 @@ export const emptyCollectionTrash = ({ root }) => {
   return root.cTrash
 }
 
+export const emptyEntryTrash = ({ collection }) => {
+  collection.eTrash = []
+  return collection.eTrash
+}
+
 export const getTrashedCollections = ({ root }) => {
   if (!root.cTrash) {
     root.cTrash = []
@@ -54,7 +59,7 @@ export const getTrashedCollections = ({ root }) => {
   return root.cTrash
 }
 
-export const getCollectionTrash = ({ root, cID }) => {
+export const getEntryTrash = ({ root, cID }) => {
   let collection = getCollectionById({ root, cID })
   if (!collection.eTrash) {
     collection.eTrash = []
@@ -117,7 +122,15 @@ export const restoreCollection = ({ root, cID }) => {
 
 // entry
 
-export const createEntry = ({ cID, eID, desc, eType }) => {
+export const getEntriesOfCollection = ({ root, cID }) => {
+  var collection = getCollectionById({ root, cID })
+  if (!collection.entries) {
+    collection.entries = []
+  }
+  return collection.entries
+}
+
+export const createEntry = ({ cID, eID, note, eType }) => {
   if (!cID) {
     throw new Error('cannot miss cID')
   }
@@ -125,6 +138,7 @@ export const createEntry = ({ cID, eID, desc, eType }) => {
     eType,
     cID,
     eID,
+    note,
     data: {
     }
   }
@@ -138,26 +152,23 @@ export const addEntry = ({ root, cID, entry }) => {
     throw new Error('needs cID')
   }
 
-  let db = getCollectionById({ root, cID })
-  db.entries.push(entry)
+  let entries = getEntriesOfCollection({ root, cID })
+  entries.push(entry)
   return entry
 }
 
-export const getEntryDirectly = ({ root, cID, eID }) => {
-  if (!eID) {
-    throw new Error('needs eID')
-  }
-  let db = getCollectionById({ root, cID }) || { entries: [] }
-  return db.entries.find(e => e.eID === eID)
+export const getEntryBycIDeID = ({ root, cID, eID }) => {
+  let collection = getCollectionById({ root, cID }) || { entries: [] }
+  return collection.entries.find(e => e.eID === eID)
 }
 
-export const deletEntry = ({ root, cID, eID }) => {
+export const removeEntry = ({ root, cID, eID }) => {
   let db = getCollectionById({ root, cID }) || { entries: [] }
   var index = db.entries.findIndex((e) => e.eID === eID)
   if (index > -1) {
     let itemToBeTrashed = db.entries[index]
 
-    let eTrash = getCollectionTrash({ root, cID })
+    let eTrash = getEntryTrash({ root, cID })
     eTrash.push(itemToBeTrashed)
     db.entries.splice(index, 1)
   } else {
@@ -166,7 +177,7 @@ export const deletEntry = ({ root, cID, eID }) => {
 }
 
 export const restoreEntry = ({ root, cID, eID }) => {
-  let eTrash = getCollectionTrash({ root, cID })
+  let eTrash = getEntryTrash({ root, cID })
   var itemToBeRestored = eTrash.find(t => t.eID === eID)
 
   if (!itemToBeRestored) {
@@ -188,4 +199,11 @@ export const replaceEntry = ({ root, cID, eID, replaceWith }) => {
   } else {
     throw new Error('cannot find item')
   }
+}
+
+export const renameAllEntries = ({ root, cID }) => {
+  let entries = getEntriesOfCollection({ root, cID })
+  entries.forEach((entry) => {
+    entry.cID = cID
+  })
 }

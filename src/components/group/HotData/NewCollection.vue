@@ -8,16 +8,16 @@
     <li class="font">
       ID:
       <br />
-      <input type="text" class="name" v-model="newCID">
+      <input type="text" class="itemID" v-model="newCID">
       <br />
       <span class="is-taken" v-if="checkDuplicated({ cID: newCID })">This ID is taken.</span>
       <br />
     </li>
 
     <li class="font">
-      Description:
+      <!-- Description:
       <br />
-      <textarea class="desc" rows="6" v-model="newDesc"></textarea>
+      <textarea class="desc" rows="6" v-model="newDesc"></textarea> -->
       <br />
       <button @click="addNewCollection">submit</button>
     </li>
@@ -37,7 +37,7 @@ export default {
   },
   data () {
     return {
-      showInput: false,
+      showInput: Hot.getCollections({ root: this.root }).length === 0,
       newDesc: '',
       newCID: ''
     }
@@ -72,58 +72,4 @@ export default {
 
 <style scoped>
 @import url(./Shared.css);
-
-.add-cursor{
-  cursor: url('./img/plus-arrow.svg'), pointer;
-}
-
-.add-icon{
-  transition: all 0.5s;
-}
-.add-icon:hover,
-.add-icon.close-icon{
-  transform: rotate(405deg);
-}
-
-
-.name{
-  width: 300px;
-  padding:5px;
-  border: 0px solid #ccc;
-  border-bottom: 1px solid #bababa;
-  -webkit-border-radius: 0px;
-  border-radius: 0px;
-  font-size: 18px;
-
-}
-.name:focus{
-  outline: none;
-}
-
-.desc{
-  width: 300px;
-  height: 50px;
-
-  padding:5px;
-  border: 1px solid #bababa;
-  /* border-bottom: 1px solid #bababa; */
-  -webkit-border-radius: 0px;
-  border-radius: 0px;
-  font-size: 18px;
-
-}
-.desc:focus{
-  outline: none;
-}
-
-.font{
-  font-size: 20px;
-  font-family: 'InterUI-Regular', Arial, Helvetica, sans-serif;
-  letter-spacing: 0;
-}
-
-.is-taken{
-  color: red;
-}
-
 </style>

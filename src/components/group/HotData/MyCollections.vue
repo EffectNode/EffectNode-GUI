@@ -9,7 +9,7 @@
         <div class="sub-title">
           {{ coll.cID }}
         </div>
-        <div class="item-desc">{{ coll.desc }}</div>
+        <!-- <div class="item-desc">{{ coll.desc }}</div> -->
       </div>
 
       <button class="trash" @click="removeCollection({ collection: coll })">Remove</button>
@@ -25,7 +25,7 @@
           <div class="sub-title">
             {{ coll.cID }}
           </div>
-          <div class="item-desc">{{ coll.desc }}</div>
+          <!-- <div class="item-desc">{{ coll.desc }}</div> -->
         </div>
       </li>
     </ul>
@@ -88,13 +88,4 @@ export default {
 <style scoped>
 @import url(./Shared.css);
 
-.enter-archive * {
-  cursor: url('./img/enter-archive-cursor.svg'), pointer;
-}
-.restore * {
-  cursor: url('./img/restore-cursor.svg'), pointer;
-}
-.trash {
-  cursor: url('./img/trash-cursor.svg'), pointer;
-}
 </style>

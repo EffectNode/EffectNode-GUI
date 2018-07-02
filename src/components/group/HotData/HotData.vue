@@ -3,6 +3,10 @@
     <div v-if="guiRootState">
 
       <div v-if="page === 'Collections'">
+        <div class="title">
+          Hot Reload UI Data
+        </div>
+        <div class="hr"></div>
         <NewCollection
           v-if="guiRootState"
           :root="guiRootState"
@@ -15,17 +19,50 @@
         />
       </div>
 
-      <div v-if="page === 'Entries'">
+      <div v-if="page === 'Entries' && collection">
         <NavBar
           @home="page = 'Collections'"
           :collection="collection"
           :root="guiRootState"
           @send="commitObj(guiRootState)"
         />
-        <DataTemplate
+        <div class="hr"></div>
+
+        <NewEntry
           :root="guiRootState"
+          :collection="collection"
+          :cID="collection.cID"
           @send="commitObj(guiRootState)"
         />
+        <MyEntries
+          :root="guiRootState"
+          :collection="collection"
+          :cID="collection.cID"
+          @edit-entry="editEntry"
+          @send="commitObj(guiRootState)"
+        />
+      </div>
+
+      <div v-if="page === 'EditEntry' && entry">
+        <NavBar
+          @home="page = 'Collections'"
+          :root="guiRootState"
+          :collection="collection"
+          :entry="entry"
+          @enter-collection="enterCollection"
+          @send="commitObj(guiRootState)"
+        />
+        <div class="hr"></div>
+
+        <ShaderCodes
+          v-if="entry.eType === 'glsl'"
+          :root="guiRootState"
+          :collection="collection"
+          :entry="entry"
+          @send="commitObj(guiRootState)"
+        />
+
+
       </div>
 
       <!-- {{ root }} -->
@@ -37,7 +74,10 @@
 <script>
 import Rotater from './Rotater/Rotater.vue'
 
-import DataTemplate from './DataTemplate.vue'
+import ShaderCodes from './DataEditors/ShaderCodes.vue'
+import NewEntry from './DataEditors/NewEntry.vue'
+import MyEntries from './DataEditors/MyEntries.vue'
+
 import NewCollection from './NewCollection.vue'
 import MyCollections from './MyCollections.vue'
 import NavBar from './NavBar.vue'
@@ -48,8 +88,11 @@ export default {
     sendData: {}
   },
   components: {
+    ShaderCodes,
+    MyEntries,
+    NewEntry,
     NavBar,
-    DataTemplate,
+    // DataTemplate,
     MyCollections,
     NewCollection,
     Rotater
@@ -58,13 +101,18 @@ export default {
     return {
       Hot,
       enable: true,
+      entry: false,
       collection: false,
-      page: 'Collections', // Entries
+      page: 'Collections', // Entries, EditEntry
       PI: Math.PI,
       guiRootState: false
     }
   },
   methods: {
+    editEntry ({ entry }) {
+      this.page = 'EditEntry'
+      this.entry = entry
+    },
     enterCollection ({ collection }) {
       this.page = 'Entries'
       this.collection = collection
@@ -98,6 +146,17 @@ export const state = {
   root: {
     ...root
   }
+}
+
+export const getBycIDeID = ({ cID, eID }) => {
+  if (!state.root.dbs) {
+    state.root.dbs = []
+  }
+  let collection = state.root.dbs.find(c => c.cID === cID) || { entries: [] }
+  if (!collection.entries) {
+    collection.entries = []
+  }
+  return collection.entries.find(e => e.eID === eID)
 }
 
 window.addEventListener('hot-data-root', (evt) => {
@@ -165,6 +224,5 @@ window.addEventListener('hot-data-root', (evt) => {
 .gui-data{
   margin: 8px;
 }
-
 
 </style>
