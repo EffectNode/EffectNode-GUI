@@ -6,6 +6,7 @@
 <script>
 var ace = require('brace')
 // npm install --save vue2-ace-editor
+// "vue2-ace-editor": "0.0.5",
 require(['emmet/emmet'], function (data) {
   window.emmet = data.emmet
 })
@@ -76,6 +77,9 @@ export default {
         if (ext === 'frag') {
           ans = 'glsl'
         }
+        if (ext === 'md') {
+          ans = 'markdown'
+        }
       } catch (e) {
         console.log(e)
       }
@@ -132,6 +136,8 @@ export default {
       require('brace/mode/javascript')
       require('brace/mode/css')
       require('brace/mode/glsl')
+      require('brace/mode/markdown')
+
       // require('brace/mode/sass')
       require('brace/theme/chrome')
       require('brace/ext/searchbox')
@@ -156,9 +162,9 @@ export default {
     }
   },
   watch: {
-    value (val) {
-      if (this.contentBackup !== val) {
-        this.editor.setValue(val, 1)
+    value () {
+      if (this.contentBackup !== this.value) {
+        this.editor.setValue(this.value, 1)
       }
     },
     filepath () {

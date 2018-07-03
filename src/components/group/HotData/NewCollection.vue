@@ -11,16 +11,14 @@
       <input type="text" class="itemID" v-model="newCID">
       <br />
       <span class="is-taken" v-if="checkDuplicated({ cID: newCID })">This ID is taken.</span>
-      <br />
     </li>
 
-    <li class="font">
+    <div class="font">
       <!-- Description:
       <br />
       <textarea class="desc" rows="6" v-model="newDesc"></textarea> -->
-      <br />
       <button @click="addNewCollection">submit</button>
-    </li>
+    </div>
   </ul>
   <!-- <pre>{{ root }}</pre> -->
 </div>
@@ -53,10 +51,6 @@ export default {
       }
       if (!this.newCID) {
         window.alert('require ID')
-        return
-      }
-      if (!this.newDesc) {
-        window.alert('require description')
         return
       }
       var newCollection = Hot.createCollection({ cID: this.newCID, desc: this.newDesc })

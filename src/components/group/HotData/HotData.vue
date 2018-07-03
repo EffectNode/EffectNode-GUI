@@ -49,6 +49,7 @@
           :root="guiRootState"
           :collection="collection"
           :entry="entry"
+
           @enter-collection="enterCollection"
           @send="commitObj(guiRootState)"
         />
@@ -57,11 +58,18 @@
         <ShaderCodes
           v-if="entry.eType === 'glsl'"
           :root="guiRootState"
-          :collection="collection"
-          :entry="entry"
+          :cID="collection.cID"
+          :eID="entry.eID"
           @send="commitObj(guiRootState)"
         />
 
+        <Article
+          v-if="entry.eType === 'article'"
+          :root="guiRootState"
+          :cID="collection.cID"
+          :eID="entry.eID"
+          @send="commitObj(guiRootState)"
+        />
 
       </div>
 
@@ -73,6 +81,8 @@
 
 <script>
 import Rotater from './Rotater/Rotater.vue'
+
+import Article from './DataEditors/Article.vue'
 
 import ShaderCodes from './DataEditors/ShaderCodes.vue'
 import NewEntry from './DataEditors/NewEntry.vue'
@@ -88,6 +98,7 @@ export default {
     sendData: {}
   },
   components: {
+    Article,
     ShaderCodes,
     MyEntries,
     NewEntry,
@@ -159,6 +170,15 @@ export const getBycIDeID = ({ cID, eID }) => {
   return collection.entries.find(e => e.eID === eID)
 }
 
+export const getBycID = ({ cID }) => {
+  if (!state.root.dbs) {
+    state.root.dbs = []
+  }
+  let collection = state.root.dbs.find(c => c.cID === cID)
+  return collection
+}
+
+
 window.addEventListener('hot-data-root', (evt) => {
   console.log('App Got Root Data Update:', evt.detail.detail);
   var data = evt.detail
@@ -206,6 +226,9 @@ window.addEventListener('hot-data-root', (evt) => {
     }
   },
   mounted () {
+    this.loadUI()
+  },
+  activated () {
     this.loadUI()
   },
   watch: {

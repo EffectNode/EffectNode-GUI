@@ -61,7 +61,8 @@ export default {
   },
   watch: {
     timeTravelIndex (newVal, oldVal) {
-      this.travel({ takeSnapshot: oldVal === 0 })
+      console.log(oldVal)
+      this.travel({ takeSnapshot: Number(oldVal) === 0 })
     },
     rootDoc () {
       this.timeTravelIndex = 0 // this.rootDoc.backups.length - 1

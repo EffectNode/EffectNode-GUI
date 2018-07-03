@@ -14,7 +14,7 @@
     <div class="content-row">
 
       <div>
-        <HotData ref="hotdata" @just-save="$emit('just-save')" :doc="doc" v-if="mode === 'hot-data' && $refs['viewer']" :sendData="$refs['viewer'].sendData" />
+        <HotData @just-save="$emit('just-save')" :doc="doc" v-if="mode === 'hot-data' && $refs['viewer']" :sendData="$refs['viewer'].sendData" />
       </div>
 
       <div class="file-selector">

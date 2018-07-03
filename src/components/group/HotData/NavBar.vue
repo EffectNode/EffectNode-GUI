@@ -52,6 +52,14 @@ export default {
     return data
   },
   watch: {
+    root () {
+      this.cID = this.collection.cID
+      this.eID = this.entry.eID
+    },
+    collection () {
+      this.cID = this.collection.cID
+      this.eID = this.entry.eID
+    },
     entry () {
       this.cID = this.collection.cID
       this.eID = this.entry.eID

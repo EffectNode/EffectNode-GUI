@@ -19,6 +19,7 @@
       </div>
 
       <button class="trash" @click="removeEntry({ entry })">Remove</button>
+      <button class="clone" @click="cloneEntry({ entry })">Clone</button>
     </li>
   </ul>
 
@@ -76,6 +77,12 @@ export default {
       } else {
         return this.myEntries
       }
+    },
+    cloneEntry ({ entry }) {
+      var cloned = JSON.parse(JSON.stringify(entry))
+      cloned.eID = Hot.makeID()
+      Hot.addEntry({ root: this.root, cID: this.cID, entry: cloned })
+      this.$emit('send')
     },
     editEntry ({ entry }) {
       this.$emit('edit-entry', { entry })
