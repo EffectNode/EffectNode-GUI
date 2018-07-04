@@ -101,23 +101,47 @@ var compile = ({ path, src }) => {
 
               var sheet = styleElt.sheet;
               var rules = sheet.cssRules;
-
               for ( var i = 0; i < rules.length; ++i ) {
+                let rule = rules[i];
 
-                var rule = rules[i];
+                if ( rule.type === 4 ) {
+
+                  // console.log(rule)
+                  for ( var j = 0; j < rule.cssRules.length; ++j ) {
+
+                    let scopedSelectors = [];
+                    let subRule = rule.cssRules[j];
+
+                    subRule.selectorText.split(/\s*,\s*/).forEach(function(sel) {
+
+                      scopedSelectors.push(scopeName+' '+sel);
+                      let segments = sel.match(/([^ :]+)(.+)?/);
+                      scopedSelectors.push(segments[1] + scopeName + (segments[2]||''));
+                    });
+
+                    let scopedRule = scopedSelectors.join(',') + subRule.cssText.substr(subRule.selectorText.length);
+
+                    rule.deleteRule(j);
+                    rule.insertRule(scopedRule, j);
+                    // console.log(rule);
+                  }
+
+                  continue;
+                }
+
                 if ( rule.type !== 1 )
                   continue;
 
-                var scopedSelectors = [];
+                let scopedSelectors = [];
 
                 rule.selectorText.split(/\s*,\s*/).forEach(function(sel) {
 
                   scopedSelectors.push(scopeName+' '+sel);
-                  var segments = sel.match(/([^ :]+)(.+)?/);
+                  let segments = sel.match(/([^ :]+)(.+)?/);
                   scopedSelectors.push(segments[1] + scopeName + (segments[2]||''));
                 });
 
-                var scopedRule = scopedSelectors.join(',') + rule.cssText.substr(rule.selectorText.length);
+                let scopedRule = scopedSelectors.join(',') + rule.cssText.substr(rule.selectorText.length);
                 sheet.deleteRule(i);
                 sheet.insertRule(scopedRule, i);
               }

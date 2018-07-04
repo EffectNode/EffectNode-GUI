@@ -21,7 +21,7 @@
   </h3>
   <ul>
     <li :key="project.id" v-for="project in projects">
-      Name: <input type="text" v-model="project.name" @input="updateToDB({ project })">
+      Name: <input type="text" v-model="project.name" @input="replaceToDB({ project })">
       <button @click="loadProject({ project })">Edit this project</button>
       <button @click="cloneProject({ project })">Clone this project</button>
 
@@ -43,11 +43,12 @@
 
 <script>
 import * as ENdb from '@/components/parts/EffectNode/ENdb/ENdb.js'
-let db = ENdb.dx
+let lf = ENdb.lf
 
 export default {
   data () {
     return {
+      lf,
       samples: [
         {
           sampleID: Math.random() + '',
@@ -65,35 +66,48 @@ export default {
       let confirm3 = window.confirm('final confirm delete project?')
 
       if (confirm1 && confirm2 && confirm3) {
-        await db.projects.delete(project.id)
-        await this.syncDexi()
+        await lf.removeItem(project.id)
+        await this.syncLF()
       }
     },
-    async syncDexi () {
-      let arr = await db.projects.toArray()
+    async syncLF () {
+      let arr = []
+      await lf.iterate((value, key, iterationNumber) => {
+        // Resulting key/value pair -- this callback
+        // will be executed for every item in the
+        // database.
+        arr.push({
+          id: key,
+          ...value
+        })
+      })
+
+      // let arr = await db.projects.toArray()
       this.projects = arr
       this.$forceUpdate()
     },
     async addProject ({ projectJSON, name }) {
-      await db.projects.put({
+      await lf.setItem(ENdb.makeID(), {
         projectJSON,
         name,
         dateUpdated: new Date(),
         dateCreated: new Date()
       })
-      await this.syncDexi()
+
+      await this.syncLF()
     },
     async cloneProject ({ project }) {
-      await db.projects.put({
+      await lf.setItem(ENdb.makeID(), {
         projectJSON: project.projectJSON,
         name: project.name + ' (Cloned)',
         dateUpdated: new Date(),
         dateCreated: new Date()
       })
-      await this.syncDexi()
+
+      await this.syncLF()
     },
-    async updateToDB ({ project }) {
-      await db.projects.update(project.id, project)
+    async replaceToDB ({ project }) {
+      await lf.setItem(project.id, project)
     },
     async loadProject ({ project }) {
       if (!project) {
@@ -102,7 +116,7 @@ export default {
       this.$emit('load-root', JSON.parse(project.projectJSON))
 
       this.$emit('save-method', ({ projectJSON }) => {
-        db.projects.update(project.id, { projectJSON, dateUpdated: new Date() })
+        lf.setItem(project.id, { ...project, projectJSON, dateUpdated: new Date() })
       })
 
       this.$nextTick(() => {
@@ -112,9 +126,9 @@ export default {
     }
   },
   async mounted () {
-    await this.syncDexi()
+    await this.syncLF()
     // debug
-    this.loadProject({ project: this.projects[0] })
+    // this.loadProject({ project: this.projects[0] })
   }
 }
 </script>

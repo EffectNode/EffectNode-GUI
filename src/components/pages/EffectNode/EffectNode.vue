@@ -243,16 +243,15 @@ export default {
         this.saveProject()
       })
     },
-    compileLater (v) {
-      if (!this.compileNowTimer) {
-        this.compileNow(v)
-      } else {
-        clearTimeout(this.compileNowTimer)
-        this.compileNowTimer = setTimeout(() => {
-          this.compileNow(v)
-        }, 3000)
-      }
-    },
+    // compileLater (v) {
+    //   clearTimeout(this.compileNowTimer)
+    //   this.compileNowTimer = setTimeout(() => {
+    //     this.compileNow(v)
+    //   }, 3000)
+    // },
+    compileLater: debounce(function (v) {
+      this.compileNow(v)
+    }, 500.55, true),
     compileNow (v) {
       if (this.$refs['exec']) {
         this.$refs['exec'].compile(v)

@@ -150,6 +150,11 @@ export default {
       editor.session.setOptions({ tabSize: 2, useSoftTabs: true })
       editor.session.setOption('useWorker', false)
 
+      if (this.getLangFromPath(this.filepath) === 'markdown') {
+        editor.setOption('indentedSoftWrap', false)
+        editor.getSession().setUseWrapMode(true)
+      }
+
       // if (this.filepath.indexOf('readonly') !== -1) {
       //   editor.setReadOnly(true)
       // }
