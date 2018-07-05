@@ -15,7 +15,7 @@
           <img @mouseover="$emit('tooltip', { name: 'Backup All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="backupTimeMachine" src="./img/download.svg" class="icon-img hover-magnify" />
           <img @mouseover="$emit('tooltip', { name: 'Restore All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="restoreTimeMachine" src="./img/upload.svg" class="icon-img hover-magnify" />
           <input @mouseover="$emit('tooltip', { name: 'Version Timeline' })" @mouseout="$emit('tooltip', false)"  type="range" class="timerange" v-model="timeTravelIndex" @change="() => {}" :min="0" :max="backups.length - 1" v-if="backups.length > 0" />
-          <img @mouseover="$emit('tooltip', { name: 'Take Project Snapshot' })" @mouseout="$emit('tooltip', false)" @click="clickSnapShot" src="./img/floppy.svg" class="icon-img hover-magnify" />
+          <img @mouseover="$emit('tooltip', { name: 'Take Project Snapshot' })" @mouseout="$emit('tooltip', false)" @click="clickTakeSnapShot" src="./img/floppy.svg" class="icon-img hover-magnify" />
           <!-- <img @mouseover="$emit('tooltip', { name: 'Project Version' })" @mouseout="$emit('tooltip', false)" src="./img/time.svg" class="icon-img version" /> -->
           <select @mouseover="$emit('tooltip', { name: 'TimeStamp' })" @mouseout="$emit('tooltip', false)" ref="version-select" class="select" @input="() => {}" v-model="timeTravelIndex">
             <option :key="backup.date + iBackup" :value="iBackup" v-for="(backup, iBackup) in backups">
@@ -167,7 +167,7 @@ export default {
         anchor.click()
       })
     },
-    clickSnapShot () {
+    clickTakeSnapShot () {
       this.takeSnapshot()
       this.$nextTick(() => {
         this.timeTravelIndex = 0 // this.rootDoc.backups.length - 1

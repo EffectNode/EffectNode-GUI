@@ -160,7 +160,7 @@ export default {
   },
   mounted () {
     this.setup()
-    this.hydrate()
+    // this.hydrate()
     this.autoRun()
   },
   watch: {
@@ -191,21 +191,21 @@ export default {
       this.compileNowTimer = false
       this.saveProject()
     },
-    async hydrate () {
-      // this.hydrateENdb()
-      // setTimeout(() => {
-      //   var localRoot = window.localStorage.getItem('alpha-root')
-      //   if (localRoot) {
-      //     this.root = JSON.parse(localRoot)
-      //     this.$forceUpdate()
-      //   } else {
-      //     window.localStorage.setItem('alpha-root', JSON.stringify(this.root))
-      //   }
-      //   this.$nextTick(() => {
-      //     this.$emit('compile')
-      //   })
-      // }, 100)
-    },
+    // async hydrate () {
+    //   // this.hydrateENdb()
+    //   // setTimeout(() => {
+    //   //   var localRoot = window.localStorage.getItem('alpha-root')
+    //   //   if (localRoot) {
+    //   //     this.root = JSON.parse(localRoot)
+    //   //     this.$forceUpdate()
+    //   //   } else {
+    //   //     window.localStorage.setItem('alpha-root', JSON.stringify(this.root))
+    //   //   }
+    //   //   this.$nextTick(() => {
+    //   //     this.$emit('compile')
+    //   //   })
+    //   // }, 100)
+    // },
     // async hydrateENdb (rootID) {
     //   let rootString = await ENdb.lf.getItem('current-project')
     //   console.log(rootString)

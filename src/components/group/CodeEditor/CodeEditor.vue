@@ -48,7 +48,7 @@
             @close="closeFile"
             @open="() => { mode = 'browse' }"
             @save="() => { $emit('just-save'); $emit('compile') }"
-            @input="() => { needsCompile = true; autoSendInfo({ file: currentFile }) }"
+            @input="() => { needsCompile = true; onKeyStrokeSendData({ file: currentFile }) }"
             theme="chrome"
             width="100%"
             :height="height + 'px'"
@@ -132,7 +132,7 @@ export default {
     }
   },
   methods: {
-    autoSendInfo ({ file }) {
+    onKeyStrokeSendData ({ file }) {
       if (file.path === '@/hot-data.hydrate.json') {
         let file = (this.doc.files || []).find(f => f.path === '@/hot-data.hydrate.json')
         let viewer = this.$refs['viewer']
