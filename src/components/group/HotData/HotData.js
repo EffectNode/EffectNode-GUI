@@ -1,29 +1,30 @@
 export const entryTypes = [
-  {
-    eType: 'effect-node',
-    name: 'Effect Nodes',
-    desc: 'Drag and Drop Effect Code Remixer'
-  },
+  // {
+  //   eType: 'effect-node',
+  //   name: 'Effect Nodes',
+  //   desc: 'Drag and Drop Effect Code Remixer'
+  // },
   {
     eType: 'glsl',
     name: 'Shader Code',
     desc: 'Custom Effect Code GLSL'
   },
-  {
-    eType: '3d-layout',
-    name: '3D Layout',
-    desc: 'Helper for making 3D Layout'
-  },
+  // {
+  //   eType: '3d-layout',
+  //   name: '3D Layout',
+  //   desc: 'Helper for making 3D Layout'
+  // },
   {
     eType: 'article',
     name: 'Article',
     desc: 'Write Article with Markdown Language'
-  },
-  {
-    eType: 'json-data',
-    name: 'Simple Data',
-    desc: 'a JSON Store'
   }
+  // ,
+  // {
+  //   eType: 'json-data',
+  //   name: 'Simple Data',
+  //   desc: 'a JSON Store'
+  // }
 ]
 
 export const makeID = () => {
