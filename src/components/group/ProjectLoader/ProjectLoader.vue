@@ -52,7 +52,7 @@ export default {
       samples: [
         {
           sampleID: Math.random() + '',
-          name: 'PALMS',
+          name: 'Spacious',
           projectJSON: JSON.stringify(require('@/components/parts/EffectNode/TimeMachine/samples/single-page.json'))
         }
       ],

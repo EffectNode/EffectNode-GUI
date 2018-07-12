@@ -9,6 +9,11 @@ export const entryTypes = [
     name: 'Shader Code',
     desc: 'Custom Effect Code GLSL'
   },
+  {
+    eType: 'html',
+    name: 'HTML Code',
+    desc: 'Try a style tag. 😎'
+  },
   // {
   //   eType: '3d-layout',
   //   name: '3D Layout',

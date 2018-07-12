@@ -71,6 +71,14 @@
           @send="commitObj(guiRootState)"
         />
 
+        <HTMLEdit
+          v-if="entry.eType === 'html'"
+          :root="guiRootState"
+          :cID="collection.cID"
+          :eID="entry.eID"
+          @send="commitObj(guiRootState)"
+        />
+
       </div>
 
       <!-- {{ root }} -->
@@ -85,6 +93,7 @@ import Rotater from './Rotater/Rotater.vue'
 import Article from './DataEditors/Article.vue'
 
 import ShaderCodes from './DataEditors/ShaderCodes.vue'
+import HTMLEdit from './DataEditors/HTMLEdit.vue'
 import NewEntry from './DataEditors/NewEntry.vue'
 import MyEntries from './DataEditors/MyEntries.vue'
 
@@ -98,6 +107,7 @@ export default {
     sendData: {}
   },
   components: {
+    HTMLEdit,
     Article,
     ShaderCodes,
     MyEntries,
