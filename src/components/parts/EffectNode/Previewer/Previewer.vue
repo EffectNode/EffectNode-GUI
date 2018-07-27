@@ -185,16 +185,20 @@ export default {
     loadFrame () {
       var url = this.makeURL(this.output.html)
       let sandboxedFrame = this.$refs['iframer']
-      let location = sandboxedFrame && sandboxedFrame.contentWindow.location
-      this.iframeURL = url + this.getBackHash(location)
+      if (sandboxedFrame && sandboxedFrame.contentWindow && sandboxedFrame.contentWindow.location) {
+        let location = sandboxedFrame.contentWindow.location
+        this.iframeURL = url + this.getBackHash(location)
+      } else {
+        this.iframeURL = url
+      }
       this.wins.forEach((w) => { w.location = url + this.getBackHash(w.location) })
     },
     openWindows () {
       this.wins.push(window.open(this.iframeURL))
     },
     getBackHash (location) {
-      let hash = '#/'
-      if (location.hash) {
+      let hash = ''
+      if (location && location.hash) {
         hash = location.hash
       }
       return hash
