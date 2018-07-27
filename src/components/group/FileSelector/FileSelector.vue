@@ -23,6 +23,7 @@
       v-model="files" :options="{group:'people', handle: '.handle'}" @start="drag = true" @end="drag = false; $emit('save', files);" @change="() => {  }"
       :move="checkMove"
     >
+
     <div
       class="file"
       :key="iFile"
@@ -40,6 +41,17 @@
       >
         Open
       </div>
+
+      <div
+        class="file-btn"
+        v-show="!checkProtectedItem(file.path)"
+        @click="
+          $emit('clone-file', file.path);
+        "
+      >
+        Clone
+      </div>
+
       <div
         v-if="!checkProtectedItem(file.path)"
         class="file-btn"

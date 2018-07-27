@@ -4,9 +4,10 @@
       <option :value="size.id" :key="size.id" v-for="size in sizes">{{ size.name }}</option>
     </select>
     Scale: {{ this.sizer.scale.toFixed(1) }}x
-    <button @click="openWindows">open window</button>
+    <button @click="openWindows">Window</button>
+    <button @click="goHome">Home</button>
 
-    <span v-show="output.isLoading">Loading...</span>
+    <span v-show="output.isLoading"><br />Loading...</span>
 
     <div class="iframe-box" :style="getRect()">
       <iframe ref="iframer" :style="getScaler()" class="iframe" v-if="useFrame" :src="iframeURL" sandbox="allow-scripts allow-same-origin allow-modals allow-presentation" frameborder="0" ></iframe>
@@ -176,13 +177,27 @@ export default {
         w.postMessage({ type: data.type, detail: data.detail }, window.location.origin)
       })
     },
-    loadFrame () {
+    goHome () {
       var url = this.makeURL(this.output.html)
       this.iframeURL = url
       this.wins.forEach((w) => { w.location = url })
     },
+    loadFrame () {
+      var url = this.makeURL(this.output.html)
+      let sandboxedFrame = this.$refs['iframer']
+      let location = sandboxedFrame && sandboxedFrame.contentWindow.location
+      this.iframeURL = url + this.getBackHash(location)
+      this.wins.forEach((w) => { w.location = url + this.getBackHash(w.location) })
+    },
     openWindows () {
       this.wins.push(window.open(this.iframeURL))
+    },
+    getBackHash (location) {
+      let hash = '#/'
+      if (location.hash) {
+        hash = location.hash
+      }
+      return hash
     },
     makeURL (html) {
       return window.URL.createObjectURL(new Blob([html], { type: 'text/html' }))

@@ -30,9 +30,9 @@
       <p>EffectNode.com is made with love in Hong Kong.</p>
 
       <p>
-        <a href="https://www.facebook.com/effectnode"><img src="../assets/icons/fb.svg" alt="Our Facebook"></a>
-        <a href="https://twitter.com/effectnode"><img src="../assets/icons/twitter.svg" alt="Our Twitter"></a>
-        <a href="https://www.instagram.com/effectnode/"><img src="../assets/icons/instagram.svg" alt="Our Instagram"></a>
+        <a href="https://www.facebook.com/effectnode"><img src="../assets/icons/fb.svg" alt="Facebook"></a>
+        <a href="https://twitter.com/effectnode"><img src="../assets/icons/twitter.svg" alt="Twitter"></a>
+        <a href="https://www.instagram.com/effectnode/"><img src="../assets/icons/instagram.svg" alt="Instagram"></a>
       </p>
 
     </div>

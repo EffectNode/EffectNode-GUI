@@ -26,6 +26,7 @@
             @close-file="closeFile"
             @select-file="selectFile"
             @open-file="openFile"
+            @clone-file="cloneFile"
             @save="() => { needsCompile = true; }"
           >
           </FileSelector>
@@ -165,6 +166,14 @@ export default {
       if (this.doc.files.find(f => f.path === path)) {
         var idx = this.doc.files.findIndex(f => f.path === path)
         this.doc.files.splice(idx, 1)
+      }
+    },
+    cloneFile (path) {
+      if (this.doc.files.find(f => f.path === path)) {
+        var idx = this.doc.files.findIndex(f => f.path === path)
+        let orig = this.doc.files[idx]
+        let clone = JSON.parse(JSON.stringify(orig))
+        this.doc.files.splice(idx, 0, clone)
       }
     },
     closeFile (path) {

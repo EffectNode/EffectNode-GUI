@@ -54,6 +54,11 @@ export default {
           sampleID: Math.random() + '',
           name: 'Spacious',
           projectJSON: JSON.stringify(require('@/components/parts/EffectNode/TimeMachine/samples/single-page.json'))
+        },
+        {
+          sampleID: Math.random() + '',
+          name: 'Vue + Three.JS Tutorial',
+          projectJSON: JSON.stringify(require('@/components/parts/EffectNode/TimeMachine/samples/tutorial.json'))
         }
       ],
       projects: []

@@ -1,14 +1,7 @@
 <template>
   <div class="time-machine">
 
-    <div v-if="!enableTimeMachine" class="label" @mouseover="enableTimeMachine = true">
-      <div class="v-center">
-        <img src="./img/time.svg" class="icon-img" />
-        Time Machine (Pro)
-      </div>
-    </div>
-
-    <div v-if="enableTimeMachine" class="timebar">
+    <div class="timebar">
       <div class="label">
         <div class="v-center">
           <img @mouseover="$emit('tooltip', { name: 'Export JavaScript Code' })" @mouseout="$emit('tooltip', false)" @click="exportJS" src="./img/export.svg" alt="code stuff" class="icon-img hover-magnify" />
@@ -22,7 +15,7 @@
               {{ fromNow(backup.date) }}
             </option>
           </select>
-          <input v-show="false" ref="time-machine-loader" type="file" @change="loadTimeMachine" />
+          <!-- <input v-show="false" ref="time-machine-loader" type="file" @change="loadTimeMachine" /> -->
         </div>
       </div>
     </div>
@@ -55,7 +48,6 @@ export default {
     return {
       clean () {},
       downloadJS: false,
-      enableTimeMachine: true,
       timeTravelIndex: 0 // this.rootDoc.backups.length - 1
     }
   },
@@ -105,9 +97,7 @@ export default {
   mounted () {
     var autosaveTimer = 0
     autosaveTimer = setInterval(() => {
-      if (this.enableTimeMachine) {
-        this.takeSnapshot()
-      }
+      this.takeSnapshot()
     }, 1000 * 60 * 7)
     this.clean = () => {
       clearInterval(autosaveTimer)
