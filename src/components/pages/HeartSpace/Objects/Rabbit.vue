@@ -41,6 +41,9 @@ import 'imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js'
       if (this.group) {
         this.$parent.$emit('remove', this.group)
       }
+      if (!obj.traverse) {
+        return
+      }
       obj.traverse((oo, key) => {
         if (oo instanceof THREE.Mesh) {
           let newObj = new THREE.Mesh(oo.geometry, this.material)
@@ -66,6 +69,11 @@ import 'imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js'
 
     // let { radius, tube, tubularSegments, radialSegments, p, q } = this
     // let geometry = new THREE.TorusKnotBufferGeometry(radius, tube, tubularSegments, radialSegments, p, q)
+  },
+  beforeDestroy () {
+    if (this.group) {
+      this.$parent.$emit('remove', this.group)
+    }
   }
 }
 </script>

@@ -42,6 +42,7 @@
           <button @click="addEffectNode({ shaderType: EN.FRAGMENT_SHADER })">+FragmentNode</button>
           <br />
           <input v-if="EffectNode && EffectNode.variations" v-model="variationIndex" type="range" min="0" :max="EffectNode.variations.length - 1" step="1">
+
           <!-- <select :value="EffectNode.variations.length - 1" @input="loadVar({ iVar })">
             <option :key="iVar" v-for="(eVar, iVar) in EffectNode.variations">
               {{ eVar.date }}
@@ -52,6 +53,12 @@
           <button @click="EN.exportRoot({ root: EffectNode })">Export Proj</button>
           <input type="file" @change="restoreProject">
           <br />
+
+          Glowing funz: <input type="checkbox" v-model="useBloom" />
+          <select v-model="useModel">
+            <option value="rabbit">Rabbit</option>
+            <option value="ball">Ball</option>
+          </select>
           uImage1 <input accept="image/*" type="file" @change="loadImage1">
           <!-- Image2 <input accept="image/*" type="file" @change="loadImage2">
           Image3 <input accept="image/*" type="file" @change="loadImage3"> -->
@@ -147,12 +154,12 @@
 
       <Object3D pz="-10">
 
-        <Rabbit v-if="!preview" :transparent="true" :glsl="glsl" :uniforms="uniforms" />
-        <!-- <Points v-if="!preview"> -->
+        <Rabbit v-if="!preview && useModel === 'rabbit'" :transparent="true" :glsl="glsl" :uniforms="uniforms" />
+        <Points v-if="!preview && useModel === 'ball'">
           <!-- <TorusKnotBufferGeometry radius="10" tube="1" tubularSegments="350" radialSegments="40" /> -->
-          <!-- <SphereBufferGeometry :r="10" :nx="200" :ny="200" /> -->
-          <!-- <ShaderMaterial :transparent="true" :vs="glsl.vertexShader" :fs="glsl.fragmentShader" :uniforms="uniforms" /> -->
-        <!-- </Points> -->
+          <SphereBufferGeometry :r="10" :nx="200" :ny="200" />
+          <ShaderMaterial :transparent="true" :vs="glsl.vertexShader" :fs="glsl.fragmentShader" :uniforms="uniforms" />
+        </Points>
 
         <!-- <MathObject
           v-if="preview"
@@ -193,15 +200,15 @@ import 'imports-loader?THREE=three!./TrackTrack.js'
 import 'imports-loader?THREE=three!./DragConCon.js'
 
 // Bloom Effect
-// import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer.js'
-// import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass.js'
-// import 'imports-loader?THREE=three!three/examples/js/postprocessing/MaskPass.js'
-// import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass.js'
-// import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader.js'
-// import 'imports-loader?THREE=three!three/examples/js/shaders/FXAAShader.js'
-// import 'imports-loader?THREE=three!three/examples/js/shaders/ConvolutionShader.js'
-// import 'imports-loader?THREE=three!three/examples/js/shaders/LuminosityHighPassShader.js'
-// import 'imports-loader?THREE=three!three/examples/js/postprocessing/UnrealBloomPass.js'
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer.js'
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass.js'
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/MaskPass.js'
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass.js'
+import 'imports-loader?THREE=three!three/examples/js/shaders/CopyShader.js'
+import 'imports-loader?THREE=three!three/examples/js/shaders/FXAAShader.js'
+import 'imports-loader?THREE=three!three/examples/js/shaders/ConvolutionShader.js'
+import 'imports-loader?THREE=three!three/examples/js/shaders/LuminosityHighPassShader.js'
+import 'imports-loader?THREE=three!three/examples/js/postprocessing/UnrealBloomPass.js'
 // Bloom Effect
 
 // import 'imports-loader?THREE=three!three/examples/js/controls/TrackballControls.js'
@@ -262,7 +269,8 @@ export default {
       //   this.$forceUpdate()
       //   // dpi = 2.0
       // }
-      // this.setupBloom({ dpi: window.devicePixelRatio })
+
+      this.setupBloom({ dpi: window.devicePixelRatio })
       this.scene.background = new THREE.Color(0x374967)
 
       this.setupTouch()
@@ -370,12 +378,13 @@ export default {
       bloomPass.threshold = Number(0.5)
       bloomPass.strength = Number(0.5)
       bloomPass.radius = Number(0.5)
+      bloomPass.renderToScreen = true
 
-      var effectCopy = new THREE.ShaderPass(THREE.CopyShader)
-      effectCopy.renderToScreen = true
+      // var effectCopy = new THREE.ShaderPass(THREE.CopyShader)
+      // effectCopy.renderToScreen = true
 
       let renderPass = new THREE.RenderPass(this.scene, this.camera)
-      this.scene.background = new THREE.Color(0x374967)
+      // this.scene.background = new THREE.Color(0x374967)
 
       let rtParameters = {
         minFilter: THREE.LinearFilter,
@@ -394,7 +403,7 @@ export default {
       // composer.addPass(renderMask)
       composer.addPass(bloomPass)
       // composer.addPass(clearMask)
-      composer.addPass(effectCopy)
+      // composer.addPass(effectCopy)
 
       this.composer = composer
     },
@@ -863,7 +872,7 @@ export default {
         this.nodes.push(EN.makeNode({
           src:
 `float floatModifier (float i1) {
-  return sin(time * 3.0 + i1) * 3.0;
+  return sin(time * 3.0 + i1 + position.z) * 3.0;
 }`,
           isEntry: false,
           shaderType,
@@ -872,8 +881,8 @@ export default {
       } else {
         this.nodes.push(EN.makeNode({
           src:
-`vec4 textureReader () {
-  return texture2D(uImage1, (vUv - 0.5) * 0.75 + 0.5);
+`float floatModifier (float i1) {
+  return sin(time * 3.0 + i1) * 3.0;
 }`,
           isEntry: false,
           shaderType,
@@ -901,6 +910,7 @@ export default {
   },
   data () {
     return {
+      useModel: 'rabbit',
       uniforms: {
         uImage1: { value: new THREE.TextureLoader().load(require('./Objects/star.png')) },
         uImage2: { value: new THREE.TextureLoader() },
@@ -918,7 +928,7 @@ export default {
       },
       loading: false,
       welcome: true,
-      useBloom: false,
+      useBloom: true,
       currentObj: false,
       camPos: { x: 0, y: 0, z: 35 },
       boxDragControl: false,
