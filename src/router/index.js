@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Test from '@/components/pages/Test/Test.vue'
+import PrivacyPolicy from '@/components/pages/PrivacyPolicy/PrivacyPolicy.vue'
 import HeartSpace from '@/components/pages/HeartSpace/HeartSpace.vue'
 
 import Mindfulness from '@/components/pages/MindScene/Mindfulness.vue'
@@ -16,6 +17,10 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   routes: [
+    {
+      path: '/privacy',
+      component: PrivacyPolicy
+    },
     {
       path: '/',
       name: 'Hello',

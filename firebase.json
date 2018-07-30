@@ -15,6 +15,10 @@
     ],
     "rewrites": [
       {
+        "source": "/api/view/**/**",
+        "function": "api"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
