@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Test from '@/components/pages/Test/Test.vue'
+import Studio from '@/components/pages/Studio/Studio.vue'
 import PrivacyPolicy from '@/components/pages/PrivacyPolicy/PrivacyPolicy.vue'
 import HeartSpace from '@/components/pages/HeartSpace/HeartSpace.vue'
 import Login from '@/components/pages/Login/Login.vue'
@@ -41,6 +42,10 @@ export default new Router({
       path: '/test',
       name: 'Test',
       component: Test
+    },
+    {
+      path: '/studio',
+      component: Studio
     },
     {
       path: '/heart-space',

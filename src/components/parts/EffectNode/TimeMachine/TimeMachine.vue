@@ -4,11 +4,11 @@
     <div class="timebar">
       <div class="label">
         <div class="v-center">
-          <img v-if="FireState.user" @mouseover="$emit('tooltip', { name: 'Deploy to the world', qr: worldURL })" @mouseout="$emit('tooltip', false)" @click="deployToWWW" src="./img/deploy.svg" alt="code stuff" class="icon-img hover-magnify" />
+          <img v-if="FireState.user" @mouseover="$emit('tooltip', { name: !worldURL ? 'One Click Deploy, \n please wait for QR Code': 'One Click Deploy', qr: worldURL })" @mouseout="$emit('tooltip', false)" @click="deployToWWW" src="./img/deploy.svg" alt="code stuff" class="icon-img hover-magnify" />
 
           <img @mouseover="$emit('tooltip', { name: 'Export JavaScript Code' })" @mouseout="$emit('tooltip', false)" @click="exportJS" src="./img/export.svg" alt="code stuff" class="icon-img hover-magnify" />
-          <img @mouseover="$emit('tooltip', { name: 'Backup All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="backupTimeMachine" src="./img/download.svg" class="icon-img hover-magnify" />
-          <img @mouseover="$emit('tooltip', { name: 'Restore All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="restoreTimeMachine" src="./img/upload.svg" class="icon-img hover-magnify" />
+          <img @mouseover="$emit('tooltip', { name: 'Backup All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="backupTimeMachine" src="./img/folder-plus.svg" class="icon-img hover-magnify" />
+          <img @mouseover="$emit('tooltip', { name: 'Replace All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="restoreTimeMachine" src="./img/nuke.svg" class="icon-img hover-magnify" />
           <input @mouseover="$emit('tooltip', { name: 'Version Timeline' })" @mouseout="$emit('tooltip', false)"  type="range" class="timerange" v-model="timeTravelIndex" @change="() => {}" :min="0" :max="backups.length - 1" v-if="backups.length > 0" />
           <img @mouseover="$emit('tooltip', { name: 'Take Project Snapshot' })" @mouseout="$emit('tooltip', false)" @click="clickTakeSnapShot" src="./img/floppy.svg" class="icon-img hover-magnify" />
           <!-- <img @mouseover="$emit('tooltip', { name: 'Project Version' })" @mouseout="$emit('tooltip', false)" src="./img/time.svg" class="icon-img version" /> -->
@@ -87,6 +87,10 @@ export default {
             }
 
             this.$emit('tooltip', { name: 'Deploy to the world', qr: this.worldURL })
+
+            setTimeout(() => {
+              this.$emit('tooltip', false)
+            }, 3 * 1000)
           })
 
         console.log(this.output)

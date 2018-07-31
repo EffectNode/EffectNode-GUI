@@ -25,7 +25,7 @@
       <br />
       <a href="./tca">Three.JS Custom Animation</a>
       <br />
-      <a href="./test">Golden Egg Studio - Front End CMS</a>
+      <a href="./studio">Golden Egg Studio - Front End CMS</a>
 
       <p>EffectNode.com is made with love in Hong Kong.</p>
 

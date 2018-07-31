@@ -110,7 +110,7 @@ export default {
       await this.syncLF()
     },
     async cloneProject ({ project }) {
-      let providedJSON = this.provideID({ projectJSON: project.projectJSON })
+      let providedJSON = this.provideID({ projectJSON: project.projectJSON, forceNewID: true })
 
       project.projectJSON = providedJSON
 
@@ -126,10 +126,10 @@ export default {
     async replaceToDB ({ project }) {
       await lf.setItem(project.id, project)
     },
-    provideID ({ projectJSON }) {
+    provideID ({ projectJSON, forceNewID = false }) {
       let root = JSON.parse(projectJSON)
 
-      if (!root.rid) {
+      if (!root.rid || forceNewID) {
         root.rid = makeID()
       }
 
