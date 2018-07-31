@@ -18,7 +18,9 @@
               <slot name="right"></slot>
             </span>
             <span class="clock">{{ clockWords }}</span>
-            <img class="logo" src="./img/user.svg" @click="$emit('user-profile-click')" />
+            <span v-if="FireState.user">{{ FireState.user.displayName }} </span>
+            <img v-if="!FireState.user" class="auth" src="./img/user.svg" @click="$emit('userLogin')" />
+            <img v-if="FireState.user" class="auth" src="./img/logout.svg" @click="$emit('userLogout')" />
           </div>
         </div>
       </div>
@@ -27,10 +29,14 @@
 </template>
 
 <script>
+import * as Fire from '@/firebase.js'
+
 import moment from 'moment'
 export default {
   data () {
     return {
+      Fire,
+      FireState: Fire.state,
       timer: 0,
       clock: new Date()
     }
@@ -113,6 +119,9 @@ export default {
 }
 .logo{
   /* margin: 8px; */
+}
+.auth{
+  margin-left: 5px;
 }
 .left, .right {
   display: flex;

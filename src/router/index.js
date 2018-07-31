@@ -4,6 +4,7 @@ import Hello from '@/components/Hello'
 import Test from '@/components/pages/Test/Test.vue'
 import PrivacyPolicy from '@/components/pages/PrivacyPolicy/PrivacyPolicy.vue'
 import HeartSpace from '@/components/pages/HeartSpace/HeartSpace.vue'
+import Login from '@/components/pages/Login/Login.vue'
 
 import Mindfulness from '@/components/pages/MindScene/Mindfulness.vue'
 import MindScene from '@/components/pages/MindScene/MindScene.vue'
@@ -25,6 +26,11 @@ export default new Router({
       path: '/',
       name: 'Hello',
       component: Hello
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
     },
     {
       path: '/tca',

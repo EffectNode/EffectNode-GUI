@@ -1,14 +1,19 @@
 <template>
   <div>
 
-    <StatusBar class="statusbar-top">
+    <StatusBar class="statusbar-top"
+      @userLogin="loginGoogle"
+      @userLogout="Fire.logout"
+    >
       <div slot="left">
         <!-- <button @click="state.mode = 'SceneEditor'">SceneEditor</button> -->
         <button v-if="!root.notReady && state.mode === 'ProjectLoader'" @click="state.mode = 'CodeEditor'">CodeEditor</button>
         <button v-if="state.mode === 'CodeEditor'" @click="state.mode = 'ProjectLoader'">ProjectLoader</button>
         <!-- <button @click="state.mode = 'CodeEditor'">CodeEditor</button> -->
+
       </div>
       <div slot="right">
+
         <TimeMachine
           v-if="state.mode === 'CodeEditor'"
           :rootDoc="root"
@@ -69,6 +74,8 @@ import ProjectLoader from '@/components/group/ProjectLoader/ProjectLoader.vue'
 
 import debounce from 'debounce'
 
+import * as Fire from '@/firebase.js'
+
 var makeID = () => {
   return '_' + Math.random().toString(36).substr(2, 9)
 }
@@ -85,6 +92,9 @@ export default {
   },
   data () {
     return {
+      Fire,
+      FireState: Fire.state,
+
       saveMethod (v) { console.log('Not Saving...', v) },
       projects: [],
       ENdb,
@@ -169,6 +179,14 @@ export default {
     // }
   },
   methods: {
+    loginGoogle () {
+      Fire.loginGoogle().then(() => {
+
+      })
+    },
+    oneClickDeploy () {
+
+    },
     loadRoot (root) {
       console.log('load-root')
       this.root = root

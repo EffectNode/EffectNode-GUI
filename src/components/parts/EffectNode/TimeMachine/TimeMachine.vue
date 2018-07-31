@@ -4,6 +4,8 @@
     <div class="timebar">
       <div class="label">
         <div class="v-center">
+          <img v-if="FireState.user" @mouseover="$emit('tooltip', { name: 'Deploy to the world', qr: worldURL })" @mouseout="$emit('tooltip', false)" @click="deployToWWW" src="./img/deploy.svg" alt="code stuff" class="icon-img hover-magnify" />
+
           <img @mouseover="$emit('tooltip', { name: 'Export JavaScript Code' })" @mouseout="$emit('tooltip', false)" @click="exportJS" src="./img/export.svg" alt="code stuff" class="icon-img hover-magnify" />
           <img @mouseover="$emit('tooltip', { name: 'Backup All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="backupTimeMachine" src="./img/download.svg" class="icon-img hover-magnify" />
           <img @mouseover="$emit('tooltip', { name: 'Restore All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="restoreTimeMachine" src="./img/upload.svg" class="icon-img hover-magnify" />
@@ -30,7 +32,12 @@
 </template>
 
 <script>
+import * as Fire from '@/firebase.js'
 import moment from 'moment'
+var makeID = () => {
+  return '_' + Math.random().toString(36).substr(2, 9)
+}
+
 export default {
   props: {
     output: {
@@ -46,7 +53,10 @@ export default {
   },
   data () {
     return {
+      worldURL: false,
+      FireState: Fire.state,
       clean () {},
+      uploadToFirebase: false,
       downloadJS: false,
       timeTravelIndex: 0 // this.rootDoc.backups.length - 1
     }
@@ -60,6 +70,27 @@ export default {
       this.timeTravelIndex = 0 // this.rootDoc.backups.length - 1
     },
     output () {
+      if (this.uploadToFirebase) {
+        this.uploadToFirebase = false
+
+        Fire.deployToWWW({ pid: this.rootDoc.rid, html: this.output.html })
+          .then(() => {
+            let url = `https://effectnode.com/api/view/${Fire.state.user.uid}/${this.rootDoc.rid}`
+
+            this.worldURL = url
+
+            if (this.worldURL) {
+              var anchor = document.createElement('a')
+              anchor.href = this.worldURL
+              anchor.target = '_blank'
+              anchor.click()
+            }
+
+            this.$emit('tooltip', { name: 'Deploy to the world', qr: this.worldURL })
+          })
+
+        console.log(this.output)
+      }
       if (this.downloadJS) {
         this.downloadJS = false
         var value = this.output.js
@@ -109,6 +140,16 @@ export default {
     }, 1000 * 60)
   },
   methods: {
+    deployToWWW () {
+      this.uploadToFirebase = true
+      this.$emit('compile', { minify: true })
+      // if (this.worldURL) {
+      //   var anchor = document.createElement('a')
+      //   anchor.href = this.worldURL
+      //   anchor.target = '_blank'
+      //   anchor.click()
+      // }
+    },
     exportJS () {
       this.downloadJS = true
       this.$emit('compile', { minify: true })
@@ -127,12 +168,24 @@ export default {
         })
       }
     },
+    provideID ({ projectJSON }) {
+      let root = JSON.parse(projectJSON)
+
+      if (!root.rid) {
+        root.rid = makeID()
+      }
+
+      return JSON.stringify(root)
+    },
     loadTimeMachine (evt) {
       var file = evt.target.files[0]
       var reader = new FileReader()
       reader.onload = () => {
         try {
-          this.$emit('load-root', JSON.parse(reader.result))
+          let result = reader.result
+          result = this.provideID({ projectJSON: result })
+
+          this.$emit('load-root', JSON.parse(result))
         } catch (e) {
           console.log('file reader error')
         }

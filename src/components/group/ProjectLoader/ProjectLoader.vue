@@ -44,19 +44,23 @@
 <script>
 import * as ENdb from '@/components/parts/EffectNode/ENdb/ENdb.js'
 let lf = ENdb.lf
+var makeID = () => {
+  return '_' + Math.random().toString(36).substr(2, 9)
+}
 
 export default {
   data () {
     return {
+      makeID,
       lf,
       samples: [
         {
-          sampleID: Math.random() + '',
+          sampleID: makeID(),
           name: 'Spacious',
           projectJSON: JSON.stringify(require('@/components/parts/EffectNode/TimeMachine/samples/single-page.json'))
         },
         {
-          sampleID: Math.random() + '',
+          sampleID: makeID(),
           name: 'Vue + Three.JS Tutorial',
           projectJSON: JSON.stringify(require('@/components/parts/EffectNode/TimeMachine/samples/tutorial.json'))
         }
@@ -66,11 +70,7 @@ export default {
   },
   methods: {
     async deleteProject ({ project }) {
-      let confirm1 = window.confirm('delete project?')
-      let confirm2 = window.confirm('confirm delete project?')
-      let confirm3 = window.confirm('final confirm delete project?')
-
-      if (confirm1 && confirm2 && confirm3) {
+      if (window.confirm('delete project?') && window.confirm('confirm delete project?') && window.confirm('final confirm delete project?')) {
         await lf.removeItem(project.id)
         await this.syncLF()
       }
@@ -88,7 +88,15 @@ export default {
       })
 
       // let arr = await db.projects.toArray()
-      this.projects = arr
+      this.projects = arr.sort((a, b) => {
+        if (Date.parse(a.dateCreated || new Date()) === Date.parse(b.dateCreated || new Date())) {
+          return 0
+        } else if (Date.parse(a.dateCreated || new Date()) > Date.parse(b.dateCreated || new Date())) {
+          return 1
+        } else if (Date.parse(a.dateCreated || new Date()) < Date.parse(b.dateCreated || new Date())) {
+          return -1
+        }
+      }).slice().reverse()
       this.$forceUpdate()
     },
     async addProject ({ projectJSON, name }) {
@@ -102,6 +110,10 @@ export default {
       await this.syncLF()
     },
     async cloneProject ({ project }) {
+      let providedJSON = this.provideID({ projectJSON: project.projectJSON })
+
+      project.projectJSON = providedJSON
+
       await lf.setItem(ENdb.makeID(), {
         projectJSON: project.projectJSON,
         name: project.name + ' (Cloned)',
@@ -114,11 +126,24 @@ export default {
     async replaceToDB ({ project }) {
       await lf.setItem(project.id, project)
     },
+    provideID ({ projectJSON }) {
+      let root = JSON.parse(projectJSON)
+
+      if (!root.rid) {
+        root.rid = makeID()
+      }
+
+      return JSON.stringify(root)
+    },
     async loadProject ({ project }) {
       if (!project) {
         return
       }
-      this.$emit('load-root', JSON.parse(project.projectJSON))
+
+      let providedJSON = this.provideID({ projectJSON: project.projectJSON })
+      lf.setItem(project.id, { ...project, projectJSON: providedJSON })
+
+      this.$emit('load-root', JSON.parse(providedJSON))
 
       this.$emit('save-method', ({ projectJSON }) => {
         lf.setItem(project.id, { ...project, projectJSON, dateUpdated: new Date() })

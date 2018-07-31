@@ -3,11 +3,19 @@
     <span v-if="tooltip.name">
       {{ tooltip.name }}
     </span>
+    <div v-if="tooltip.qr">
+      <VueQrcode :value="tooltip.qr" :options="{ size: 250 }" />
+    </div>
   </div>
 </template>
 
 <script>
+import VueQrcode from '@xkeshi/vue-qrcode'
+
 export default {
+  components: {
+    VueQrcode
+  },
   props: {
     tooltip: {
       default () {
@@ -29,6 +37,9 @@ export default {
       this.page.x = evt.pageX
       this.page.y = evt.pageY
     }, false)
+  },
+  methods: {
+
   },
   computed: {
     tooltipCSS () {

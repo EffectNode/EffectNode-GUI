@@ -7,8 +7,15 @@
 </template>
 
 <script>
+// import * as Fire from '@/firebase.js'
+
 export default {
-  name: 'app'
+  name: 'app',
+  mounted () {
+    // Fire.state.$forceUpdate = () => {
+    //   this.$forceUpdate()
+    // }
+  }
 }
 </script>
 
