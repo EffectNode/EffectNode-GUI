@@ -39,6 +39,8 @@
 <script>
 import * as Fire from '@/firebase.js'
 import moment from 'moment'
+var JSZip = require('jszip')
+
 var makeID = () => {
   return '_' + Math.random().toString(36).substr(2, 9)
 }
@@ -147,7 +149,32 @@ export default {
   },
   methods: {
     exportZip () {
-      this.$emit('zip', { root: this.rootDoc })
+      let root = this.rootDoc
+      let zip = new JSZip()
+      root.now.files.forEach((file) => {
+        if (file.path !== '@/index.html') {
+          zip.file(file.path.replace('@/', 'myapp/src/'), file.src)
+        } else {
+          let newSrc = file.src
+          let insertion = `<script src="${'./main.js'}">${'</'}${'script>'}`
+          newSrc = newSrc.replace('</body>', `${insertion}</body>`)
+          zip.file(file.path.replace('@/', 'myapp/src/'), newSrc)
+        }
+      })
+      zip.file('myapp/package.json', require('./parcel/package.json.txt'))
+      zip.file('myapp/.babelrc', require('./parcel/babelrc.txt'))
+
+      var promise = null
+      if (JSZip.support.uint8array) {
+        promise = zip.generateAsync({ type: 'uint8array' })
+      } else {
+        promise = zip.generateAsync({ type: 'string' })
+      }
+      promise.then((file) => {
+        var blob = new Blob([file], { type: 'application/zip' })
+        var link = window.URL.createObjectURL(blob)
+        window.location = link
+      })
     },
     deployToWWW () {
       this.uploadToFirebase = true
