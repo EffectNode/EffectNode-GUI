@@ -4,7 +4,9 @@
       {{ tooltip.name }}
     </span>
     <div v-if="tooltip.qr">
-      <VueQrcode :value="tooltip.qr" :options="{ size: 250 }" />
+      <a :href="tooltip.qr" target="_blank">
+        <VueQrcode :value="tooltip.qr" :options="{ size: 250 }" />
+      </a>
     </div>
   </div>
 </template>

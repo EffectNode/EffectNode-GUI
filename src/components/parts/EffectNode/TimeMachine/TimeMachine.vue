@@ -4,8 +4,13 @@
     <div class="timebar">
       <div class="label">
         <div class="v-center">
-          <img v-if="FireState.user" @mouseover="$emit('tooltip', { name: !worldURL ? 'One Click Deploy, \n please wait for QR Code': 'One Click Deploy', qr: worldURL })" @mouseout="$emit('tooltip', false)" @click="deployToWWW" src="./img/deploy.svg" alt="code stuff" class="icon-img hover-magnify" />
 
+          <a v-if="worldURL" target="_blank" :href="worldURL">
+            <img v-if="FireState.user" @mouseover="$emit('tooltip', { name: !worldURL ? 'One Click Deploy, \n please wait for QR Code': 'Click to deploy update.', qr: worldURL })" @mouseout="$emit('tooltip', false)" @click="deployToWWW" src="./img/deploy.svg" alt="code stuff" class="icon-img hover-magnify" />
+          </a>
+          <img v-if="FireState.user && !worldURL" @mouseover="$emit('tooltip', { name: !worldURL ? 'One Click Deploy, \n please wait for QR Code': 'Click to deploy update.', qr: worldURL })" @mouseout="$emit('tooltip', false)" @click="deployToWWW" src="./img/deploy.svg" alt="code stuff" class="icon-img hover-magnify" />
+
+          <img @mouseover="$emit('tooltip', { name: 'Export Zip' })" @mouseout="$emit('tooltip', false)" @click="exportZip" src="./img/zip.svg" alt="zip stuff" class="icon-img hover-magnify" />
           <img @mouseover="$emit('tooltip', { name: 'Export JavaScript Code' })" @mouseout="$emit('tooltip', false)" @click="exportJS" src="./img/export.svg" alt="code stuff" class="icon-img hover-magnify" />
           <img @mouseover="$emit('tooltip', { name: 'Backup All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="backupTimeMachine" src="./img/folder-plus.svg" class="icon-img hover-magnify" />
           <img @mouseover="$emit('tooltip', { name: 'Replace All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="restoreTimeMachine" src="./img/nuke.svg" class="icon-img hover-magnify" />
@@ -17,7 +22,7 @@
               {{ fromNow(backup.date) }}
             </option>
           </select>
-          <!-- <input v-show="false" ref="time-machine-loader" type="file" @change="loadTimeMachine" /> -->
+          <input v-show="false" ref="time-machine-loader" type="file" @change="loadTimeMachine" />
         </div>
       </div>
     </div>
@@ -76,22 +81,18 @@ export default {
         Fire.deployToWWW({ pid: this.rootDoc.rid, html: this.output.html })
           .then(() => {
             let url = `https://effectnode.com/api/view/${Fire.state.user.uid}/${this.rootDoc.rid}`
-
             this.worldURL = url
 
-            if (this.worldURL) {
-              var anchor = document.createElement('a')
-              anchor.href = this.worldURL
-              anchor.target = '_blank'
-              anchor.click()
-            }
-
-            this.$emit('tooltip', { name: 'Deploy to the world', qr: this.worldURL })
-
-            setTimeout(() => {
-              this.$emit('tooltip', false)
-            }, 3 * 1000)
+            this.$emit('tooltip', { name: 'Deployed to the world. \n Click the QR Code.', qr: this.worldURL })
           })
+
+        let handler = () => {
+          if (this.worldURL) {
+            window.removeEventListener('click', handler)
+            this.$emit('tooltip', false)
+          }
+        }
+        window.addEventListener('click', handler, true)
 
         console.log(this.output)
       }
@@ -134,6 +135,7 @@ export default {
     autosaveTimer = setInterval(() => {
       this.takeSnapshot()
     }, 1000 * 60 * 7)
+
     this.clean = () => {
       clearInterval(autosaveTimer)
     }
@@ -144,15 +146,12 @@ export default {
     }, 1000 * 60)
   },
   methods: {
+    exportZip () {
+      this.$emit('zip', { root: this.rootDoc })
+    },
     deployToWWW () {
       this.uploadToFirebase = true
       this.$emit('compile', { minify: true })
-      // if (this.worldURL) {
-      //   var anchor = document.createElement('a')
-      //   anchor.href = this.worldURL
-      //   anchor.target = '_blank'
-      //   anchor.click()
-      // }
     },
     exportJS () {
       this.downloadJS = true

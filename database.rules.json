@@ -3,7 +3,6 @@
     "html-acl": {
       "$usr": {
         ".read": "$usr === auth.uid",
-        ".write": "$usr === auth.uid",
         "$prj": {
           ".read": "$usr === auth.uid",
           ".write": "$usr === auth.uid"

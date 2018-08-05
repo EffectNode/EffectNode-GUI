@@ -5,6 +5,7 @@
       @userLogin="loginGoogle"
       @userLogout="Fire.logout"
     >
+
       <div slot="left">
         <!-- <button @click="state.mode = 'SceneEditor'">SceneEditor</button> -->
         <button v-if="!root.notReady && state.mode === 'ProjectLoader'" @click="state.mode = 'CodeEditor'">CodeEditor</button>
@@ -18,7 +19,7 @@
           v-if="state.mode === 'CodeEditor'"
           :rootDoc="root"
           :output="output"
-
+          @zip="exportZip"
           @travel="travel"
           @load-root="loadRoot"
           @compile="(v) => { $emit('compile', v) }"
@@ -79,6 +80,7 @@ import * as Fire from '@/firebase.js'
 var makeID = () => {
   return '_' + Math.random().toString(36).substr(2, 9)
 }
+var JSZip = require('jszip')
 
 export default {
   components: {
@@ -92,6 +94,7 @@ export default {
   },
   data () {
     return {
+      JSZip,
       Fire,
       FireState: Fire.state,
 
@@ -179,9 +182,35 @@ export default {
     // }
   },
   methods: {
+    exportZip ({ root }) {
+      let zip = new JSZip()
+      root.now.files.forEach((file) => {
+        if (file.path !== '@/index.html') {
+          zip.file(file.path.replace('@/', 'myapp/src/'), file.src)
+        } else {
+          let newSrc = file.src
+          let insertion = `<script src="${'./main.js'}">${'</'}${'script>'}`
+          newSrc = newSrc.replace('</body>', `${insertion}</body>`)
+          zip.file(file.path.replace('@/', 'myapp/src/'), newSrc)
+        }
+      })
+      zip.file('myapp/package.json', require('./package.json.txt'))
+      zip.file('myapp/.babelrc', require('./babelrc.txt'))
+
+      var promise = null
+      if (JSZip.support.uint8array) {
+        promise = zip.generateAsync({ type: 'uint8array' })
+      } else {
+        promise = zip.generateAsync({ type: 'string' })
+      }
+      promise.then((file) => {
+        var blob = new Blob([file], { type: 'application/zip' })
+        var link = window.URL.createObjectURL(blob)
+        window.location = link
+      })
+    },
     loginGoogle () {
       Fire.loginGoogle().then(() => {
-
       })
     },
     oneClickDeploy () {
