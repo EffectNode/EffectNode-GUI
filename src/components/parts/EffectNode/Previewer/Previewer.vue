@@ -76,6 +76,20 @@ export default {
           width: 1024,
           height: 768,
           scale: 500 / 1024
+        },
+        {
+          id: 'ipad-v-1',
+          name: 'iPad Safari Vertical 1x',
+          width: 768,
+          height: 1024,
+          scale: 1.0
+        },
+        {
+          id: 'ipad-h-1',
+          name: 'iPad Safari Horizontal 1x',
+          width: 1024,
+          height: 768,
+          scale: 1.0
         }
       ],
       useFrame: true,
@@ -98,6 +112,9 @@ export default {
     output () {
       this.loadFrame()
     }
+  },
+  beforeDestroy () {
+    this.goHome()
   },
   mounted () {
     window.addEventListener('unload', () => {
@@ -138,6 +155,12 @@ export default {
         }
       }
     })
+
+    // go home
+    // this.goHome()
+    // setTimeout(() => {
+    //   this.goHome()
+    // }, 300)
   },
   methods: {
     getRect () {
