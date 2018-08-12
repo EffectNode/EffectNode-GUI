@@ -88,7 +88,7 @@ export default {
     },
     setup () {
       var vm = this
-      var theme = this.theme || 'chrome'
+      // var theme = this.theme || 'chrome'
 
       require('brace/ext/emmet')
 
@@ -143,9 +143,12 @@ export default {
       require('brace/ext/searchbox')
 
       editor.$blockScrolling = Infinity
+      editor.setTheme('ace/theme/' + 'chrome')
+      editor.setStyle('inconsolata-ace')
       editor.setOption('enableEmmet', true)
+      editor.setOption('fontSize', '17px')
+
       editor.getSession().setMode('ace/mode/' + this.getLangFromPath(this.filepath))
-      editor.setTheme('ace/theme/' + theme)
       editor.session.setValue(this.value, 1)
       editor.session.setOptions({ tabSize: 2, useSoftTabs: true })
       editor.session.setOption('useWorker', false)
@@ -183,5 +186,8 @@ export default {
 </script>
 
 <style>
-
+.inconsolata-ace{
+  font-family: inconsolata !important;
+  line-height: 20px !important;
+}
 </style>

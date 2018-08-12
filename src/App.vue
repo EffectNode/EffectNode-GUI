@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <transition name="fade">
+    <!-- <transition name="fade"> -->
       <router-view></router-view>
-    </transition>
+    <!-- </transition> -->
   </div>
 </template>
 
@@ -20,6 +20,9 @@ export default {
 </script>
 
 <style>
+@import url(./normalise.css);
+@import url(./skeleton.css);
+
 @font-face {
   font-family: 'InterUI';
   src: url('./assets/interui-font/Inter-UI-Regular.woff');
@@ -27,6 +30,21 @@ export default {
 @font-face {
   font-family: 'InterUI-Bold';
   src: url('./assets/interui-font/Inter-UI-Bold.woff');
+}
+
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Inconsolata Regular'), local('Inconsolata-Regular'), url('./assets/Inconsolata/Inconsolata-Regular.ttf') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inconsolata-Bold';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Inconsolata Regular'), local('Inconsolata-Regular'), url('./assets/Inconsolata/Inconsolata-Bold.ttf') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 /*
@@ -44,7 +62,7 @@ export default {
 }
 */
 
-@font-face {
+/* @font-face {
     font-family: 'Trivial';
     src: local('Trivial Bold'), local('Trivial-Bold'),
         url('./assets/trivial-wf/Trivial-Bold.woff2') format('woff2'),
@@ -112,14 +130,14 @@ export default {
         url('./assets/trivial-wf/Trivial-UltraLight.ttf') format('truetype');
     font-weight: 200;
     font-style: normal;
-}
+} */
 
 .enforce-chi{
   font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', sans-serif !important;
 }
 
 body {
-  font-family: 'InterUI';
+  font-family: 'Inconsolata';
 }
 .fade-enter-active, .fade-leave-active {
   position: fixed;
@@ -136,7 +154,7 @@ body {
   opacity: 0;
 }
 #app {
-  font-family: 'InterUI', 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Inconsolata', 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 13px;

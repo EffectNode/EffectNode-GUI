@@ -12,16 +12,18 @@
 
           <img @mouseover="$emit('tooltip', { name: 'Export Zip' })" @mouseout="$emit('tooltip', false)" @click="exportZip" src="./img/zip.svg" alt="zip stuff" class="icon-img hover-magnify" />
           <img @mouseover="$emit('tooltip', { name: 'Export JavaScript Code' })" @mouseout="$emit('tooltip', false)" @click="exportJS" src="./img/export.svg" alt="code stuff" class="icon-img hover-magnify" />
-          <img @mouseover="$emit('tooltip', { name: 'Backup All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="backupTimeMachine" src="./img/folder-plus.svg" class="icon-img hover-magnify" />
-          <img @mouseover="$emit('tooltip', { name: 'Replace All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="restoreTimeMachine" src="./img/nuke.svg" class="icon-img hover-magnify" />
+          <!-- <img @mouseover="$emit('tooltip', { name: 'Backup All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="backupTimeMachine" src="./img/folder-plus.svg" class="icon-img hover-magnify" /> -->
+          <!-- <img @mouseover="$emit('tooltip', { name: 'Replace All Snapshots' })" @mouseout="$emit('tooltip', false)"  @click="restoreTimeMachine" src="./img/nuke.svg" class="icon-img hover-magnify" /> -->
           <input @mouseover="$emit('tooltip', { name: 'Version Timeline' })" @mouseout="$emit('tooltip', false)"  type="range" class="timerange" v-model="timeTravelIndex" @change="() => {}" :min="0" :max="backups.length - 1" v-if="backups.length > 0" />
           <img @mouseover="$emit('tooltip', { name: 'Take Project Snapshot' })" @mouseout="$emit('tooltip', false)" @click="clickTakeSnapShot" src="./img/floppy.svg" class="icon-img hover-magnify" />
           <!-- <img @mouseover="$emit('tooltip', { name: 'Project Version' })" @mouseout="$emit('tooltip', false)" src="./img/time.svg" class="icon-img version" /> -->
-          <select @mouseover="$emit('tooltip', { name: 'TimeStamp' })" @mouseout="$emit('tooltip', false)" ref="version-select" class="select" @input="() => {}" v-model="timeTravelIndex">
+
+          <select @mouseover="$emit('tooltip', { name: 'TimeStamp' })" @mouseout="$emit('tooltip', false)" ref="version-select" class="select-versions" @input="() => {}" v-model="timeTravelIndex">
             <option :key="backup.date + iBackup" :value="iBackup" v-for="(backup, iBackup) in backups">
               {{ fromNow(backup.date) }}
             </option>
           </select>
+
           <input v-show="false" ref="time-machine-loader" type="file" @change="loadTimeMachine" />
         </div>
       </div>
@@ -185,7 +187,7 @@ export default {
       this.$emit('compile', { minify: true })
     },
     fromNow (date) {
-      return moment(new Date(date)).fromNow() + ' ' + moment(new Date(date)).format('MMM Do YYYY, h:mm:ss a')
+      return 'Backup: ' + moment(new Date(date)).fromNow() + ' ' + moment(new Date(date)).format('MMM Do YYYY, h:mm:ss a')
     },
     format () {
       if (window.confirm('delete all time machine records and rest factory settings?') && window.confirm('are you sure?') && window.confirm('Final confirm. this is irreversible.')) {
@@ -308,7 +310,7 @@ export default {
   transform: scale(1.3333);
 }
 
-.select{
+.select-versions{
   font-size: 13px;
   line-height: 15px;
   text-align: center;
@@ -317,7 +319,7 @@ export default {
   background: transparent;
   border: none;
 }
-.select:hover{
+.select-versions:hover{
   text-decoration: underline;
 }
 
@@ -345,10 +347,11 @@ input[type=range].timerange {
   width: 100%;
   background-color: transparent;
 
-  background: linear-gradient(90deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
+  /* background: linear-gradient(90deg, #EE7752, #E73C7E, #23A6D5, #23D5AB); */
+  background: linear-gradient(90deg, rgb(76, 76, 76), rgb(192, 192, 192), rgb(76, 76, 76));
 	background-size: 400% 400%;
   animation: track-gradient 8.88888s ease infinite;
-  border-radius: 15px;
+  border-radius: 0.0000px;
 
   margin-right: 8px;
 }
@@ -364,7 +367,7 @@ input[type=range].timerange::-webkit-slider-runnable-track {
 
   box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
   /* background: transparent; */
-  border-radius: 15px;
+  border-radius: 0.0000px;
   border: 0px solid #010101;
 }
 input[type=range].timerange::-webkit-slider-thumb {
@@ -377,7 +380,7 @@ input[type=range].timerange::-webkit-slider-thumb {
   cursor: pointer;
   -webkit-appearance: none;
   margin-top: 0px;
-  border-radius: 15px;
+  border-radius: 0.0000px;
 
 }
 input[type=range].timerange:focus::-webkit-slider-runnable-track {

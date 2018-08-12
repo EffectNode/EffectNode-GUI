@@ -1,43 +1,53 @@
 <template>
-<div>
-  <h1>
-    Project Loader
-  </h1>
+<div class="container">
+  <div class="row">
+    <div class="columns eight offset-by-two">
+      <h1>
+        Project Loader
+      </h1>
 
-  <h2>
-    Sample Projects
-  </h2>
+      <h2>
+        Sample Projects
+      </h2>
 
-  <div :key="sample.sampleID" v-for="sample in samples">
-    Name: {{ sample.name }} <button @click="addProject({ projectJSON: sample.projectJSON, name: sample.name })">Copy from this template</button>
+      <div :key="sample.sampleID" v-for="sample in samples">
+        Name: {{ sample.name }} <button @click="addProject({ projectJSON: sample.projectJSON, name: sample.name })">Copy from this template</button>
+      </div>
+
+      <h2>Load Project File</h2>
+      <div>
+        <button @click="openDialogue">Load</button>
+        <input type="file" hidden @change="loadFile" ref="project-file-loader">
+      </div>
+
+
+      <h2>
+        My Projects
+      </h2>
+      <h3 v-if="projects.length === 0 && !loading">
+        You dont have any project yet.
+        Please cooy from a template to get started.
+      </h3>
+      <h3 v-if="loading">Loading</h3>
+      <ul>
+        <li :key="project.id" v-for="project in projects">
+          Name: <input type="text" v-model="project.name" @input="replaceToDB({ project })">
+          <button @click="loadProject({ project })">Edit</button>
+          <button @click="cloneProject({ project })">Clone Project</button>
+          <button @click="downloadFile({ project })">Download File</button>
+          <br />
+          Last Updated: {{ new Date(project.dateUpdated).toDateString() }} - {{ new Date(project.dateUpdated).toTimeString() }}
+          <br />
+          Created At: {{ new Date(project.dateCreated).toDateString() }} - {{ new Date(project.dateCreated).toTimeString() }}
+
+          <br />
+          Delete: <button @click="deleteProject({ project })">Delete</button>
+          <br />
+        </li>
+      </ul>
+    </div>
+
   </div>
-
-  <h2>
-    My Projects
-  </h2>
-  <h3 v-if="projects.length === 0">
-    You dont have any project yet.
-    Please cooy from a template to get started.
-  </h3>
-  <ul>
-    <li :key="project.id" v-for="project in projects">
-      Name: <input type="text" v-model="project.name" @input="replaceToDB({ project })">
-      <button @click="loadProject({ project })">Edit this project</button>
-      <button @click="cloneProject({ project })">Clone this project</button>
-
-      <br />
-      Last Updated: {{ new Date(project.dateUpdated).toDateString() }} - {{ new Date(project.dateUpdated).toTimeString() }}
-      <br />
-      Created At: {{ new Date(project.dateCreated).toDateString() }} - {{ new Date(project.dateCreated).toTimeString() }}
-
-      <br />
-      Delete: <button @click="deleteProject({ project })">Delete</button>
-      <br />
-    </li>
-  </ul>
-
-  <br />
-  <!-- <pre>{{ projects }}</pre> -->
 </div>
 </template>
 
@@ -51,6 +61,7 @@ var makeID = () => {
 export default {
   data () {
     return {
+      loading: false,
       makeID,
       lf,
       samples: [
@@ -68,9 +79,54 @@ export default {
       projects: []
     }
   },
+  watch: {
+  },
   methods: {
+    openDialogue () {
+      if (this.$refs['project-file-loader']) {
+        this.$refs['project-file-loader'].click()
+      }
+    },
+    downloadFile ({ project }) {
+      var json = JSON.stringify(JSON.parse(project.projectJSON), null, '\t')
+      var url = URL.createObjectURL(new Blob([json]), { type: 'application/json' })
+      var anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = `${project.name}@ Date Of @` + new Date() + '.json'
+      anchor.target = '_blank'
+      anchor.click()
+    },
+    async loadFile (evt) {
+      var file = evt.target.files[0]
+      var reader = new FileReader()
+      reader.onload = () => {
+        try {
+          let result = reader.result
+          let newFileName = file.name.replace(/\.json/, '')
+          newFileName = newFileName.split('@ Date Of @')
+          if (newFileName.length >= 2) {
+            newFileName.pop()
+          }
+          newFileName = newFileName.join('')
+
+          let project = {
+            sampleID: makeID(),
+            name: newFileName,
+            projectJSON: result
+          }
+          this.addProject(project)
+        } catch (e) {
+          console.log('file reader error')
+        }
+      }
+      if (file) {
+        reader.readAsText(file)
+      } else {
+        console.log('file reader error')
+      }
+    },
     async deleteProject ({ project }) {
-      if (window.confirm('delete project?') && window.confirm('confirm delete project?') && window.confirm('final confirm delete project?')) {
+      if (window.prompt(`Type the title of this project to confirm delete: ${project.name}`) === project.name) {
         await lf.removeItem(project.id)
         await this.syncLF()
       }
@@ -87,7 +143,6 @@ export default {
         })
       })
 
-      // let arr = await db.projects.toArray()
       this.projects = arr.sort((a, b) => {
         if (Date.parse(a.dateCreated || new Date()) === Date.parse(b.dateCreated || new Date())) {
           return 0
@@ -145,6 +200,7 @@ export default {
 
       this.$emit('load-root', JSON.parse(providedJSON))
 
+      // update save method
       this.$emit('save-method', ({ projectJSON }) => {
         lf.setItem(project.id, { ...project, projectJSON, dateUpdated: new Date() })
       })
@@ -156,13 +212,17 @@ export default {
     }
   },
   async mounted () {
+    this.loading = true
     await this.syncLF()
+    this.loading = false
     // debug
     // this.loadProject({ project: this.projects[0] })
   }
 }
 </script>
 
-<style>
-
+<style scoped>
+.full{
+  width: 100%;
+}
 </style>

@@ -209,10 +209,10 @@ export default {
   display: flex;
   align-items: center;
   /* Files: */
-  font-family: 'InterUI-Bold', Arial, Helvetica, sans-serif;
+  font-family: 'Inconsolata-Bold', 'Avenir', Helvetica, Arial, sans-serif;
   font-size: 40px;
-  color: #939393;
-  letter-spacing: 0;
+  color: #474747;
+  letter-spacing: -1px;
 }
 
 .circle-add{
@@ -243,7 +243,7 @@ export default {
   margin-left: 15px;
   font-size: 20px;
   color: #939393;
-  font-family: 'InterUI', Arial, Helvetica, sans-serif;
+  font-family: 'Inconsolata', 'Avenir', Helvetica, Arial, sans-serif;
 }
 
 input:focus{
@@ -290,7 +290,8 @@ input:focus{
   border: none;
   width: 80%;
   font-size: 20px;
-  font-family: 'InterUI', Arial, Helvetica, sans-serif;
+  font-family: 'Inconsolata', 'Avenir', Helvetica, Arial, sans-serif;
+  text-decoration: underline;
 }
 
 .file{

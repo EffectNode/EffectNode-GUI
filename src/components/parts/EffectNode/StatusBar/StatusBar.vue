@@ -1,28 +1,21 @@
 <template>
-  <div class="statusbar-wrapper">
-    <div class="statusbar">
-      <div class="statusbar-blur">
-        <div class="statusbar-image"></div>
+ <div class="statusbar">
+    <div class="statusbar-content">
+      <div class="left">
+        <img class="logo" src="./img/logo.svg" />
+        <span class="brand">Effect Node</span>
+        <span class="left-slot">
+          <slot name="left"></slot>
+        </span>
       </div>
-      <div class="statusbar-content-layer">
-        <div class="statusbar-content">
-          <div class="left">
-            <img class="logo" src="./img/logo.svg" />
-            <span class="brand">Effect Node</span>
-            <span class="left-slot">
-              <slot name="left"></slot>
-            </span>
-          </div>
-          <div class="right">
-            <span class="right-slot">
-              <slot name="right"></slot>
-            </span>
-            <span class="clock">{{ clockWords }}</span>
-            <span v-if="FireState.user">{{ FireState.user.displayName }} </span>
-            <img v-if="!FireState.user" class="auth" src="./img/user.svg" @click="$emit('userLogin')" />
-            <img v-if="FireState.user" class="auth" src="./img/logout.svg" @click="$emit('userLogout')" />
-          </div>
-        </div>
+      <div class="right">
+        <span class="right-slot">
+          <slot name="right"></slot>
+        </span>
+        <span class="clock">{{ clockWords }}</span>
+        <span v-if="FireState.user">{{ FireState.user.displayName }} </span>
+        <img v-if="!FireState.user" class="auth" src="./img/user.svg" @click="$emit('userLogin')" />
+        <img v-if="FireState.user" class="auth" src="./img/logout.svg" @click="$emit('userLogout')" />
       </div>
     </div>
   </div>
@@ -59,66 +52,20 @@ export default {
 </script>
 
 <style scoped>
-.statusbar-wrapper{
-  height: 24px;
-}
 .statusbar{
-  position: absolute;
-  top: 0px;
-  left: 0px;
   width: 100%;
-  height: 76px;
 }
 
-@keyframes hue-runner {
-  0% {
-    filter: hue-rotate(0deg) contrast(1.0);
-  }
-  100% {
-    filter: hue-rotate(360deg) contrast(2.0);
-  }
-}
-
-.statusbar:hover .statusbar-image{
-  /* animation: hue-runner 3s ease-in-out 0s infinite alternate; */
-}
-.statusbar-image{
-  animation: hue-runner 3s ease-in-out 0s infinite alternate;
-  position: absolute;
-  top: calc(-25px / 2.0);
-  left: 0px;
-  width: 100%;
-  height: 25px;
-  background-image: url('./img/wally2.jpg');
-  background-repeat: repeat;
-  /* background-size: cover; */
-}
-.statusbar-blur{
-  position: absolute;
-  top: 0px;
-  left: 0;
-  width: 100%;
-  height: 76px;
-  filter: blur(25px);
-}
-.statusbar-content-layer{
-  z-index: 100;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-}
 .statusbar-content{
   width: calc(100% - 8px * 1);
+  height: 20px;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 8px;
   font-size: 13px;
   line-height: 15px;
-}
-.logo{
-  /* margin: 8px; */
 }
 .auth{
   margin-left: 5px;

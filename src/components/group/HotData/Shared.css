@@ -1,19 +1,19 @@
 .title{
-  font-family: 'InterUI-Bold', Arial, Helvetica, sans-serif;
+  font-family: 'Inconsolata-Bold', 'Avenir', Helvetica, Arial, sans-serif;
   font-size: 40px;
-  color: #939393;
-  letter-spacing: 0;
+  color: #464646;
+  letter-spacing: -1px;
 }
 
 .sub-title{
   /* Effect Nodes: */
-  font-family: 'InterUI-Regular', Arial, Helvetica, sans-serif;
+  font-family: 'Inconsolata-Bold', 'Avenir', Helvetica, Arial, sans-serif;
   font-size: 30px;
-  letter-spacing: 0;
+  letter-spacing: -1px;
 }
 
 .item-desc{
-  font-family: 'InterUI-Regular', Arial, Helvetica, sans-serif;
+  font-family: 'Inconsolata', 'Avenir', Helvetica, Arial, sans-serif;
   font-size: 12px;
   letter-spacing: 0;
 }
@@ -89,7 +89,7 @@
 
 .font{
   font-size: 20px;
-  font-family: 'InterUI-Regular', Arial, Helvetica, sans-serif;
+  font-family: 'Inconsolata', 'Avenir', Helvetica, Arial, sans-serif;
   letter-spacing: 0;
 }
 

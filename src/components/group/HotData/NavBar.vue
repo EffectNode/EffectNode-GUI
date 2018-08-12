@@ -117,10 +117,10 @@ export default {
   border-radius: 0px;
   font-size: 30px;
 
-  font-family: 'InterUI-Bold', Arial, Helvetica, sans-serif;
+  font-family: 'Inconsolata-Bold', Arial, Helvetica, sans-serif;
   font-size: 40px;
   color: #939393;
-  letter-spacing: 0;
+  letter-spacing: -1.00001px;
   text-decoration: underline;
 }
 
@@ -133,10 +133,10 @@ export default {
   border-radius: 0px;
   font-size: 30px;
 
-  font-family: 'InterUI-Bold', Arial, Helvetica, sans-serif;
+  font-family: 'Inconsolata-Bold', Arial, Helvetica, sans-serif;
   font-size: 40px;
   color: #939393;
-  letter-spacing: 0;
+  letter-spacing: -1.00001px;
   text-decoration: underline;
 }
 

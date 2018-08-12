@@ -8,8 +8,8 @@
 
       <div slot="left">
         <!-- <button @click="state.mode = 'SceneEditor'">SceneEditor</button> -->
-        <button v-if="!root.notReady && state.mode === 'ProjectLoader'" @click="state.mode = 'CodeEditor'">CodeEditor</button>
-        <button v-if="state.mode === 'CodeEditor'" @click="state.mode = 'ProjectLoader'">ProjectLoader</button>
+        <div class="linker" v-if="!root.notReady && state.mode === 'ProjectLoader'" @click="state.mode = 'CodeEditor'">CodeEditor</div>
+        <div class="linker" v-if="state.mode === 'CodeEditor'" @click="state.mode = 'ProjectLoader'">ProjectLoader</div>
         <!-- <button @click="state.mode = 'CodeEditor'">CodeEditor</button> -->
 
       </div>
@@ -30,28 +30,22 @@
     </StatusBar>
 
     <div class="container-box">
-      <div :class="{
-        'margin-box': useMarginBox
-      }">
-        <!-- <keep-alive> -->
-        <Component
-          :is="state.mode"
-          :doc="doc"
-          :output="output"
-          :currentFilePath="doc.currentFilePath"
-          @just-save="saveProject"
-          @compile-now="compileNow"
-          @compile="(v) => { $emit('compile', v) }"
-          @select-file="(v) => { doc.currentFilePath = v }"
-          @tooltip="(v) => { tooltip = v }"
+      <Component
+        :is="state.mode"
+        :doc="doc"
+        :output="output"
+        :currentFilePath="doc.currentFilePath"
+        @just-save="saveProject"
+        @compile-now="compileNow"
+        @compile="(v) => { $emit('compile', v) }"
+        @select-file="(v) => { doc.currentFilePath = v }"
+        @tooltip="(v) => { tooltip = v }"
 
-          @change-mode="(v) => { state.mode = v }"
-          @load-root="loadRoot"
-          @save-method="(v) => { saveMethod = v }"
-        >
-        </Component>
-        <!-- </keep-alive> -->
-      </div>
+        @change-mode="(v) => { state.mode = v }"
+        @load-root="loadRoot"
+        @save-method="(v) => { saveMethod = v }"
+      >
+      </Component>
     </div>
 
     <Tooltip v-if="isBigEnough" v-show="tooltip" :tooltip="tooltip" />
@@ -301,5 +295,9 @@ export default {
 }
 .margin-box{
   margin: 8px;
+}
+.linker{
+  font-weight: bold;
+  text-decoration: underline;
 }
 </style>

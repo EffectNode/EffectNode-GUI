@@ -2,12 +2,12 @@
   <div>
 
     <div class="tabs-row" ref="tabs-row">
+      <div class="tab" :class="{ 'using': mode === 'hot-data' }" @click="mode = 'hot-data'">Hot Data</div>
       <div
-      @mouseover="$emit('tooltip', { name: 'Open File' })" @mouseout="$emit('tooltip', false)"
-      class="browse-btn" :class="{ 'using': mode === 'browse' }" @click="toggleMode">Browse</div>
-      <div class="browse-btn" :class="{ 'using': mode === 'hot-data' }" @click="mode = 'hot-data'">Hot Data</div>
+        @mouseover="$emit('tooltip', { name: 'Open File' })" @mouseout="$emit('tooltip', false)"
+        class="tab" :class="{ 'using': mode === 'browse' }" @click="toggleMode">Browse</div>
       <Draggable class="opened-files" v-model="openedFiles" :move="onDragTabs">
-        <div class="tab" :class="{ 'active': isTabActive(tab.path) }" @click="selectFile(tab.path)" :key="tab.path + iTab" v-for="(tab, iTab) in openedFiles"><img class="cross" src="./img/cross.svg" @click="removeTab(tab, iTab, openedFiles)" /> {{ tab.path }} </div>
+        <div class="tab" :class="{ 'active': isTabActive(tab.path) }" @click="selectFile(tab.path)" :key="tab.path + iTab" v-for="(tab, iTab) in openedFiles"><img class="cross" src="./img/cross.svg" @click="removeTab(tab, iTab, openedFiles)" /> {{ getFileName(tab.path) }} </div>
       </Draggable>
     </div>
 
@@ -52,7 +52,7 @@
             @input="() => { needsCompile = true; onKeyStrokeSendData({ file: currentFile }) }"
             theme="chrome"
             width="100%"
-            :height="height + 'px'"
+            :height="'calc(100vh - 85px)'"
           >
           </Component>
         </div>
@@ -133,6 +133,15 @@ export default {
     }
   },
   methods: {
+    getFileName (path) {
+      if (path.includes('/')) {
+        let ans = path.split('/')
+        ans = ans.pop()
+        return ans
+      } else {
+        return path
+      }
+    },
     onKeyStrokeSendData ({ file }) {
       if (file.path === '@/hot-data.hydrate.json') {
         let file = (this.doc.files || []).find(f => f.path === '@/hot-data.hydrate.json')
@@ -248,7 +257,7 @@ export default {
   position: relative;
 }
 
-.browse-btn{
+/* .browse-btn{
   color: #2e2e2e;
   border-radius: 26px;
   border: 1px solid #979797;
@@ -258,10 +267,15 @@ export default {
   margin: 10px 0px 0px 5px;
   background-color: rgba(255,255,255,0.8);
   transform: translate3d(0,0,0.1px);
-}
-.browse-btn.using{
+} */
+.tab.using{
   color: blue;
   border-color: blue;
+}
+.tab.using:hover{
+  color: blue;
+  border-color: blue;
+  box-shadow: rgb(144, 144, 144) 2px 2px 0px 0px;
 }
 
 .opened-files{
@@ -270,18 +284,21 @@ export default {
 
 .tab {
   color: #636363;
-  border-radius: 26px;
-  border: 1px solid #979797;
+  /* border-radius: 26px; */
+  border: 1px solid #4a4a4a;
 
   display: inline-block;
-  padding: 3px 15px;
-  margin: 10px 8px 0px 5px;
+  padding: 3px 10px;
+  margin: 10px 0px 0px 5px;
   background-color: rgba(255,255,255,0.8);
   transform: translate3d(0,0,0.1px);
 }
 .tab.active{
   color: black;
   border-color: lime;
+}
+.tab.active:hover{
+  box-shadow: rgb(20, 140, 20) 1px 1px 0px 0px;
 }
 .tab:first-child {
   margin-left: 8px;
@@ -290,6 +307,9 @@ export default {
 .tab .cross{
   margin-right: 4px;
   transition: transform 1s;
+}
+.tab:hover{
+  box-shadow: #787878 1px 1px 0px 0px;
 }
 .tab .cross:hover{
   transform: scale(1.4);
@@ -304,6 +324,7 @@ export default {
   top: 0px;
   right: 0px;
   display: flex;
+  z-index: 10000;
 
   /*
   width: 650px;

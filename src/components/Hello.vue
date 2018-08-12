@@ -9,12 +9,12 @@
       <h3>While you wait for our product, you can experiment our prototype.</h3>
 
 
-      Our first Kickstarter (QuickStarter): <br />
+      <!-- Our first Kickstarter (QuickStarter): <br />
       <a href="https://www.kickstarter.com/projects/wonglok831/492876667?ref=539300&token=76b955fc">Quickstarter: Particle Art Remixer / GLSL Coding Playground</a>
       <br />
       <a href="https://codepen.io/wonglok/pen/djPLZy">Codepen: Particle Playground.</a>
       <br />
-      <br />
+      <br /> -->
 
       Our concept prototypes: <br />
       <a href="./heart-space">Heart Space Prototype</a>
@@ -25,7 +25,7 @@
       <br />
       <a href="./tca">Three.JS Custom Animation</a>
       <br />
-      <a href="./studio">Golden Egg Studio - Front End CMS</a>
+      <router-link to="./studio">Golden Egg Studio - Front End CMS</router-link>
 
       <p>EffectNode.com is made with love in Hong Kong.</p>
 
