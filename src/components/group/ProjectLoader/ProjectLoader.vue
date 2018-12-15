@@ -1,50 +1,69 @@
 <template>
 <div class="container">
   <div class="row">
-    <div class="columns eight offset-by-two">
+    <div class="columns six">
       <h1>
-        Project Loader
+        Starter Templates
       </h1>
+      <div class="templates-area">
 
-      <h2>
-        Sample Projects
-      </h2>
-
-      <div :key="sample.sampleID" v-for="sample in samples">
-        Name: {{ sample.name }} <button @click="addProject({ projectJSON: sample.projectJSON, name: sample.name })">Copy from this template</button>
+        <div
+          class="template-box"
+          :key="sample.sampleID" v-for="sample in samples"
+        >
+          <div class="template-name">{{ sample.name }}</div>
+          <div class="use-this" @click="addProject({ projectJSON: sample.projectJSON, name: sample.name })">+</div>
+        </div>
       </div>
 
-      <h2>Load Project File</h2>
+      <h1>Restore a Project</h1>
       <div>
-        <button @click="openDialogue">Load</button>
+        <span class="action-link" @click="openDialogue">Load Project Backup File</span>
         <input type="file" hidden @change="loadFile" ref="project-file-loader">
       </div>
 
-
-      <h2>
-        My Projects
-      </h2>
+    </div>
+    <div class="columns six">
+      <h1>
+        My Local Projects
+      </h1>
       <h3 v-if="projects.length === 0 && !loading">
         You dont have any project yet.
         Please cooy from a template to get started.
       </h3>
       <h3 v-if="loading">Loading</h3>
-      <ul>
+      <ol class="project-ordered-list">
         <li :key="project.id" v-for="project in projects">
-          Name: <input type="text" v-model="project.name" @input="replaceToDB({ project })">
-          <button @click="loadProject({ project })">Edit</button>
-          <button @click="cloneProject({ project })">Clone Project</button>
-          <button @click="downloadFile({ project })">Download File</button>
-          <br />
-          Last Updated: {{ new Date(project.dateUpdated).toDateString() }} - {{ new Date(project.dateUpdated).toTimeString() }}
-          <br />
-          Created At: {{ new Date(project.dateCreated).toDateString() }} - {{ new Date(project.dateCreated).toTimeString() }}
 
-          <br />
-          Delete: <button @click="deleteProject({ project })">Delete</button>
-          <br />
+          <ul>
+            <li>
+              Title: <input class="name-editor" type="text" v-model="project.name" @input="replaceToDB({ project })" />
+            </li>
+            <li>
+              <span class="action-link" @click="loadProject({ project })">Edit this Project</span>
+            </li>
+            <li>
+              <span class="action-link" @click="cloneProject({ project })">Clone this project</span>
+            </li>
+            <li>
+              <span class="action-link" @click="downloadFile({ project })">Download Project Backup File</span>
+            </li>
+            <li>
+              <span class="action-link" @click="deleteProject({ project })">Delete Project</span>
+            </li>
+            <li>
+              Updated: {{ getFromNow(project.dateUpdated) }}
+            </li>
+            <li>
+              Created: {{ getDateTime(project.dateCreated) }}
+            </li>
+
+          </ul>
+
+
         </li>
-      </ul>
+      </ol>
+
     </div>
 
   </div>
@@ -53,6 +72,8 @@
 
 <script>
 import * as ENdb from '@/components/parts/EffectNode/ENdb/ENdb.js'
+import moment from 'moment'
+
 let lf = ENdb.lf
 var makeID = () => {
   return '_' + Math.random().toString(36).substr(2, 9)
@@ -67,12 +88,12 @@ export default {
       samples: [
         {
           sampleID: makeID(),
-          name: 'Spacious',
+          name: 'First Fun Stuff',
           projectJSON: JSON.stringify(require('@/components/parts/EffectNode/TimeMachine/samples/single-page.json'))
         },
         {
           sampleID: makeID(),
-          name: 'Vue + Three.JS Tutorial',
+          name: 'SDK Tutorial',
           projectJSON: JSON.stringify(require('@/components/parts/EffectNode/TimeMachine/samples/tutorial.json'))
         }
       ],
@@ -82,6 +103,12 @@ export default {
   watch: {
   },
   methods: {
+    getDateTime (d) {
+      return moment(d).format('MMMM Do YYYY, h:mm:ss a')
+    },
+    getFromNow (d) {
+      return moment(d).fromNow()
+    },
     openDialogue () {
       if (this.$refs['project-file-loader']) {
         this.$refs['project-file-loader'].click()
@@ -224,5 +251,54 @@ export default {
 <style scoped>
 .full{
   width: 100%;
+}
+.templates-area {
+  display: flex;
+  justify-content: flex-start;
+  align-items: space-around;
+}
+.template-box {
+  position: relative;
+  border: black solid 1px;
+  width: 150px;
+  height: 150px;
+  margin: 20px;
+  margin-left: 0px;
+}
+
+.template-name {
+  margin-top: 30px;
+  text-align: center;
+}
+.use-this{
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  border: black solid 1px;
+}
+
+.use-this:hover{
+  background-color: beige;
+}
+.action-link{
+  cursor: pointer;
+  text-decoration: underline;
+}
+.action-link:hover{
+  font-weight: bold;
+}
+.name-editor{
+  appearance: none;
+  padding: 10px;
+  border: black solid 1px;
+  box-sizing: border-box;
+  outline: none;
+}
+.project-ordered-list > li{
+  margin-bottom: 35px;
 }
 </style>

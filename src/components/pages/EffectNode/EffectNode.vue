@@ -4,12 +4,14 @@
     <StatusBar class="statusbar-top"
       @userLogin="loginGoogle"
       @userLogout="Fire.logout"
+      @mode="(v) => { state.mode = v }"
     >
-
       <div slot="left">
+
+        <!-- <div class="linker" v-if="!root.notReady && state.mode === 'ProjectLoader'" @click="state.mode = 'CodeEditor'">Back to Editor</div>
+        <div class="linker" v-if="state.mode === 'CodeEditor'" @click="state.mode = 'ProjectLoader'">My Projects</div> -->
+
         <!-- <button @click="state.mode = 'SceneEditor'">SceneEditor</button> -->
-        <div class="linker" v-if="!root.notReady && state.mode === 'ProjectLoader'" @click="state.mode = 'CodeEditor'">CodeEditor</div>
-        <div class="linker" v-if="state.mode === 'CodeEditor'" @click="state.mode = 'ProjectLoader'">ProjectLoader</div>
         <!-- <button @click="state.mode = 'CodeEditor'">CodeEditor</button> -->
 
       </div>
@@ -26,6 +28,7 @@
           @change-mode="(v) => { state.mode = v }"
           @tooltip="(v) => { tooltip = v }"
         />
+
       </div>
     </StatusBar>
 

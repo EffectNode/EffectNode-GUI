@@ -2,8 +2,8 @@
  <div class="statusbar">
     <div class="statusbar-content">
       <div class="left">
-        <img class="logo" src="./img/logo.svg" />
-        <span class="brand">Effect Node</span>
+        <img class="logo" src="./img/logo.svg"  @click="$emit('mode', 'ProjectLoader')" />
+        <span class="brand" @click="$emit('mode', 'ProjectLoader')">Effect Node</span>
         <span class="left-slot">
           <slot name="left"></slot>
         </span>
@@ -63,7 +63,8 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 8px;
+  margin: 0px;
+  padding: 8px;
   font-size: 13px;
   line-height: 15px;
 }
@@ -79,12 +80,13 @@ export default {
   margin-right: 8px;
 }
 .brand{
+  font-weight: bold;
   margin-left: 8px;
-  font-family: 'InterUI-Bold', 'InterUI', Arial, Helvetica, sans-serif;
+  /* font-family: 'InterUI-Bold', 'InterUI', Arial, Helvetica, sans-serif; */
 }
 .clock{
   margin-right: 8px;
-  font-family: 'InterUI', Arial, Helvetica, sans-serif;
+  /* font-family: 'InterUI', Arial, Helvetica, sans-serif; */
 }
 .left-slot{
   margin-left: 8px;
