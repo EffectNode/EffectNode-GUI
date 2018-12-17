@@ -160,4 +160,7 @@ body {
   font-size: 13px;
   line-height: 1.55;
 }
+button {
+  color: black;
+}
 </style>

@@ -1,16 +1,15 @@
 <template>
-  <enOS></enOS>
+  <div class="ll-screen">
+    <slot></slot>
+  </div>
 </template>
 
 <script>
-import enOS from '@/enOS/enOS.vue'
 export default {
-  components: {
-    enOS
-  }
+
 }
 </script>
 
 <style scoped>
-
+@import url(../jot.css);
 </style>

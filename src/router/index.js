@@ -3,9 +3,9 @@ import Router from 'vue-router'
 import Hello from '@/components/Hello'
 // import Test from '@/components/pages/Test/Test.vue'
 // import Studio from '@/components/pages/Studio/Studio.vue'
-import PrivacyPolicy from '@/components/pages/PrivacyPolicy/PrivacyPolicy.vue'
+// import PrivacyPolicy from '@/components/pages/PrivacyPolicy/PrivacyPolicy.vue'
 // import HeartSpace from '@/components/pages/HeartSpace/HeartSpace.vue'
-import Login from '@/components/pages/Login/Login.vue'
+// import Login from '@/components/pages/Login/Login.vue'
 import enOS from '@/components/pages/enOS/enOS.vue'
 
 // import Mindfulness from '@/components/pages/MindScene/Mindfulness.vue'
@@ -25,15 +25,15 @@ export default new Router({
       name: 'Hello',
       component: Hello
     },
-    {
-      path: '/privacy',
-      component: PrivacyPolicy
-    },
-    {
-      path: '/login',
-      name: 'Login',
-      component: Login
-    },
+    // {
+    //   path: '/privacy',
+    //   component: PrivacyPolicy
+    // },
+    // {
+    //   path: '/login',
+    //   name: 'Login',
+    //   component: Login
+    // },
     {
       path: '/enOS',
       name: 'enos',
