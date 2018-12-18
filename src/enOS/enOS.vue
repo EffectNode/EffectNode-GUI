@@ -1,6 +1,6 @@
 <template>
-  <Screen v-if="ready" class="over-hidden">
-    <Portals>
+  <Screen class="over-hidden">
+    <Portals v-if="ready" :uiAPI="uiAPI">
     </Portals>
   </Screen>
 </template>
@@ -22,17 +22,20 @@ export default {
   },
   data () {
     return {
-      ready: false
+      ready: false,
+      uiAPI: false
     }
   },
   mounted () {
-    Services.init().then((api) => {
-      Vue.prototype.$server = api
-      this.ready = true
-    })
+    this.loadProject({ projectID: '123' })
   },
   methods: {
-
+    loadProject ({ projectID }) {
+      Services.init({ projectID }).then((api) => {
+        this.uiAPI = api
+        this.ready = true
+      })
+    }
   }
 }
 </script>

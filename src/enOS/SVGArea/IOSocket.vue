@@ -6,13 +6,14 @@
     <circle ref="socket" v-if="type === 'input'" class="mover cross-hair stroke-only" :cx="x + w / 2" :cy="y + h / 2" :dwidth="w" :r="h / 4" />
     <circle ref="socket" v-else-if="type === 'output'" class="mover cross-hair stroke-only " :cx="x + w / 2" :cy="y + h / 2" :dwidth="w" :r="h / 4" />
 
-    <path class="path" v-if="isDown" :style="getStyle()" :d="getFromNode(bridge.a, bridge.b)" fill="none" :marker-start="`url(#circle-ok)`" marker-mid="url(#square)" :marker-end="`url(#circle-ok)`" />
+    <path class="path" :stroke="`url(#${uniq}kale-salad)`" v-if="isDown" :style="getStyle()" :d="getFromNode(bridge.a, bridge.b)" fill="none" :marker-start="`url(#${uniq}circle-ok)`" marker-mid="url(#${uniq}square)" :marker-end="`url(#${uniq}circle-ok)`" />
   </g>
 </template>
 
 <script>
 export default {
   props: {
+    uniq: {},
     Data: {},
     Doc: {},
 
@@ -49,8 +50,12 @@ export default {
           },
           // x: this.x,
           // y: this.y,
-          w: this.w,
-          h: this.h,
+          get w () {
+            return self.w
+          },
+          get h () {
+            return self.h
+          },
           stroke: ``,
           fill: `lime`
         },
@@ -233,7 +238,7 @@ export default {
       return {
         'stroke-dasharray': this.bridge.line.running ? '8px' : '0px',
         'animation-play-state': this.bridge.line.running ? 'running' : 'paused',
-        'animation-direction': this.type === 'output' ? `normal` : `reverse`
+        'animation-direction': this.type === 'input' ? `normal` : `reverse`
       }
     }
   }
@@ -265,7 +270,7 @@ export default {
   stroke: black;
 }
 .path {
-  stroke: url('#kale-salad');
+  /* stroke: url('#kale-salad'); */
   animation: dash 30s linear infinite;
   animation-play-state: paused;
   stroke-dasharray: 8;

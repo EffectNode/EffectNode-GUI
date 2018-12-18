@@ -1,7 +1,7 @@
 (function () {
   let g = window
   var getID = () => {
-    return '-' + (1024 * 1024 * 1024 * Math.random()).toFixed(0)
+    return '_docs_' + (1024 * 1024 * 1024 * Math.random()).toFixed(0)
   }
   let DocsQuery = {
     download () {

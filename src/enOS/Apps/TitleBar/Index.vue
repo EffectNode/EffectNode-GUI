@@ -9,14 +9,15 @@
 <script>
 export default {
   props: {
+    uiAPI: {},
     portal: {}
   },
   methods: {
     close () {
-      this.$server.portal.removeWindow(this.portal)
+      this.uiAPI.portal.removeWindow(this.portal)
     },
     hide () {
-      this.$server.portal.hideWindow(this.portal)
+      this.uiAPI.portal.hideWindow(this.portal)
     }
   }
 }

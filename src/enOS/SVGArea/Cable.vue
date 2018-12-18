@@ -2,13 +2,14 @@
   <g>
     <!-- <TerminalBox :box="bridge.a" :svg="svg" @move="onMove" />
     <TerminalBox :box="bridge.b" :svg="svg" @move="onMove" /> -->
-    <path class="path" :style="getStyle()" :d="getFromNode(aBridge, bBridge)" fill="none" :marker-start="`url(#circle-ready)`" marker-mid="url(#square)" :marker-end="`url(#circle-ready)`" />
+    <path class="path" v-if="aBridge && bBridge" :style="getStyle()" :d="getFromNode(aBridge, bBridge)" :stroke="`url(#${uniq}kale-salad)`" fill="none" :marker-start="`url(#${uniq}circle-ready)`" :marker-mid="`url(#${uniq}square)`" :marker-end="`url(#${uniq}circle-ready)`" />
   </g>
 </template>
 
 <script>
 export default {
   props: {
+    uniq: {},
     socketuis: {},
     pair: {},
     svg: {}
@@ -20,16 +21,26 @@ export default {
   },
   computed: {
     aBridge () {
-      return this.socketuis.find(s => {
+      let socketUI = this.socketuis.find(s => {
         // console.log(s)
         return this.pair.socket.from === s.socket.socket.from
-      }).bridge.a
+      })
+      if (socketUI) {
+        return socketUI.bridge.a
+      } else {
+        return false
+      }
     },
     bBridge () {
-      return this.socketuis.find(s => {
+      let socketUI = this.socketuis.find(s => {
         // console.log(s)
         return this.pair.socket.to === s.socket.socket.to
-      }).bridge.a
+      })
+      if (socketUI) {
+        return socketUI.bridge.a
+      } else {
+        return false
+      }
     }
   },
   data () {
@@ -38,6 +49,7 @@ export default {
       return '--' + (Math.random() * 1024 * 1024 * 1024).toFixed(0)
     }
     return {
+
       bridge: {
         id: getID(),
         line: {
@@ -152,6 +164,6 @@ export default {
   animation-play-state: paused;
   stroke-dasharray: 8;
 
-  stroke: url(#kale-salad);
+
 }
 </style>

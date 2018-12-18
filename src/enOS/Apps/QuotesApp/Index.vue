@@ -1,6 +1,6 @@
 <template>
   <div class="full quotes-app" >
-    <TitleBar :portal="portal">
+    <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
       QuotesApp
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
@@ -17,6 +17,7 @@ import TitleBar from '../TitleBar'
 
 export default {
   props: {
+    uiAPI: {},
     portal: {}
   },
   components: {

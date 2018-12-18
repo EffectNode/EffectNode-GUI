@@ -23,8 +23,8 @@ export function makeWin () {
   temp.x += 30
   temp.y += 30
 
-  temp.x %= 180
-  temp.y %= 180
+  temp.x %= 210
+  temp.y %= 210
 
   if (window.innerWidth < 500) {
     win.width = window.innerWidth - win.x * 2.0
@@ -35,7 +35,7 @@ export function makeWin () {
   return win
 }
 
-export function makePortal ({ type, data }) {
+export function makePortal ({ type, data = {} }) {
   let id = getID()
   let win = makeWin(id)
   let app = 'QuotesApp'
@@ -51,6 +51,8 @@ export function makePortal ({ type, data }) {
     app = 'VolumetricApp'
   } else if (type === 'connector') {
     app = 'ConnectorApp'
+  } else if (type === 'exec-env') {
+    app = 'ExecEnvApp'
   }
 
   return {
@@ -64,7 +66,7 @@ export function makePortal ({ type, data }) {
 
 export function makeSample (api) {
   api.portals.push(
-    makePortal({ type: 'connector' })
+    makePortal({ type: 'connector', data: {} })
   )
 }
 
@@ -137,46 +139,44 @@ export function activate (api, current) {
 }
 
 export function makeEngine () {
-  var api = {}
-  api.meta = {}
-  api.portals = []
-  api.meta.space3DMode = false
-  api.makeSample = () => {
-    makeSample(api)
+  var mod = {}
+  mod.meta = {}
+  mod.portals = []
+  mod.meta.space3DMode = false
+  mod.makeSample = () => {
+    makeSample(mod)
   }
-  api.addWindow = (arg) => {
-    addWindow(api, arg)
+  mod.addWindow = (arg) => {
+    addWindow(mod, arg)
   }
-  api.fixOverflow = () => {
-    fixOverflow(api)
+  mod.fixOverflow = () => {
+    fixOverflow(mod)
   }
-  api.enableSpace3D = () => {
-    enableSpace3D(api)
+  mod.enableSpace3D = () => {
+    enableSpace3D(mod)
   }
-  api.disableSpace3D = () => {
-    disableSpace3D(api)
+  mod.disableSpace3D = () => {
+    disableSpace3D(mod)
   }
-  api.makeZList = () => {
-    makeZList(api)
+  mod.makeZList = () => {
+    makeZList(mod)
   }
-  api.sortWinZ = (current) => {
-    sortWinZ(api, current)
+  mod.sortWinZ = (current) => {
+    sortWinZ(mod, current)
   }
-  api.removeWindow = (current) => {
-    removeWindow(api, current)
+  mod.removeWindow = (current) => {
+    removeWindow(mod, current)
   }
-  api.hideWindow = (current) => {
-    hideWindow(api, current)
+  mod.hideWindow = (current) => {
+    hideWindow(mod, current)
   }
-  api.activate = (current) => {
-    activate(api, current)
+  mod.activate = (current) => {
+    activate(mod, current)
   }
-  api.load = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve()
-      }, 10)
-    })
-  }
-  return api
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mod)
+    }, 10)
+  })
 }

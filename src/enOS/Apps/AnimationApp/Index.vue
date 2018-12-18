@@ -1,6 +1,6 @@
 <template>
   <div class="full animation-app">
-    <TitleBar :portal="portal"  @click="$emit('click')">
+    <TitleBar :portal="portal"  @click="$emit('click')" :uiAPI="uiAPI">
       Animation
     </TitleBar>
     <div class="content-div" @click="$emit('click')" v-if="quotesInfo" >
@@ -30,6 +30,7 @@ import Messages from './Messages'
 
 export default {
   props: {
+    uiAPI: {},
     portal: {}
   },
   components: {

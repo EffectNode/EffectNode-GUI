@@ -1,7 +1,7 @@
 (function () {
   let g = window
   var getID = () => {
-    return '-' + (1024 * 1024 * 1024 * Math.random()).toFixed(0)
+    return '_hive_' + (1024 * 1024 * 1024 * Math.random()).toFixed(0)
   }
   let Data = g.HiveData = {
     init: () => {
@@ -59,6 +59,11 @@
     addModToDoc ({ mod, Doc }) {
       Doc.root.modules.push(mod)
     },
+    removeModToDoc ({ mod, Doc }) {
+      let modules = Doc.root.modules
+      let idx = modules.findIndex(m => m.id === mod.id)
+      modules.splice(idx, 1)
+    },
     makeDocumentStack () {
       return {
         root: {
@@ -94,7 +99,12 @@
       return {
         id: modID,
         pos: {
-          x: 100, y: 100
+          x: 100,
+          y: 100
+        },
+        size: {
+          w: 200,
+          h: 40
         },
         src: ``
       }

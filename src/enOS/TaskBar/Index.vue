@@ -6,16 +6,16 @@
         <div class="taskbar-icon home" @click="startMenu = true">
           Open App
         </div>
-        <div class="taskbar-icon button3d" v-if="$server.portal.meta.space3DMode" @click="toggle3DSpace">
-          2D 🎩
+        <div class="taskbar-icon button3d" v-if="uiAPI.portal.meta.space3DMode && uiAPI.portal.portals.length > 0" @click="toggle3DSpace">
+          2D 🦄
         </div>
-        <div class="taskbar-icon button3d" v-if="!$server.portal.meta.space3DMode" @click="toggle3DSpace">
-          3D 🎩
+        <div class="taskbar-icon button3d" v-if="!uiAPI.portal.meta.space3DMode && uiAPI.portal.portals.length > 0" @click="toggle3DSpace">
+          3D 🌈
         </div>
         <div
         class="taskbar-icon win" :key="ipk"
         :class="{ 'is-on': ip.win.minimised }"
-        v-for="(ip, ipk) in $server.portal.portals.slice().sort((a, b) => { return a.date - b.date })"
+        v-for="(ip, ipk) in uiAPI.portal.portals.slice().sort((a, b) => { return a.date - b.date })"
 
           @touchstart="$emit('activated', { portal: ip })"
           @click="$emit('activated', { portal: ip })"
@@ -29,23 +29,26 @@
       <div class="start-title-bar">Lok Lok App Store</div>
       <div class="start-content-div">
         <div class="start-content-div-margin">
-          <div class="app-icon adder" @click="closeMenu(); $server.portal.addWindow({ type: 'quotes' })">
+          <!-- <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ type: 'quotes' })">
             Quotes
           </div>
-          <div class="app-icon adder" @click="closeMenu(); $server.portal.addWindow({ type: 'animation' })">
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ type: 'animation' })">
             Roll
+          </div> -->
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'dimensional' })">
+            Space & Dimension
           </div>
-          <div class="app-icon adder" @click="closeMenu(); $server.portal.addWindow({ type: 'dimensional' })">
-            Space
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'particle-sea' })">
+            Sea & 彩雲追月
           </div>
-          <div class="app-icon adder" @click="closeMenu(); $server.portal.addWindow({ type: 'particle-sea' })">
-            Sea
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'volumetric' })">
+            Volumetric Rendering
           </div>
-          <div class="app-icon adder" @click="closeMenu(); $server.portal.addWindow({ type: 'volumetric' })">
-            Volume
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'connector' })">
+            Connectors
           </div>
-          <div class="app-icon adder" @click="closeMenu(); $server.portal.addWindow({ type: 'connector' })">
-            Connector
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'exec-env' })">
+            ExecEnv
           </div>
         </div>
       </div>
@@ -55,6 +58,9 @@
 
 <script>
 export default {
+  props: {
+    uiAPI: {}
+  },
   mounted () {
     this.$forceUpdate()
   },
@@ -66,7 +72,6 @@ export default {
   data () {
     return {
       startMenu: false,
-      serv: this.server,
       toggle3D: false
     }
   },
@@ -75,7 +80,7 @@ export default {
       this.startMenu = false
     },
     toggle3DSpace () {
-      this.$server.portal.meta.space3DMode = !this.$server.portal.meta.space3DMode
+      this.uiAPI.portal.meta.space3DMode = !this.uiAPI.portal.meta.space3DMode
     },
     goHome () {
       window.location.href = '/'
@@ -99,8 +104,8 @@ export default {
 
 .taskbar-content{
   /* max-width: 960px; */
-  margin-bottom: 20px;
-  margin-left: 20px;
+  margin-bottom: 10px;
+  margin-left: 15px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -227,10 +232,10 @@ export default {
 .is-on::after{
   content: '';
   position: absolute;
-  bottom: -13px;
-  left: calc(50% - 10px / 2);
-  width: 10px;
-  height: 10px;
+  bottom: -22px;
+  left: calc(50% - 20px / 2);
+  width: 20px;
+  height: 20px;
   background-color: rgb(36, 49, 228);
   box-shadow: 0px 0px 30px 0px rgb(53, 215, 255);
   border-radius: 50%;

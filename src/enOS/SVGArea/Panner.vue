@@ -33,7 +33,7 @@ export default {
         this.isDown = false
       }
     }
-    console.log(this)
+    // console.log(this)
     this.$el.addEventListener('mousedown', h.onMD, false)
     this.$el.addEventListener('mouseup', h.onMU, false)
     this.$el.addEventListener('mousemove', h.onMM, false)

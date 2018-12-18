@@ -5,25 +5,25 @@
         <!-- <title>Simple connector with intermediate point example</title> -->
 
         <defs>
-          <marker :id="`circle-ok`" style="overflow:visible; cursor: move;">
+          <marker :id="`${uniq}circle-ok`" style="overflow:visible; cursor: move;">
             <circle r="3" :fill="'lime'" />
           </marker>
-          <marker :id="`circle-ready`" style="overflow:visible; cursor: move;">
-            <circle r="3" :fill="'url(#kale-salad)'" />
+          <marker :id="`${uniq}circle-ready`" style="overflow:visible; cursor: move;">
+            <circle r="3" :fill="`url(#${uniq}kale-salad)`" />
           </marker>
-           <marker :id="`circle-error`" style="overflow:visible; cursor: move;">
+           <marker :id="`${uniq}circle-error`" style="overflow:visible; cursor: move;">
             <circle r="3" :fill="'red'" />
           </marker>
-           <marker :id="`circle-info`" style="overflow:visible; cursor: move;">
+           <marker :id="`${uniq}circle-info`" style="overflow:visible; cursor: move;">
             <circle r="3" :fill="'blue'" />
           </marker>
 
-          <linearGradient id="kale-salad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient :id="`${uniq}kale-salad`" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style="stop-color:#00C9FF;stop-opacity:1" />
             <stop offset="100%" style="stop-color:#92FE9D;stop-opacity:1" />
           </linearGradient>
 
-          <linearGradient id="disco-club" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient :id="`${uniq}disco-club`" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style="stop-color:#FC466B;stop-opacity:1" />
             <stop offset="100%" style="stop-color:#3F5EFB;stop-opacity:1" />
           </linearGradient>
@@ -37,12 +37,19 @@
           @move="onPannerMove"
         ></Panner>
 
-        <g :key="`boxes-${box.id}`" v-for="box in modules">
-          <ModuleBox :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :win="win" :box="box" :svg="$refs['svg']" v-if="$refs.svg" @move="onMoveBox" />
+        <g :key="`${uniq}boxes-${box.id}`" v-for="box in modules">
+          <ModuleBox
+          @toggle-size="toggleSize"
+          :uniq="uniq" :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :win="win" :box="box" :svg="$refs['svg']" v-if="$refs.svg" @move="onMoveBox">
+            <!-- <div class="full">
+              <button @click="toggleSize(box)">Happy</button>
+              {{ box }}
+            </div> -->
+          </ModuleBox>
         </g>
 
-        <g :key="`cabel-${pair.socket.from + pair.socket.to}`" v-for="(pair) in linePairs">
-          <Cable :pair="pair" :socketuis="socketuis" :svg="$refs['svg']" v-if="$refs.svg" @move="onMove"></Cable>
+        <g :key="`${uniq}cabel-${pair.socket.from + pair.socket.to}`" v-for="(pair) in linePairs">
+          <Cable :uniq="uniq" :pair="pair" :socketuis="socketuis" :svg="$refs['svg']" v-if="$refs.svg" @move="onMove"></Cable>
         </g>
 
         <!-- <rect :x="box.b.x" :y="box.b.y" :width="box.b.w" :height="box.b.h" fill="lightgreen" stroke="black" >
@@ -52,7 +59,8 @@
         <!-- M 100,75 C 150,75 150,125 200,125 -->
       </svg>
       <div class="tools">
-        <button @click="scrolHome">View Home</button>
+        <button @click="scrolHome">Home View</button>
+        <button @click="duplicateWindow">Duplicate Window</button>
       </div>
   </div>
 </template>
@@ -67,6 +75,8 @@ import makeUIO from '../lib/userio.js'
 
 export default {
   props: {
+    uiAPI: {},
+
     Doc: {},
     Data: {},
     root: {},
@@ -74,7 +84,7 @@ export default {
     connectors: {},
 
     win: {},
-    bonding: {}
+    meta: {}
   },
   components: {
     Cable,
@@ -82,10 +92,15 @@ export default {
     ModuleBox
   },
   mounted () {
+    console.log(this.meta)
     this.ready = true
     this.$nextTick(() => {
-      this.setupTouchTarget()
+      this.setupWheel()
+      // this.setupTouchTarget()
+      // this.$forceUpdate()
     })
+  },
+  watch: {
   },
   computed: {
     linePairs () {
@@ -95,6 +110,27 @@ export default {
     }
   },
   methods: {
+    toggleSize (box) {
+      if (box.size.w === 200) {
+        anime({
+          targets: box.size,
+          w: 500,
+          h: 200
+        })
+      } else {
+        anime({
+          targets: box.size,
+          w: 200,
+          h: 40
+        })
+      }
+    },
+    duplicateWindow () {
+      this.uiAPI.portal.addWindow({
+        type: 'connector',
+        data: {}
+      })
+    },
     onConnect (v) {
       v.from.socket.to = v.to.socket.from
       v.to.socket.to = v.from.socket.to
@@ -103,7 +139,6 @@ export default {
     onDisconnect (v) {
       v.from.socket.to = false
       v.to.socket.to = false
-
       console.log('dis', v)
     },
     scrolHome () {
@@ -115,29 +150,92 @@ export default {
         duration: Math.log(Math.abs(this.ui.aX + this.ui.aY)) * 300
       })
     },
-    setupTouchTarget () {
-      var uio = this.makeUIO({
-        target: this.$refs.svg,
-        preventTouchStart: true
-      })
-      // this.cleanUIO = uio.clean
-      this.ui = uio.ui
-      this.ui.deltaX = 0.00000000001
-      this.ui.deltaY = 0.00000000001
+    isDescendant (parent, child) {
+      var node = child.parentNode
+      if (parent === child) {
+        return true
+      }
 
+      while (node !== null) {
+        if (node === parent) {
+          return true
+        }
+        node = node.parentNode
+      }
+      return false
+    },
+    onWheel (evt) {
+      if (this.isDescendant(this.$refs.svg, evt.target)) {
+        evt.preventDefault()
+      } else {
+        return
+      }
+      let ui = this.ui
+      ui.deltaX = -event.deltaX * 0.02
+      ui.deltaY = -event.deltaY * 0.02
+
+      if (event.deltaX) {
+        ui.deltaTheta = -event.deltaX * 0.02 / (Math.PI * 2)
+      }
+      if (event.deltaY) {
+        ui.deltaTheta = -event.deltaY * 0.02 / (Math.PI * 2)
+      }
+      ui.inertia = ui.mass
+    },
+    setupWheel () {
+      let ui = this.ui
+      let h = {
+        onWheel: (e) => {
+          this.onWheel(e)
+        }
+      }
+      window.addEventListener('wheel', h.onWheel)
       var rAF = () => {
         this.rAFID = requestAnimationFrame(rAF)
-        uio.sim()
-        this.view.x = -uio.ui.aX
-        this.view.y = -uio.ui.aY
-        this.view.z = -uio.ui.aZ
+
+        if (ui.inertia > 0.01) {
+          ui.inX = (ui.deltaX * ui.inertia)
+          ui.inY = (ui.deltaY * ui.inertia)
+          ui.aX += ui.inX
+          ui.aY += ui.inY
+
+          // inertia
+          ui.inertia *= 0.98
+        }
+
+        this.view.x = -ui.aX
+        this.view.y = -ui.aY
       }
       this.rAFID = requestAnimationFrame(rAF)
       this.onClose = () => {
-        uio.clean()
+        // uio.clean()
+        window.removeEventListener('wheel', h.onWheel)
         cancelAnimationFrame(this.rAFID)
       }
     },
+    // setupTouchTarget () {
+    //   var uio = this.makeUIO({
+    //     target: this.$refs.svg,
+    //     preventTouchStart: true
+    //   })
+    //   // this.cleanUIO = uio.clean
+    //   this.ui = uio.ui
+    //   this.ui.deltaX = 0.00000000001
+    //   this.ui.deltaY = 0.00000000001
+
+    //   var rAF = () => {
+    //     this.rAFID = requestAnimationFrame(rAF)
+    //     uio.sim()
+    //     this.view.x = -uio.ui.aX
+    //     this.view.y = -uio.ui.aY
+    //     this.view.z = -uio.ui.aZ
+    //   }
+    //   this.rAFID = requestAnimationFrame(rAF)
+    //   this.onClose = () => {
+    //     uio.clean()
+    //     cancelAnimationFrame(this.rAFID)
+    //   }
+    // },
     onMoveBox (evt) {
       evt.box.pos.x += evt.dx
       evt.box.pos.y += evt.dy
@@ -146,16 +244,26 @@ export default {
       evt.box.rect.x += evt.dx
       evt.box.rect.y += evt.dy
     },
-    onPannerMove (v) {
-      this.ui.aX += v.dx
-      this.ui.aY += v.dy
+    onPannerMove (evt) {
+      this.ui.aX += evt.dx
+      this.ui.aY += evt.dy
     },
     getID () {
-      return '-' + (1024 * 1024 * 1024 * Math.random()).toFixed(0)
+      return 'r' + (1024 * 1024 * 1024 * Math.random()).toFixed(0)
     }
   },
   data () {
     return {
+      ui: {
+        aX: 0,
+        aY: 0,
+        deltaX: 0,
+        deltaY: 0,
+        inX: 0,
+        inY: 0,
+        mass: 5.0
+      },
+      uniq: this.getID(),
       socketuis: [],
       hand: {
         shouod: '',
@@ -165,11 +273,10 @@ export default {
         socket: false
       },
       ready: false,
-      view: { x: 0, y: 0 },
+      view: { x: 0.0000001, y: 0.0000001, z: 0.0000001 },
       onClose () {},
       rAFID: 0,
-      makeUIO,
-      ui: false
+      makeUIO
     }
   }
 }

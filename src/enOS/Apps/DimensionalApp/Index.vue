@@ -1,10 +1,12 @@
 <template>
   <div class="full quotes-app" >
-    <TitleBar :portal="portal">
+    <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
       Dimensional Portal Animation by Bryant & Lok
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
-      <Dimension ref="dimesnion"></Dimension>
+      <Dimension ref="dimesnion">
+
+      </Dimension>
     </div>
   </div>
 </template>
@@ -16,6 +18,7 @@ import Dimension from './Dimension/Index.vue'
 
 export default {
   props: {
+    uiAPI: {},
     portal: {}
   },
   components: {

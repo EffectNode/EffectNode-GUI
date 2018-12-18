@@ -1,25 +1,24 @@
 import * as Portal from './portal.js'
 
-export const Ser = {
-  portal: Portal.makeEngine()
-}
+export const Ser = {}
 
-export const loadAll = () => {
-  return new Promise((resolve) => {
+export const loadProject = ({ projectID }) => {
+  return new Promise((resolve, reject) => {
     Promise.all([
-      Ser.portal.load()
+      Portal.makeEngine({ projectID })
     ])
-      .then(() => {
+      .then((res) => {
+        Ser.portal = res[0]
         resolve(Ser)
       })
       .catch((e) => {
         console.trace(e)
         console.log(e)
-        resolve(Ser)
+        reject(e)
       })
   })
 }
 
-export const init = () => {
-  return loadAll()
+export const init = ({ projectID }) => {
+  return loadProject({ projectID })
 }

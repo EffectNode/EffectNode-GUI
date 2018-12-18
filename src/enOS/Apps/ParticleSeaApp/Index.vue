@@ -1,6 +1,6 @@
 <template>
   <div class="full quotes-app" >
-    <TitleBar :portal="portal">
+    <TitleBar :portal="portal"  @click="$emit('activated')" :uiAPI="uiAPI">
       Particle Sea
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
@@ -16,6 +16,7 @@ import ParticleSea from './ParticleSea/Index.vue'
 
 export default {
   props: {
+    uiAPI: {},
     portal: {}
   },
   components: {

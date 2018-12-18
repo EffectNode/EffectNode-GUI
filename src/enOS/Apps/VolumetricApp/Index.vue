@@ -1,6 +1,6 @@
 <template>
   <div class="full quotes-app" >
-    <TitleBar :portal="portal">
+    <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
       Volumetric Rendering
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
@@ -16,6 +16,7 @@ import Volumetric from './Volumetric/Index.vue'
 
 export default {
   props: {
+    uiAPI: {},
     portal: {}
   },
   components: {

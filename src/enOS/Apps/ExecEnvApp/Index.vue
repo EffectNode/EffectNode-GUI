@@ -5,7 +5,7 @@
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
       <!-- Lok Lok -->
-      <SVGArea v-if="portal && ready" :Doc="Doc" :meta="portal.data" :connectors="connectors" :modules="modules" :uiAPI="uiAPI" :Data="Data" :root="root" :win="portal.win" />
+      <!-- <SVGArea v-if="portal && ready" :Doc="Doc" :connectors="connectors" :modules="modules" :Data="Data" :root="root" :win="portal.win" /> -->
     </div>
   </div>
 </template>
@@ -13,15 +13,15 @@
 <script>
 // import axios from 'axios'
 import TitleBar from '../TitleBar'
-import SVGArea from '../../SVGArea/Index.vue'
+// import SVGArea from '../../SVGArea/Index.vue'
 // import nlp from 'compromise'
 // import csv from 'csvtojson'
 import * as Hive from '../../data/HiveApp.js'
 
 export default {
   components: {
-    TitleBar,
-    SVGArea
+    TitleBar// ,
+    // SVGArea
   },
   props: {
     uiAPI: {},

@@ -4,7 +4,7 @@
       <vue-draggable-resizable
         :key="ip.id"
         v-show="!ip.win.minimised"
-        v-for="(ip) in $server.portal.portals"
+        v-for="(ip) in uiAPI.portal.portals"
         :w="ip.win.width"
         :h="ip.win.height"
         :x="ip.win.x"
@@ -36,6 +36,8 @@
             @mouseout="() => { ip.win.active = true; }"
             @activated="onActivated(ip)"
             class="full"
+            @click="onActivated(ip)"
+            :uiAPI="uiAPI"
             :is="ip.app"
             :portal="ip"
           ></Component>
@@ -43,6 +45,7 @@
     </div>
 
     <TaskBar
+      :uiAPI="uiAPI"
       ref="taskbar"
       @activated="(v) => {
         onActivated(v.portal)
@@ -61,9 +64,13 @@ import DimensionalApp from '@/enOS/Apps/DimensionalApp'
 import ParticleSeaApp from '@/enOS/Apps/ParticleSeaApp'
 import VolumetricApp from '@/enOS/Apps/VolumetricApp'
 import ConnectorApp from '@/enOS/Apps/ConnectorApp'
+import ExecEnvApp from '@/enOS/Apps/ExecEnvApp'
 import TaskBar from '../TaskBar'
 
 export default {
+  props: {
+    uiAPI: {}
+  },
   components: {
     ParticleSeaApp,
     DimensionalApp,
@@ -71,7 +78,8 @@ export default {
     QuotesApp,
     TaskBar,
     VolumetricApp,
-    ConnectorApp
+    ConnectorApp,
+    ExecEnvApp
   },
   created () {
   },
@@ -79,29 +87,34 @@ export default {
     return {
       opened: false,
       resizeTimeout: 0,
-      serv: this.$server,
       sct: 0
     }
   },
   mounted () {
-    this.loadLS()
+    // this.loadLS()
     this.loadResizer()
   },
   watch: {
+    metasJSON () {
+      // this.shouldSave()
+    },
     portalsJSON () {
-      this.shouldSave()
+      // this.shouldSave()
     },
     portalLength () {
-      this.shouldSave()
+      // this.shouldSave()
       this.loadResizer()
     }
   },
   computed: {
     portalLength () {
-      return this.$server.portal.portals.length
+      return this.uiAPI.portal.portals.length
     },
     portalsJSON () {
-      return JSON.stringify(this.$server.portal.portals)
+      return JSON.stringify(this.uiAPI.portal.portals)
+    },
+    metasJSON () {
+      return JSON.stringify(this.uiAPI.portal.meta)
     }
   },
   methods: {
@@ -118,7 +131,7 @@ export default {
     },
     loadResizer () {
       this.$nextTick(() => {
-        this.$server.portal.portals.forEach((ip) => {
+        this.uiAPI.portal.portals.forEach((ip) => {
           let e = this.$refs['portals_' + ip.id][0]
           if (e) {
             let br = e.$el.querySelector('.handle.handle-br')
@@ -135,27 +148,27 @@ export default {
     getWindowStyle (ip) {
       return {
         transition: 'transform 0.5s',
-        transform: this.$server.portal.meta.space3DMode ? `rotateX(-30deg) rotateY(30deg)` : ``
+        transform: this.uiAPI.portal.meta.space3DMode ? `rotateX(-30deg) rotateY(30deg)` : ``
       }
     },
     loadLS () {
-      let items = window.localStorage.getItem('portals-vessel-script')
-      let meta = window.localStorage.getItem('portals-meta-vessel-script')
+      let items = window.localStorage.getItem('portals-effect-node')
+      let meta = window.localStorage.getItem('portals-meta-effect-node')
 
       try {
         if (items && meta) {
-          this.$server.portal.portals = JSON.parse(items)
-          this.$server.portal.meta = JSON.parse(meta)
+          this.uiAPI.portal.portals = JSON.parse(items)
+          this.uiAPI.portal.meta = JSON.parse(meta)
         } else {
-          this.$server.portal.makeSample()
+          this.uiAPI.portal.makeSample()
         }
 
-        this.$server.portal.fixOverflow()
-        this.$server.portal.makeZList()
+        this.uiAPI.portal.fixOverflow()
+        this.uiAPI.portal.makeZList()
       } catch (e) {
         console.log('==== Reset ====')
-        this.$server.portal.portals = []
-        this.$server.portal.makeSample()
+        this.uiAPI.portal.portals = []
+        this.uiAPI.portal.makeSample()
         console.log(e)
       }
 
@@ -163,13 +176,13 @@ export default {
     },
     shouldSave () {
       this.$nextTick(() => {
-        window.localStorage.setItem('portals-meta-vessel-script', JSON.stringify(this.$server.portal.meta))
-        window.localStorage.setItem('portals-vessel-script', JSON.stringify(this.$server.portal.portals))
+        window.localStorage.setItem('portals-meta-effect-node', JSON.stringify(this.uiAPI.portal.meta))
+        window.localStorage.setItem('portals-effect-node', JSON.stringify(this.uiAPI.portal.portals))
       })
     },
     onActivated (ip) {
       console.log(ip)
-      this.$server.portal.activate(ip)
+      this.uiAPI.portal.activate(ip)
 
       this.$forceUpdate()
 

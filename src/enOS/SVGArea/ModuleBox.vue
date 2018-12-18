@@ -1,14 +1,23 @@
 <template>
   <g>
-    <rect ref="rect" :width="300" :height="100" :x="box.pos.x" :y="box.pos.y" class="box"></rect>
+    <rect ref="rect" :width="boxW" :height="boxH" :x="box.pos.x" :y="box.pos.y" class="box" :fill="`url(#${uniq}kale-salad)`"></rect>
 
     <g :key="input.id" v-for="(input, ii) in inputs">
-      <IOSocket :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :socket="input" :win="win" :svg="svg" type="input" :x="box.pos.x + ii * inputW" :y="box.pos.y - 13" :w="inputW" :h="13" />
+      <IOSocket :boxH="boxH" :uniq="uniq" :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :socket="input" :win="win" :svg="svg" type="input" :x="box.pos.x + ii * inputW" :y="box.pos.y - 13" :w="inputW" :h="13" />
     </g>
 
     <g :key="output.id" v-for="(output, ii) in outputs">
-      <IOSocket :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :socket="output" :win="win" :svg="svg" type="output" :x="box.pos.x + ii * outputW" :y="box.pos.y + 100 - 13 + 13" :w="outputW" :h="13" />
+      <IOSocket :boxH="boxH" :uniq="uniq" :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :socket="output" :win="win" :svg="svg" type="output" :x="box.pos.x + ii * outputW" :y="box.pos.y + boxH - 13 + 13" :w="outputW" :h="13" />
     </g>
+
+    <circle style="cursor: pointer;" :cx="box.pos.x + boxW - 7.5 - 1" :cy="box.pos.y + 7.5 + 1" :r="7.5" :height="20" @click="$emit('toggle-size', box)" :fill="`url(#${uniq}disco-club)`">
+    </circle>
+
+    <!-- <foreignObject :x="box.pos.x" :y="box.pos.y" :width="boxW" :height="boxH">
+      <div class="noselect" style="width: 100%; height: 100%; position: relative;" xmlns="http://www.w3.org/1999/xhtml" >
+        <slot></slot>
+      </div>
+    </foreignObject> -->
 
   </g>
 </template>
@@ -20,31 +29,28 @@ export default {
     IOSocket
   },
   props: {
+    uniq: {},
     Data: {},
     Doc: {},
-
     socketuis: {},
     hand: {},
     view: {},
     win: {},
     svg: {},
-    box: {
-      default () {
-        return {
-          pos: {
-            x: 100,
-            y: 100
-          }
-        }
-      }
-    }
+    box: {}
   },
   computed: {
+    boxW () {
+      return this.box.size.w
+    },
+    boxH () {
+      return this.box.size.h
+    },
     inputW () {
-      return 300 / (this.inputs.length || 3)
+      return this.boxW / (this.inputs.length || 3)
     },
     outputW () {
-      return 300 / (this.outputs.length || 3)
+      return this.boxW / (this.outputs.length || 3)
     },
     inputs () {
       return this.Data.getModInputs({ Doc: this.Doc, modID: this.box.id }) || []
@@ -57,8 +63,8 @@ export default {
   },
   data () {
     return {
-      boxW: 300,
-      boxH: 100,
+      // boxW: 300,
+      // boxH: 100,
       clean () {}
     }
   },
@@ -116,7 +122,16 @@ export default {
 
 <style scoped>
 .box{
-  fill: url(#kale-salad);
+  /* fill: url(#kale-salad); */
   stroke: black;
+}
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }
 </style>
