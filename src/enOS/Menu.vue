@@ -47,31 +47,33 @@ export default {
   },
   async mounted () {
     this.ts.project = new API.TableSync({ namespace: 'project', getArray: () => { return this.projects } })
-
-    await API.LoginStatus.check()
-    if (API.LoginStatus.isLoggedIn) {
-      this.sync({ data: { userID: API.LoginStatus.myID } })
-    } else {
+    this.reload()
+  },
+  methods: {
+    async reload () {
+      if (await API.LoginStatus.check()) {
+        this.showProjects()
+      } else {
+        this.showLogin()
+      }
+    },
+    goUpdate ({ project }) {
+      this.ts.project.update({ data: project })
+    },
+    showLogin () {
       this.mode = 'login'
       this.auth = {
         username: '',
         password: ''
       }
-    }
-  },
-  methods: {
-    goUpdate ({ project }) {
-      this.ts.project.update({ data: project })
     },
-    async sync () {
+    showProjects () {
       this.mode = 'projects'
-      API.sync({ userID: API.LoginStatus.myID })
       this.ts.project.load({ data: { userID: API.LoginStatus.myID } })
     },
     async login () {
       await API.login(this.auth)
-      this.sync({ data: { userID: API.LoginStatus.myID } })
-      this.$forceUpdate()
+      this.reload()
     },
     async removeProject ({ project }) {
       this.ts.project.remove({ data: project })

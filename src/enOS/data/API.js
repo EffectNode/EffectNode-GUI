@@ -66,7 +66,8 @@ iAXIOS.interceptors.response.use((response) => {
 export const RT = {
   makeSocket: (path, name) => {
     // return io(`${baseURL}/${path}`, { transports: ['websocket'] })
-    let socket = io(`${baseURL}${path}`, { transports: ['websocket'] })
+    let socket = io(`${baseURL}${path}`)
+    // let socket = io(`${baseURL}${path}`, { transports: ['websocket'] })
     window.addEventListener('focus', () => {
       socket.connect()
     })
@@ -75,15 +76,6 @@ export const RT = {
     return socket
   },
   all: []
-}
-
-export function refresh () {
-  RT.all.forEach(async s => {
-    s.disconnect()
-    setTimeout(() => {
-      s.connect()
-    }, 100)
-  })
 }
 
 function prepSocket () {
@@ -104,14 +96,20 @@ export const LoginStatus = {
   myself: false,
   isLoggedIn: false,
   async check () {
-    try {
-      let resp = await myself()
-      LoginStatus.myself = resp.data
-      LoginStatus.isLoggedIn = true
-    } catch (e) {
-      console.log(e)
-      LoginStatus.myself = false
-      LoginStatus.isLoggedIn = false
+    if (this.isLoggedIn) {
+      return true
+    } else {
+      try {
+        RT.en.close()
+        RT.en.connect()
+        let resp = await myself()
+        LoginStatus.myself = resp.data
+        LoginStatus.isLoggedIn = true
+      } catch (e) {
+        console.error(e)
+        LoginStatus.myself = false
+        LoginStatus.isLoggedIn = false
+      }
     }
     return LoginStatus.isLoggedIn
   }
@@ -119,11 +117,6 @@ export const LoginStatus = {
 
 export const myself = () => {
   return iAXIOS.get('/myself')
-    .then((resp) => {
-      refresh()
-      LoginStatus.myself = resp.data
-      return resp
-    })
 }
 
 export const register = (data) => {
@@ -132,11 +125,10 @@ export const register = (data) => {
 
 export const login = (data) => {
   return iAXIOS.post('/login', data)
-    .then(() => {
-      return LoginStatus.check()
-        .then(() => {
-          return LoginStatus.myself
-        })
+    .then(async (resp) => {
+      RT.en.close()
+      RT.en.connect()
+      return resp
     })
 }
 
@@ -145,18 +137,6 @@ export const logout = (data) => {
   LoginStatus.isLoggedIn = false
   return iAXIOS.post('/logout', data)
 }
-
-export const sync = ({ userID }) => {
-  RT.en.emit('sync', { userID })
-}
-
-// export const getMyProjects = async () => {
-//   let data = await listProjects({ userID: LoginStatus.myself._id })
-//   return data
-// }
-// export const loadProject = ({ projectID }) => {
-
-// }
 
 export class TableSync extends EventEmitter {
   constructor ({ socket = RT.en, namespace, getArray, $forceUpdate = () => {} }) {
@@ -223,11 +203,7 @@ export class TableSync extends EventEmitter {
   }
   _onUpdate () {
     this.onLocal({
-      handler: ({ results, socketID }) => {
-        if (this.socket.id === socketID) {
-          console.log('dont update myself again after delay', this.socket.id === socketID)
-          return
-        }
+      handler: ({ results }) => {
         let newItem = results
         let arr = this.getArray()
         let idx = arr.findIndex(a => a._id === newItem._id)
