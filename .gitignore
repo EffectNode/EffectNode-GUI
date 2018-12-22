@@ -12,3 +12,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 .firebase/hosting.ZGlzdA.cache
+.firebase/*

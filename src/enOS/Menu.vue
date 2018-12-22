@@ -68,6 +68,7 @@ export default {
       }
     },
     showProjects () {
+      this.ts.project.sync()
       this.mode = 'projects'
       this.projects = []
       this.ts.project.load({ data: { userID: API.myself._id } })

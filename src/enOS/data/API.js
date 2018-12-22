@@ -73,48 +73,31 @@ var makeAxios = () => {
   return iAXIOS
 }
 
-var iAXIOS = makeAxios()
-// RT....
-
-export const RT = {
-  makeSocket: (path, name) => {
-    // return io(`${baseURL}/${path}`, { transports: ['websocket'] })
-    // let socket = io(`${baseURL}${path}`)
-    let rememberMe = window.localStorage.getItem('jwt_remember_me')
-    let query = ``
-    if (rememberMe) {
-      query = `auth_token=${rememberMe}`
-    }
-
-    let socket = io(`${baseURL}${path}`, { transports: ['websocket'], query })
-    window.addEventListener('focus', () => {
-      socket.connect()
-    })
-    RT[name] = socket
-    return socket
+var makeSocket = (path) => {
+  // return io(`${baseURL}/${path}`, { transports: ['websocket'] })
+  // let socket = io(`${baseURL}${path}`)
+  let rememberMe = window.localStorage.getItem('jwt_remember_me')
+  let query = ``
+  if (rememberMe) {
+    query = `auth_token=${rememberMe}`
   }
+  let socket = io(`${baseURL}${path}`, { transports: ['websocket'], query })
+  window.addEventListener('focus', () => {
+    socket.connect()
+  })
+  return socket
 }
 
-RT.makeSocket('effect-node', 'en')
-
-// function prepSocket () {
-//   try {
-//     RT.makeSocket('effect-node', 'en')
-//   } catch (e) {
-//     console.log(e)
-//     setTimeout(() => {
-//       prepSocket()
-//     }, 1000 * 10)
-//   }
-// }
+export const RT = {
+  en: makeSocket('effect-node')
+}
+var iAXIOS = makeAxios()
 
 export let myself = false
 
 export let checkLogin = async () => {
   try {
     await getMe()
-    RT.en.close()
-    RT.en.connect()
     return true
   } catch (e) {
     return false
@@ -122,7 +105,6 @@ export let checkLogin = async () => {
 }
 
 export const getMe = () => {
-  iAXIOS = makeAxios()
   return iAXIOS.get('/myself')
     .then((resp) => {
       myself = resp.data
@@ -139,7 +121,7 @@ export const login = (data) => {
     .then((resp) => {
       window.localStorage.setItem('jwt_remember_me', resp.data.token)
       iAXIOS = makeAxios()
-      // prepSocket()
+      RT.en = makeSocket('effect-node')
       return resp
     })
 }
@@ -150,12 +132,13 @@ export const logout = (data) => {
 }
 
 export class TableSync {
-  constructor ({ socket = RT.en, namespace, getArray, $forceUpdate = () => {} }) {
-    this.socket = socket
+  constructor ({ namespace, getArray, $forceUpdate = () => {} }) {
     this.namespace = namespace
     this.getArray = getArray
     this.$forceUpdate = $forceUpdate
-    this.sync()
+  }
+  get socket () {
+    return RT.en || { emit () {}, on () {} }
   }
   add ({ data }) {
     this.doRemote({ data: data, method: 'add' })
