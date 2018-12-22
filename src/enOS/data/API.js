@@ -34,32 +34,45 @@ if (process.env.NODE_ENV === 'production') {
 
 export const PROXY_URL = baseURL + 'yo/proxy'
 
-var iAXIOS = axios.create({
-  withCredentials: true,
-  baseURL
-})
+var makeAxios = ({ headers = {} }) => {
+  var iAXIOS = axios.create({
+    withCredentials: true,
+    headers,
+    baseURL
+  })
 
-iAXIOS.interceptors.request.use((config) => {
-  // Do something before request is sent
-  NProgress.start()
-  return config
-}, (error) => {
-  NProgress.done()
-  // Do something with request error
-  return Promise.reject(error)
-})
+  iAXIOS.interceptors.request.use((config) => {
+    // Do something before request is sent
+    NProgress.start()
+    return config
+  }, (error) => {
+    NProgress.done()
+    // Do something with request error
+    return Promise.reject(error)
+  })
 
-// Add a response interceptor
-iAXIOS.interceptors.response.use((response) => {
-  NProgress.done()
-  // Do something with response data
-  return response
-}, (error) => {
-  NProgress.done()
-  // Do something with response error
-  return Promise.reject(error)
-})
+  // Add a response interceptor
+  iAXIOS.interceptors.response.use((response) => {
+    NProgress.done()
+    // Do something with response data
+    return response
+  }, (error) => {
+    NProgress.done()
+    // Do something with response error
+    return Promise.reject(error)
+  })
+  return iAXIOS
+}
 
+let rememberMe = window.localStorage.getItem('jwt_remember_me')
+let axiosConfig = {}
+if (rememberMe) {
+  axiosConfig.headers = {
+    'Authorization': `bearer ${rememberMe}`
+  }
+}
+
+var iAXIOS = makeAxios(axiosConfig)
 // RT....
 
 export const RT = {
@@ -103,9 +116,10 @@ export let checkLogin = async () => {
 }
 
 export const getMe = () => {
-  return iAXIOS.post('/myself')
+  return iAXIOS.get('/myself')
     .then((resp) => {
       myself = resp.data
+      return resp
     })
 }
 
@@ -116,11 +130,18 @@ export const register = (data) => {
 export const login = (data) => {
   return iAXIOS.post('/login', data)
     .then((resp) => {
+      iAXIOS = makeAxios({
+        headers: {
+          'Authorization': `bearer ${resp.data.token}`
+        }
+      })
+      window.localStorage.setItem('jwt_remember_me', resp.data.token)
       return resp
     })
 }
 
 export const logout = (data) => {
+  window.localStorage.removeItem('jwt_remember_me')
   return iAXIOS.post('/logout', data)
 }
 
