@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     async reload () {
-      if (await API.LoginStatus.check()) {
+      if (await API.checkLogin()) {
         this.showProjects()
       } else {
         this.showLogin()
@@ -69,7 +69,8 @@ export default {
     },
     showProjects () {
       this.mode = 'projects'
-      this.ts.project.load({ data: { userID: API.LoginStatus.myID } })
+      this.projects = []
+      this.ts.project.load({ data: { userID: API.myself._id } })
     },
     async login () {
       await API.login(this.auth)
@@ -81,7 +82,7 @@ export default {
     async createProject () {
       this.ts.project.add({
         data: {
-          userID: API.LoginStatus.myID,
+          userID: API.myself._id,
           title: 'Project - ' + new Date(),
           desc: '',
           date: new Date()

@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 // import uuid from 'uuid'
 import NProgress from 'nprogress'
 import './nprogress.css'
-import { EventEmitter } from 'events'
+// import { EventEmitter } from 'events'
 
 NProgress.configure({
   minimum: 0.08,
@@ -23,6 +23,8 @@ NProgress.configure({
 var baseURL = 'http://localhost:3003/'
 
 // console.log(process.env.NODE_ENV)
+// debug
+// baseURL = `https://effectnode-heroku.herokuapp.com/`
 
 if (process.env.NODE_ENV === 'production') {
   baseURL = 'https://effectnode-heroku.herokuapp.com/'
@@ -34,10 +36,7 @@ export const PROXY_URL = baseURL + 'yo/proxy'
 
 var iAXIOS = axios.create({
   withCredentials: true,
-  baseURL,
-  headers: {
-    'X-Widget-Origin': window.location.origin
-  }
+  baseURL
 })
 
 iAXIOS.interceptors.request.use((config) => {
@@ -66,8 +65,8 @@ iAXIOS.interceptors.response.use((response) => {
 export const RT = {
   makeSocket: (path, name) => {
     // return io(`${baseURL}/${path}`, { transports: ['websocket'] })
-    let socket = io(`${baseURL}${path}`)
-    // let socket = io(`${baseURL}${path}`, { transports: ['websocket'] })
+    // let socket = io(`${baseURL}${path}`)
+    let socket = io(`${baseURL}${path}`, { transports: ['websocket'] })
     window.addEventListener('focus', () => {
       socket.connect()
     })
@@ -82,6 +81,7 @@ function prepSocket () {
   try {
     RT.makeSocket('effect-node', 'en')
   } catch (e) {
+    console.log(e)
     setTimeout(() => {
       prepSocket()
     }, 1000 * 10)
@@ -89,34 +89,24 @@ function prepSocket () {
 }
 prepSocket()
 
-export const LoginStatus = {
-  get myID () {
-    return this.myself && this.myself._id
-  },
-  myself: false,
-  isLoggedIn: false,
-  async check () {
-    if (this.isLoggedIn) {
-      return true
-    } else {
-      try {
-        RT.en.close()
-        RT.en.connect()
-        let resp = await myself()
-        LoginStatus.myself = resp.data
-        LoginStatus.isLoggedIn = true
-      } catch (e) {
-        console.error(e)
-        LoginStatus.myself = false
-        LoginStatus.isLoggedIn = false
-      }
-    }
-    return LoginStatus.isLoggedIn
+export let myself = false
+
+export let checkLogin = async () => {
+  try {
+    await getMe()
+    RT.en.close()
+    RT.en.connect()
+    return true
+  } catch (e) {
+    return false
   }
 }
 
-export const myself = () => {
-  return iAXIOS.get('/myself')
+export const getMe = () => {
+  return iAXIOS.post('/myself')
+    .then((resp) => {
+      myself = resp.data
+    })
 }
 
 export const register = (data) => {
@@ -125,22 +115,17 @@ export const register = (data) => {
 
 export const login = (data) => {
   return iAXIOS.post('/login', data)
-    .then(async (resp) => {
-      RT.en.close()
-      RT.en.connect()
+    .then((resp) => {
       return resp
     })
 }
 
 export const logout = (data) => {
-  LoginStatus.myself = false
-  LoginStatus.isLoggedIn = false
   return iAXIOS.post('/logout', data)
 }
 
-export class TableSync extends EventEmitter {
+export class TableSync {
   constructor ({ socket = RT.en, namespace, getArray, $forceUpdate = () => {} }) {
-    super()
     this.socket = socket
     this.namespace = namespace
     this.getArray = getArray

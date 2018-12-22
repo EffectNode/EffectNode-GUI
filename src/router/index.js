@@ -7,7 +7,7 @@ import Hello from '@/components/Hello'
 // import HeartSpace from '@/components/pages/HeartSpace/HeartSpace.vue'
 // import Login from '@/components/pages/Login/Login.vue'
 import enOS from '@/components/pages/enOS/enOS.vue'
-import { LoginStatus } from '@/enOS/data/API.js'
+// import { LoginStatus } from '@/enOS/data/API.js'
 import MenuPage from '@/enOS/menu.vue'
 
 // import Mindfulness from '@/components/pages/MindScene/Mindfulness.vue'
@@ -42,15 +42,15 @@ export default new Router({
     },
     {
       path: '/enOS/:projectID',
-      beforeEnter: async (from, to, next) => {
-        if (await LoginStatus.check()) {
-          next()
-        } else {
-          next('/menu')
-        }
-      },
+      // beforeEnter: async (from, to, next) => {
+      //   if (await LoginStatus.check()) {
+      //     next()
+      //   } else {
+      //     next('/menu')
+      //   }
+      // },
       component: enOS
-    },
+    }// ,
     // {
     //   path: '/tca',
     //   name: 'tca',
@@ -103,10 +103,10 @@ export default new Router({
     //     }
     //   ]
     // },
-    {
-      path: '*',
-      redirect: '/'
-    }
+    // {
+    //   path: '*',
+    //   redirect: '/'
+    // }
   ]
 })
 
