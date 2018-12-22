@@ -16,7 +16,7 @@ import TitleBar from '../TitleBar'
 import SVGArea from '../../SVGArea/Index.vue'
 // import nlp from 'compromise'
 // import csv from 'csvtojson'
-import * as Hive from '../../data/HiveApp.js'
+// import * as Hive from '../../data/HiveApp.js'
 
 export default {
   components: {
@@ -34,7 +34,6 @@ export default {
   },
   data () {
     return {
-      Hive,
       Doc: false,
       Data: false,
       root: false,
@@ -44,13 +43,12 @@ export default {
   },
   methods: {
     init () {
-      console.log(this.portal)
-      return Hive.get({ doc: 'happy' }).then(({ Data, Doc }) => {
-        this.Doc = Doc
-        this.Data = Data
-        this.root = Doc.root
-        this.ready = true
-      })
+      let { Doc, Data } = this.uiAPI.hive
+      console.log(this.uiAPI.hive)
+      this.Doc = Doc
+      this.Data = Data
+      this.root = Doc.root
+      this.ready = true
     }
   },
   computed: {

@@ -3,6 +3,7 @@ import io from 'socket.io-client'
 // import uuid from 'uuid'
 import NProgress from 'nprogress'
 import './nprogress.css'
+import { EventEmitter } from 'events'
 
 NProgress.configure({
   minimum: 0.08,
@@ -24,7 +25,7 @@ var baseURL = 'http://localhost:3003/'
 // console.log(process.env.NODE_ENV)
 
 if (process.env.NODE_ENV === 'production') {
-  baseURL = 'https://effect-node-cloud.herokuapp.com/'
+  baseURL = 'https://effectnode-heroku.herokuapp.com/'
 } else if (window.location.host.indexOf('192') !== -1) {
   baseURL = 'http://' + window.location.hostname + ':3003/'
 }
@@ -60,29 +61,34 @@ iAXIOS.interceptors.response.use((response) => {
   return Promise.reject(error)
 })
 
-// sockets....
+// RT....
 
-var _sockets = []
-var makeSocket = (path) => {
-  // return io(`${baseURL}/${path}`, { transports: ['websocket'] })
-  let socket = io(`${baseURL}${path}`, { transports: ['websocket'] })
-  window.addEventListener('focus', () => {
-    socket.connect()
-  })
-  _sockets.push(socket)
-  return socket
+export const RT = {
+  makeSocket: (path, name) => {
+    // return io(`${baseURL}/${path}`, { transports: ['websocket'] })
+    let socket = io(`${baseURL}${path}`, { transports: ['websocket'] })
+    window.addEventListener('focus', () => {
+      socket.connect()
+    })
+    RT.all.push(socket)
+    RT[name] = socket
+    return socket
+  },
+  all: []
 }
 
-export const sockets = {
-  makeSocket,
-  get list () {
-    return _sockets
-  }
+export function refresh () {
+  RT.all.forEach(async s => {
+    s.disconnect()
+    setTimeout(() => {
+      s.connect()
+    }, 100)
+  })
 }
 
 function prepSocket () {
   try {
-    sockets.effectnode = makeSocket('effectnode')
+    RT.makeSocket('effect-node', 'en')
   } catch (e) {
     setTimeout(() => {
       prepSocket()
@@ -91,10 +97,170 @@ function prepSocket () {
 }
 prepSocket()
 
-export const myself = () => {
-  return iAXIOS.get('/myself')
+export const LoginStatus = {
+  get myID () {
+    return this.myself && this.myself._id
+  },
+  myself: false,
+  isLoggedIn: false,
+  async check () {
+    try {
+      let resp = await myself()
+      LoginStatus.myself = resp.data
+      LoginStatus.isLoggedIn = true
+    } catch (e) {
+      console.log(e)
+      LoginStatus.myself = false
+      LoginStatus.isLoggedIn = false
+    }
+    return LoginStatus.isLoggedIn
+  }
 }
 
-export const projectWelcome = () => {
-  return iAXIOS.get('/en/project')
+export const myself = () => {
+  return iAXIOS.get('/myself')
+    .then((resp) => {
+      refresh()
+      LoginStatus.myself = resp.data
+      return resp
+    })
+}
+
+export const register = (data) => {
+  return iAXIOS.post('/register', data)
+}
+
+export const login = (data) => {
+  return iAXIOS.post('/login', data)
+    .then(() => {
+      return LoginStatus.check()
+        .then(() => {
+          return LoginStatus.myself
+        })
+    })
+}
+
+export const logout = (data) => {
+  LoginStatus.myself = false
+  LoginStatus.isLoggedIn = false
+  return iAXIOS.post('/logout', data)
+}
+
+export const sync = ({ userID }) => {
+  RT.en.emit('sync', { userID })
+}
+
+// export const getMyProjects = async () => {
+//   let data = await listProjects({ userID: LoginStatus.myself._id })
+//   return data
+// }
+// export const loadProject = ({ projectID }) => {
+
+// }
+
+export class TableSync extends EventEmitter {
+  constructor ({ socket = RT.en, namespace, getArray, $forceUpdate = () => {} }) {
+    super()
+    this.socket = socket
+    this.namespace = namespace
+    this.getArray = getArray
+    this.$forceUpdate = $forceUpdate
+    this.sync()
+  }
+  add ({ data }) {
+    this.doRemote({ data: data, method: 'add' })
+  }
+  remove ({ data }) {
+    this.doRemote({ data: data, method: 'remove' })
+  }
+  update ({ data }) {
+    this.doRemote({ data: data, method: 'update' })
+  }
+  load ({ data }) {
+    this.doRemote({ data: data, method: 'load' })
+  }
+  sync () {
+    this._onLoad()
+    this._onAdd()
+    this._onRemove()
+    this._onUpdate()
+  }
+  _onLoad () {
+    this.onLocal({
+      handler: ({ results }) => {
+        let arr = this.getArray()
+        let idList = arr.map(e => e._id)
+        results.forEach((item) => {
+          if (!idList.includes(item._id)) {
+            arr.push(item)
+          } else {
+            // let idx = idList.indexOf(item._id)
+            // arr[idx] = item
+          }
+        })
+      },
+      method: 'load'
+    })
+  }
+  _onAdd () {
+    this.onLocal({
+      handler: ({ results }) => {
+        this.getArray().push(results)
+      },
+      method: 'add'
+    })
+  }
+  _onRemove () {
+    this.onLocal({
+      handler: ({ results }) => {
+        let item = results
+        let arr = this.getArray()
+        let idx = arr.findIndex(a => a._id === item._id)
+        arr.splice(idx, 1)
+      },
+      method: 'remove'
+    })
+  }
+  _onUpdate () {
+    this.onLocal({
+      handler: ({ results, socketID }) => {
+        if (this.socket.id === socketID) {
+          console.log('dont update myself again after delay', this.socket.id === socketID)
+          return
+        }
+        let newItem = results
+        let arr = this.getArray()
+        let idx = arr.findIndex(a => a._id === newItem._id)
+        Object.keys(newItem).forEach((keyname) => {
+          let oldItem = arr[idx]
+          let isScalar = typeof oldItem[keyname] !== 'object'
+          if (isScalar) {
+            oldItem[keyname] = newItem[keyname]
+          } else {
+            if (newItem[keyname] instanceof Array) {
+              newItem[keyname].forEach((newSubItem, ii) => {
+                oldItem[keyname][ii] = newSubItem[ii]
+              })
+            } else {
+              for (var subKeyname in newItem[keyname]) {
+                oldItem[subKeyname] = newItem[subKeyname]
+              }
+            }
+          }
+        })
+        // this.$forceUpdate()
+      },
+      method: 'update'
+    })
+  }
+  doRemote ({ data, method }) {
+    this.socket.emit(`${this.namespace}::up::${method}`, data)
+    console.log(`${this.namespace}::up::${method}`, data)
+  }
+  onLocal ({ handler, method }) {
+    this.socket.on(`${this.namespace}::dn::${method}`, (data, fn) => {
+      handler(data, fn)
+      console.log(`${this.namespace}::dn::${method}`, data)
+    })
+  }
 }

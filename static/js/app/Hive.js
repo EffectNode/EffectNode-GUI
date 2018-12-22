@@ -4,10 +4,10 @@
     return '_hive_' + (1024 * 1024 * 1024 * Math.random()).toFixed(0)
   }
   let Data = g.HiveData = {
-    init: () => {
+    init: ({ RT }) => {
       return new Promise((resolve, reject) => {
         let Doc = Data.makeDocumentStack()
-        resolve({ Data, Doc })
+        resolve({ Data, Doc, RT })
       })
     },
     getToSocketByFromID ({ Doc, fromSocketID }) {
@@ -24,6 +24,7 @@
     },
     makein4out4Mod ({ Doc }) {
       let mod = Data.makeModule()
+
       Data.addModToDoc({ mod, Doc })
 
       let in1 = Data.makeSocket({ type: 'input', modID: mod.id })
@@ -96,6 +97,7 @@
     },
     makeModule () {
       let modID = getID()
+
       return {
         id: modID,
         pos: {

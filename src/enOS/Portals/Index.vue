@@ -91,18 +91,18 @@ export default {
     }
   },
   mounted () {
-    // this.loadLS()
+    this.loadLS()
     this.loadResizer()
   },
   watch: {
     metasJSON () {
-      // this.shouldSave()
+      this.shouldSave()
     },
     portalsJSON () {
-      // this.shouldSave()
+      this.shouldSave()
     },
     portalLength () {
-      // this.shouldSave()
+      this.shouldSave()
       this.loadResizer()
     }
   },
@@ -152,9 +152,8 @@ export default {
       }
     },
     loadLS () {
-      let items = window.localStorage.getItem('portals-effect-node')
-      let meta = window.localStorage.getItem('portals-meta-effect-node')
-
+      let items = window.localStorage.getItem(this.uiAPI.projectID + 'portals-effect-node')
+      let meta = window.localStorage.getItem(this.uiAPI.projectID + 'portals-meta-effect-node')
       try {
         if (items && meta) {
           this.uiAPI.portal.portals = JSON.parse(items)
@@ -176,8 +175,8 @@ export default {
     },
     shouldSave () {
       this.$nextTick(() => {
-        window.localStorage.setItem('portals-meta-effect-node', JSON.stringify(this.uiAPI.portal.meta))
-        window.localStorage.setItem('portals-effect-node', JSON.stringify(this.uiAPI.portal.portals))
+        window.localStorage.setItem(this.uiAPI.projectID + 'portals-meta-effect-node', JSON.stringify(this.uiAPI.portal.meta))
+        window.localStorage.setItem(this.uiAPI.projectID + 'portals-effect-node', JSON.stringify(this.uiAPI.portal.portals))
       })
     },
     onActivated (ip) {

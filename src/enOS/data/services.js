@@ -1,15 +1,25 @@
 import * as Portal from './portal.js'
+import '../../../static/js/app/Hive.js'
+import { RT, TableSync } from './API'
 
-export const Ser = {}
+export const HiveData = window.HiveData
 
 export const loadProject = ({ projectID }) => {
   return new Promise((resolve, reject) => {
     Promise.all([
-      Portal.makeEngine({ projectID })
+      Portal.init({ projectID, RT, TableSync }),
+      HiveData.init({ projectID, RT, TableSync })
     ])
       .then((res) => {
-        Ser.portal = res[0]
-        resolve(Ser)
+        let $uiAPI = {
+          projectID
+        }
+        $uiAPI.RT = RT
+        $uiAPI.TableSync = TableSync
+
+        $uiAPI.portal = res[0]
+        $uiAPI.hive = res[1]
+        resolve($uiAPI)
       })
       .catch((e) => {
         console.trace(e)

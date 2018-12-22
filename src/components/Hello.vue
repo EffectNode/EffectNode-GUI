@@ -8,7 +8,7 @@
         Effect Node is getting a revamp.
       </h1>
 
-      <router-link to="/enOS">enOS</router-link>
+      <router-link to="/menu">effect node OS</router-link>
 
       <!--
 

@@ -1,3 +1,4 @@
+// import * as API from './API'
 export function getID () {
   return '_' + (Math.random() * 100000000).toFixed(0)
 }
@@ -138,8 +139,10 @@ export function activate (api, current) {
   sortWinZ(api, current)
 }
 
-export function makeEngine () {
+export function init ({ projectID, RT }) {
   var mod = {}
+  mod.RT = RT
+  mod.projectID = projectID
   mod.meta = {}
   mod.portals = []
   mod.meta.space3DMode = false

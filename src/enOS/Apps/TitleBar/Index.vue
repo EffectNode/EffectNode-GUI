@@ -12,6 +12,9 @@ export default {
     uiAPI: {},
     portal: {}
   },
+  mounted () {
+    this.$parent.$emit('activated')
+  },
   methods: {
     close () {
       this.uiAPI.portal.removeWindow(this.portal)
