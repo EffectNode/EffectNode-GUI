@@ -47,7 +47,7 @@ export default {
   },
   async mounted () {
     this.ts.project = new API.TableSync({ namespace: 'project', getArray: () => { return this.projects } })
-    this.reload()
+    await this.reload()
   },
   methods: {
     async reload () {

@@ -34,12 +34,21 @@ if (process.env.NODE_ENV === 'production') {
 
 export const PROXY_URL = baseURL + 'yo/proxy'
 
-var makeAxios = ({ headers = {} }) => {
-  var iAXIOS = axios.create({
+var makeAxios = () => {
+  let config = {
     withCredentials: true,
-    headers,
+    headers: {},
     baseURL
-  })
+  }
+
+  let rememberMe = window.localStorage.getItem('jwt_remember_me')
+  if (rememberMe) {
+    config.headers = {
+      'Authorization': `bearer ${rememberMe}`
+    }
+  }
+
+  var iAXIOS = axios.create(config)
 
   iAXIOS.interceptors.request.use((config) => {
     // Do something before request is sent
@@ -64,43 +73,40 @@ var makeAxios = ({ headers = {} }) => {
   return iAXIOS
 }
 
-let rememberMe = window.localStorage.getItem('jwt_remember_me')
-let axiosConfig = {}
-if (rememberMe) {
-  axiosConfig.headers = {
-    'Authorization': `bearer ${rememberMe}`
-  }
-}
-
-var iAXIOS = makeAxios(axiosConfig)
+var iAXIOS = makeAxios()
 // RT....
 
 export const RT = {
   makeSocket: (path, name) => {
     // return io(`${baseURL}/${path}`, { transports: ['websocket'] })
     // let socket = io(`${baseURL}${path}`)
-    let socket = io(`${baseURL}${path}`, { transports: ['websocket'] })
+    let rememberMe = window.localStorage.getItem('jwt_remember_me')
+    let query = ``
+    if (rememberMe) {
+      query = `auth_token=${rememberMe}`
+    }
+
+    let socket = io(`${baseURL}${path}`, { transports: ['websocket'], query })
     window.addEventListener('focus', () => {
       socket.connect()
     })
-    RT.all.push(socket)
     RT[name] = socket
     return socket
-  },
-  all: []
-}
-
-function prepSocket () {
-  try {
-    RT.makeSocket('effect-node', 'en')
-  } catch (e) {
-    console.log(e)
-    setTimeout(() => {
-      prepSocket()
-    }, 1000 * 10)
   }
 }
-prepSocket()
+
+RT.makeSocket('effect-node', 'en')
+
+// function prepSocket () {
+//   try {
+//     RT.makeSocket('effect-node', 'en')
+//   } catch (e) {
+//     console.log(e)
+//     setTimeout(() => {
+//       prepSocket()
+//     }, 1000 * 10)
+//   }
+// }
 
 export let myself = false
 
@@ -116,6 +122,7 @@ export let checkLogin = async () => {
 }
 
 export const getMe = () => {
+  iAXIOS = makeAxios()
   return iAXIOS.get('/myself')
     .then((resp) => {
       myself = resp.data
@@ -130,12 +137,9 @@ export const register = (data) => {
 export const login = (data) => {
   return iAXIOS.post('/login', data)
     .then((resp) => {
-      iAXIOS = makeAxios({
-        headers: {
-          'Authorization': `bearer ${resp.data.token}`
-        }
-      })
       window.localStorage.setItem('jwt_remember_me', resp.data.token)
+      iAXIOS = makeAxios()
+      // prepSocket()
       return resp
     })
 }
