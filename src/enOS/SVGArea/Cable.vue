@@ -9,6 +9,8 @@
 <script>
 export default {
   props: {
+    Data: {},
+    Doc: {},
     uniq: {},
     socketuis: {},
     pair: {},
@@ -16,6 +18,9 @@ export default {
     // bridge: {
     //   required: true
     // }
+  },
+  mounted () {
+    // console.log(this.pair, this.aaBridge)
   },
   components: {
   },
@@ -33,7 +38,7 @@ export default {
     bBridge () {
       let socketUI = this.socketuis.find(s => {
         // console.log(s)
-        return this.pair.socket.to === s.socket.socket.to
+        return this.pair.socket.to === s.socket.socket.from
       })
       if (socketUI) {
         return socketUI.bridge.a

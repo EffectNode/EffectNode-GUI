@@ -14,23 +14,27 @@
         Data.TableSync = api.TableSync
         Data.RT = api.RT
         Data.listen({ Data, Doc })
+
         resolve({ Data, Doc })
       })
     },
-    listen ({ Data, Doc }) {
+    async listen ({ Data, Doc }) {
       let TableSync = Data.TableSync
       Data.ts.modules = new TableSync({ namespace: 'boxes', getArray: () => { return Doc.root.modules } })
       Data.ts.connectors = new TableSync({ namespace: 'connectors', getArray: () => { return Doc.root.connectors } })
+      return new Promise((resolve) => {
+        Data.RT.en.emit('open-hive', {
+          projectID: Doc.projectID
+        }, async () => {
+          Data.ts.modules.sync()
+          Data.ts.connectors.sync()
 
-      Data.RT.en.emit('open-hive', {
-        projectID: Doc.projectID
-      }, () => {
-        Data.ts.modules.sync()
-        Data.ts.connectors.sync()
+          console.log({ userID: Doc.userID, projectID: Doc.projectID })
+          Data.ts.connectors.hydrate({ userID: Doc.userID, projectID: Doc.projectID })
+          Data.ts.modules.hydrate({ userID: Doc.userID, projectID: Doc.projectID })
 
-        console.log({ userID: Doc.userID, projectID: Doc.projectID })
-        Data.ts.modules.hydrate({ userID: Doc.userID, projectID: Doc.projectID })
-        Data.ts.connectors.hydrate({ userID: Doc.userID, projectID: Doc.projectID })
+          resolve()
+        })
       })
     },
     getToSocketByFromID ({ Doc, fromSocketID }) {
@@ -46,7 +50,7 @@
       return sockets.filter(s => s.modID === modID && s.type === 'output')
     },
     async makein4out4Mod ({ Doc }) {
-      let mod = Data.makeModule({ Doc })
+      let mod = await Data.makeModule({ Doc })
 
       // Data.addModToDoc({ mod, Doc })
 
@@ -77,11 +81,59 @@
     getAllSockets ({ Doc }) {
       return Doc.root.connectors
     },
+    getAllModules ({ Doc }) {
+      return Doc.root.modules
+    },
+    getAllModulesOfProject ({ Doc, projectID }) {
+      return Doc.root.modules.filter(c => c.projectID === projectID)
+    },
+    getAllSocketsOfProject ({ Doc, projectID }) {
+      return Doc.root.connectors.filter(c => c.projectID === projectID)
+    },
     addSocketToDoc ({ socket, Doc }) {
       Doc.root.connectors.push(socket)
     },
+    getSocketByID ({ id, Doc }) {
+      return Doc.root.connectors.find(s => s.socket.from === id)
+    },
     addModToDoc ({ mod, Doc }) {
       Doc.root.modules.push(mod)
+    },
+    getTop ({ Doc, socket }) {
+      let box = Doc.root.modules.find(m => m.id === socket.modID)
+      let boxW = box.size.w
+      // let boxH = box.size.h
+      let inputs = Data.getModInputs({ Doc, modID: box.id }) || []
+      // let outputs = Data.getModOutputs({ Doc, modID: box.id }) || []
+      let inputW = boxW / (inputs.length || 3)
+      // let outputW = boxW / (outputs.length || 3)
+
+      return {
+        rect: {
+          x: box.pos.x + inputs.find(e => e.id === socket.id) * inputW,
+          y: box.pos.y - 13,
+          w: inputW,
+          h: 13
+        }
+      }
+    },
+    getBottom ({ Doc, socket }) {
+      let box = Doc.root.modules.find(m => m.id === socket.modID)
+      let boxW = box.size.w
+      let boxH = box.size.h
+      // let inputs = Data.getModInputs({ Doc, modID: box.id }) || []
+      let outputs = Data.getModOutputs({ Doc, modID: box.id }) || []
+      // let inputW = boxW / (inputs.length || 3)
+      let outputW = boxW / (outputs.length || 3)
+
+      return {
+        rect: {
+          x: box.pos.x + outputs.find(e => e.id === socket.id) * outputW,
+          y: box.pos.y + boxH - 13 + 13,
+          w: outputW,
+          h: 13
+        }
+      }
     },
     removeModToDoc ({ mod, Doc }) {
       let modules = Doc.root.modules
@@ -123,7 +175,7 @@
       let obj = resp.data.results
       return obj
     },
-    makeModule ({ Doc }) {
+    async makeModule ({ Doc }) {
       let modID = getID(Doc.projectID + 'module')
       let data = {
         userID: Doc.userID,
@@ -139,8 +191,10 @@
         },
         src: ``
       }
-      Data.ts.modules.add(data)
-      return data
+
+      let resp = await Data.ts.modules.add(data)
+      let obj = resp.data.results
+      return obj
     }// ,
     // makeBridge () {
     //   return {

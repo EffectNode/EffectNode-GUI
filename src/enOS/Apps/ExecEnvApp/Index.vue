@@ -4,6 +4,16 @@
       {{ portal.win.name }}
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
+      <h1>Inputs</h1>
+      <pre>{{ connectedInputs }}</pre>
+      <h2>Outpus</h2>
+      <pre>{{ connectedOutputs }}</pre>
+      <!--
+      {{ modules }}
+      {{ connectors }}
+      {{ pairs }}
+      -->
+
       <!-- Lok Lok -->
       <!-- <SVGArea v-if="portal && ready" :Doc="Doc" :connectors="connectors" :modules="modules" :Data="Data" :root="root" :win="portal.win" /> -->
     </div>
@@ -57,12 +67,23 @@ export default {
     }
   },
   computed: {
+    connectedInputs () {
+      return this.connectors.filter((c) => {
+        return c.socket.to && c.type === 'input'
+      })
+    },
+    connectedOutputs () {
+      return this.connectors.filter((c) => {
+        return c.socket.to && c.type === 'output'
+      })
+    },
     connectors () {
       if (this.root) {
-        let modIDs = this.root.modules.map(m => m.id)
-        return this.root.connectors.filter(c => {
-          return modIDs.includes(c.mod.from) || modIDs.includes(c.mod.to)
-        })
+        // let modIDs = this.root.modules.map(m => m.id)
+        return this.root.connectors
+        // .filter(c => {
+        //   return modIDs.includes(c.mod.from) || modIDs.includes(c.mod.to)
+        // })
       } else {
         return []
       }
@@ -88,13 +109,14 @@ export default {
   /* background: linear-gradient(90deg, #eef3ff 0%, #8aa3d4 100%); */
   box-sizing: border-box;
   border-radius: 10px 10px 10px 10px;
-  color: white;
+  color: black;
   background-image: radial-gradient( circle farthest-corner at 100% 100%, rgb(193, 234, 255) 0%, rgb(255, 255, 255) 90.1% );
 /* background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(149,219,254,1) 0%, rgba(7,134,197,1) 90.1% ); */
 }
 
 .content-div{
   height: calc(100% - 30px);
+  overflow: auto;
   /* -webkit-overflow-scrolling: touch;
   overflow: auto; */
 }

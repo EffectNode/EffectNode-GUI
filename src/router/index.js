@@ -47,9 +47,7 @@ export default new Router({
     {
       path: '/enOS/:projectID',
       beforeEnter: async (from, to, next) => {
-        if (Promise.all([
-          API.checkLogin()
-        ])) {
+        if (await API.checkLogin()) {
           next()
         } else {
           next('/menu')

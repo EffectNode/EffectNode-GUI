@@ -247,7 +247,7 @@ export class TableSync {
           //   }
           // }
         })
-        this.$forceUpdate()
+        // this.$forceUpdate()
       },
       method: 'update'
     })

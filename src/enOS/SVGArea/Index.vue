@@ -48,8 +48,8 @@
           </ModuleBox>
         </g>
 
-        <g :key="`${uniq}cabel-${pair.socket.from + pair.socket.to}`" v-for="(pair) in linePairs">
-          <Cable :uniq="uniq" :pair="pair" :socketuis="socketuis" :svg="$refs['svg']" v-if="$refs.svg" @move="onMoveCable"></Cable>
+        <g :key="`${uniq}cabel-${pair.socket.from + pair.socket.to}`" v-for="(pair) in outputCable">
+          <Cable :Data="Data" :Doc="Doc" :uniq="uniq" :pair="pair" :socketuis="socketuis" :svg="$refs['svg']" v-if="$refs.svg" @move="onMoveCable"></Cable>
         </g>
 
         <!-- <rect :x="box.b.x" :y="box.b.y" :width="box.b.w" :height="box.b.h" fill="lightgreen" stroke="black" >
@@ -105,9 +105,9 @@ export default {
   watch: {
   },
   computed: {
-    linePairs () {
-      return this.root.connectors.filter(c => {
-        return c.socket.to && c.type === 'output'
+    outputCable () {
+      return this.root.connectors.filter((c, idx) => {
+        return c.socket.to && c.socket.from && c.type === 'output'
       })
     }
   },
@@ -147,7 +147,11 @@ export default {
     },
     onConnect (v) {
       v.from.socket.to = v.to.socket.from
-      v.to.socket.to = v.from.socket.to // to already has it
+      v.to.socket.to = v.from.socket.from // to already has it
+
+      v.from.mod.to = v.to.mod.from
+      v.to.mod.to = v.from.mod.from
+
       console.log('con', v)
       this.$emit('connect', v)
     },

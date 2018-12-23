@@ -2,6 +2,22 @@
   <g>
     <rect ref="rect" :width="boxW" :height="boxH" :x="box.pos.x" :y="box.pos.y" class="box" :fill="`url(#${uniq}kale-salad)`"></rect>
 
+    <!-- <foreignObject :x="box.pos.x" :y="box.pos.y + 10" :width="boxW" :height="boxH - 10">
+      <div class="" style="width: 100%; height: 100%; position: relative;" xmlns="http://www.w3.org/1999/xhtml" >
+        <div style="width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;">
+
+        </div>
+        <div style="position: absolute; top: 0px; left: 0px;" class="d-noselect text">
+          <div :key="input.id" v-for="input in inputs" class="labels" >
+            <input type="text" v-model="input.name" />
+          </div>
+          <div :key="output.id" v-for="output in outputs" class="labels" >
+            <input type="text" v-model="output.name" />
+          </div>
+        </div>
+      </div>
+    </foreignObject> -->
+
     <g :key="input.id" v-for="(input, ii) in inputs">
       <IOSocket :boxH="boxH" :uniq="uniq" :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :socket="input" :win="win" :svg="svg" type="input" :x="box.pos.x + ii * inputW" :y="box.pos.y - 13" :w="inputW" :h="13" />
     </g>
@@ -10,14 +26,7 @@
       <IOSocket :boxH="boxH" :uniq="uniq" :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :socket="output" :win="win" :svg="svg" type="output" :x="box.pos.x + ii * outputW" :y="box.pos.y + boxH - 13 + 13" :w="outputW" :h="13" />
     </g>
 
-    <circle style="cursor: pointer;" :cx="box.pos.x + boxW - 7.5 - 1" :cy="box.pos.y + 7.5 + 1" :r="7.5" :height="20" @click="$emit('toggle-size', box)" :fill="`url(#${uniq}disco-club)`">
-    </circle>
-
-    <!-- <foreignObject :x="box.pos.x" :y="box.pos.y" :width="boxW" :height="boxH">
-      <div class="noselect" style="width: 100%; height: 100%; position: relative;" xmlns="http://www.w3.org/1999/xhtml" >
-        <slot></slot>
-      </div>
-    </foreignObject> -->
+    <circle style="cursor: pointer;" :cx="box.pos.x + 7.5 + 1" :cy="box.pos.y + 7.5 + 1" :r="7.5" :height="20" @click="$emit('toggle-size', box)" :fill="`url(#${uniq}disco-club)`"></circle>
 
   </g>
 </template>
@@ -124,6 +133,7 @@ export default {
 .box{
   /* fill: url(#kale-salad); */
   stroke: black;
+  cursor: grab;
 }
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
@@ -133,5 +143,12 @@ export default {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+}
+.text{
+  color: black;
+}
+
+.labels{
+  display: inline-block;
 }
 </style>

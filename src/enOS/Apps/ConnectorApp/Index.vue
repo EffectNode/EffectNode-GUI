@@ -72,7 +72,12 @@ export default {
     updateBox ({ box }) {
       let Data = this.uiAPI.hive.Data
       // let Doc = this.uiAPI.hive.Doc
-      Data.ts.modules.update(box)
+
+      Data.ts.modules.animate(box)
+      clearTimeout(this.boxTimeout)
+      this.boxTimeout = setTimeout(() => {
+        Data.ts.modules.update(box)
+      }, 1000)
     },
     addModule () {
       let Data = this.uiAPI.hive.Data
@@ -91,10 +96,11 @@ export default {
   computed: {
     connectors () {
       if (this.root) {
-        let modIDs = this.modules.map(m => m.id)
-        return this.root.connectors.filter(c => {
-          return modIDs.includes(c.mod.from) || modIDs.includes(c.mod.to)
-        })
+        // let modIDs = this.modules.map(m => m.id)
+        // return this.root.connectors.filter(c => {
+        //   return modIDs.includes(c.mod.from) || modIDs.includes(c.mod.to)
+        // })
+        return this.root.connectors
       } else {
         return []
       }

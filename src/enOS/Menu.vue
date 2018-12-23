@@ -82,12 +82,10 @@ export default {
     },
     async createProject () {
       this.ts.project.add({
-        data: {
-          userID: API.myself._id,
-          title: 'Project - ' + new Date(),
-          desc: '',
-          date: new Date()
-        }
+        userID: API.myself._id,
+        title: 'Project - ' + new Date(),
+        desc: '',
+        date: new Date()
       })
     }
   }

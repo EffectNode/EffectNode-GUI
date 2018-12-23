@@ -182,6 +182,8 @@ export default {
 
           console.log('enter')
           this.hand.should = 'connect'
+        } else {
+          this.hand.should = 'nothing'
         }
         // console.log(from, to)
       },
