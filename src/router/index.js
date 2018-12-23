@@ -6,8 +6,8 @@ import Hello from '@/components/Hello'
 // import PrivacyPolicy from '@/components/pages/PrivacyPolicy/PrivacyPolicy.vue'
 // import HeartSpace from '@/components/pages/HeartSpace/HeartSpace.vue'
 // import Login from '@/components/pages/Login/Login.vue'
-import enOS from '@/components/pages/enOS/enOS.vue'
-// import { LoginStatus } from '@/enOS/data/API.js'
+import enOS from '@/enOS/enOS.vue'
+import * as API from '@/enOS/data/API.js'
 import MenuPage from '@/enOS/menu.vue'
 
 // import Mindfulness from '@/components/pages/MindScene/Mindfulness.vue'
@@ -41,14 +41,20 @@ export default new Router({
       component: MenuPage
     },
     {
+      path: '/enOS',
+      redirect: '/menu'
+    },
+    {
       path: '/enOS/:projectID',
-      // beforeEnter: async (from, to, next) => {
-      //   if (await LoginStatus.check()) {
-      //     next()
-      //   } else {
-      //     next('/menu')
-      //   }
-      // },
+      beforeEnter: async (from, to, next) => {
+        if (Promise.all([
+          API.checkLogin()
+        ])) {
+          next()
+        } else {
+          next('/menu')
+        }
+      },
       component: enOS
     }// ,
     // {

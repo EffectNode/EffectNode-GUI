@@ -22,7 +22,6 @@ export default {
   computed: {
     aBridge () {
       let socketUI = this.socketuis.find(s => {
-        // console.log(s)
         return this.pair.socket.from === s.socket.socket.from
       })
       if (socketUI) {
@@ -108,6 +107,7 @@ export default {
       // }
     },
     getFromCenter (a, b) {
+      console.log(a, b)
       let ax = a.rect.x + a.rect.w / 2
       let ay = a.rect.y + a.rect.h / 2
       let bx = b.rect.x + b.rect.w / 2

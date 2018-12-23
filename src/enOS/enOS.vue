@@ -27,22 +27,21 @@ export default {
     }
   },
   async mounted () {
-    if (!this.$route.params.projectID) {
+    if (!this.$route.params.projectID || this.$route.params.projectID === '') {
       this.$router.push('/menu')
       return
     }
     // this.$router.push(`/enOS/${this.$route.params.projectID}`)
 
-    this.loadProject({ _id: this.$route.params.projectID })
+    this.startENOS({ _id: this.$route.params.projectID })
     // this.loadProject({ projectSlug: 123 })
   },
   methods: {
-    async loadProject ({ _id }) {
-      API.loadProject({ projectID: _id })
-
-      Services.init({ projectID: _id }).then((api) => {
+    async startENOS ({ _id }) {
+      await API.checkLogin()
+      Services.loadProject({ projectID: _id, userID: API.myself._id }).then((uiAPI) => {
         this.mode = 'loading'
-        this.uiAPI = api
+        this.uiAPI = uiAPI
         this.$nextTick(() => {
           this.mode = 'enOS'
         })

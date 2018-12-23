@@ -139,9 +139,8 @@ export function activate (api, current) {
   sortWinZ(api, current)
 }
 
-export function init ({ projectID, RT }) {
+export function init ({ projectID }) {
   var mod = {}
-  mod.RT = RT
   mod.projectID = projectID
   mod.meta = {}
   mod.portals = []

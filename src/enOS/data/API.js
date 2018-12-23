@@ -100,6 +100,7 @@ export let checkLogin = async () => {
     await getMe()
     return true
   } catch (e) {
+    window.localStorage.removeItem('jwt_remember_me')
     return false
   }
 }
@@ -140,25 +141,47 @@ export class TableSync {
   get socket () {
     return RT.en || { emit () {}, on () {} }
   }
-  add ({ data }) {
-    this.doRemote({ data: data, method: 'add' })
+  add (data) {
+    return this.doRemote({ data: data, method: 'add' })
   }
-  remove ({ data }) {
-    this.doRemote({ data: data, method: 'remove' })
+  remove (data) {
+    return this.doRemote({ data: data, method: 'remove' })
   }
-  update ({ data }) {
-    this.doRemote({ data: data, method: 'update' })
+  update (data) {
+    return this.doRemote({ data: data, method: 'update' })
   }
-  load ({ data }) {
-    this.doRemote({ data: data, method: 'load' })
+  hydrate (data) {
+    return this.doRemote({ data: data, method: 'hydrate' })
+  }
+  animate (data) {
+    return this.doRemote({ data: data, method: 'animate' })
   }
   sync () {
-    this._onLoad()
+    this._onHydrate()
     this._onAdd()
     this._onRemove()
     this._onUpdate()
+    this._onAnimate()
   }
-  _onLoad () {
+  _onAnimate () {
+    this.onLocal({
+      handler: ({ results }) => {
+        console.log(results)
+        let newItem = results
+        let arr = this.getArray()
+        let idx = arr.findIndex(a => a._id === newItem._id)
+        Object.keys(newItem).forEach((keyname) => {
+          let oldItem = arr[idx]
+          if (newItem && oldItem) {
+            oldItem[keyname] = newItem[keyname]
+          }
+        })
+        this.$forceUpdate()
+      },
+      method: 'animate'
+    })
+  }
+  _onHydrate () {
     this.onLocal({
       handler: ({ results }) => {
         let arr = this.getArray()
@@ -171,14 +194,17 @@ export class TableSync {
             // arr[idx] = item
           }
         })
+        this.$forceUpdate()
       },
-      method: 'load'
+      method: 'hydrate'
     })
   }
   _onAdd () {
     this.onLocal({
       handler: ({ results }) => {
+        console.log(results)
         this.getArray().push(results)
+        this.$forceUpdate()
       },
       method: 'add'
     })
@@ -190,6 +216,7 @@ export class TableSync {
         let arr = this.getArray()
         let idx = arr.findIndex(a => a._id === item._id)
         arr.splice(idx, 1)
+        this.$forceUpdate()
       },
       method: 'remove'
     })
@@ -202,29 +229,36 @@ export class TableSync {
         let idx = arr.findIndex(a => a._id === newItem._id)
         Object.keys(newItem).forEach((keyname) => {
           let oldItem = arr[idx]
-          let isScalar = typeof oldItem[keyname] !== 'object'
-          if (isScalar) {
+          if (newItem && oldItem) {
             oldItem[keyname] = newItem[keyname]
-          } else {
-            if (newItem[keyname] instanceof Array) {
-              newItem[keyname].forEach((newSubItem, ii) => {
-                oldItem[keyname][ii] = newSubItem[ii]
-              })
-            } else {
-              for (var subKeyname in newItem[keyname]) {
-                oldItem[subKeyname] = newItem[subKeyname]
-              }
-            }
           }
+          // let isScalar = typeof oldItem[keyname] !== 'object'
+          // if (isScalar) {
+          //   oldItem[keyname] = newItem[keyname]
+          // } else {
+          //   if (newItem[keyname] instanceof Array) {
+          //     newItem[keyname].forEach((newSubItem, ii) => {
+          //       oldItem[keyname][ii] = newSubItem[ii]
+          //     })
+          //   } else {
+          //     Object.keys(newItem[keyname]).forEach((subKeyname) => {
+          //       oldItem[subKeyname] = newItem[subKeyname]
+          //     })
+          //   }
+          // }
         })
-        // this.$forceUpdate()
+        this.$forceUpdate()
       },
       method: 'update'
     })
   }
   doRemote ({ data, method }) {
-    this.socket.emit(`${this.namespace}::up::${method}`, data)
-    console.log(`${this.namespace}::up::${method}`, data)
+    return new Promise((resolve) => {
+      console.log(`${this.namespace}::up::${method}`, data)
+      this.socket.emit(`${this.namespace}::up::${method}`, data, (v) => {
+        resolve(v)
+      })
+    })
   }
   onLocal ({ handler, method }) {
     this.socket.on(`${this.namespace}::dn::${method}`, (data, fn) => {

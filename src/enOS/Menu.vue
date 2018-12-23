@@ -68,10 +68,10 @@ export default {
       }
     },
     showProjects () {
-      this.ts.project.sync()
       this.mode = 'projects'
       this.projects = []
-      this.ts.project.load({ data: { userID: API.myself._id } })
+      this.ts.project.sync()
+      this.ts.project.hydrate({ userID: API.myself._id })
     },
     async login () {
       await API.login(this.auth)

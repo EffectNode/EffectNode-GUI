@@ -1,5 +1,5 @@
 <template>
-  <rect :x="view.x.toFixed(2)" :y="view.y.toFixed(2)" :width="win.width" :height="win.height" fill="transparent" stroke="none">
+  <rect :x="view.x.toFixed(2)" :y="view.y.toFixed(2)" :width="win.width" :height="win.height - 30" fill="transparent" stroke="none">
   </rect>
 </template>
 

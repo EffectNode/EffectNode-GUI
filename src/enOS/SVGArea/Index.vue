@@ -49,7 +49,7 @@
         </g>
 
         <g :key="`${uniq}cabel-${pair.socket.from + pair.socket.to}`" v-for="(pair) in linePairs">
-          <Cable :uniq="uniq" :pair="pair" :socketuis="socketuis" :svg="$refs['svg']" v-if="$refs.svg" @move="onMove"></Cable>
+          <Cable :uniq="uniq" :pair="pair" :socketuis="socketuis" :svg="$refs['svg']" v-if="$refs.svg" @move="onMoveCable"></Cable>
         </g>
 
         <!-- <rect :x="box.b.x" :y="box.b.y" :width="box.b.w" :height="box.b.h" fill="lightgreen" stroke="black" >
@@ -57,8 +57,10 @@
         <!-- <rect x="200" y="100" width="50" height="50" fill="lightgreen" stroke="black">
         </rect> -->
         <!-- M 100,75 C 150,75 150,125 200,125 -->
+
       </svg>
       <div class="tools">
+        <span style="display: none;">{{ root }}</span>
         <button @click="scrolHome">Home View</button>
         <button @click="duplicateWindow">Duplicate Window</button>
       </div>
@@ -104,7 +106,7 @@ export default {
   },
   computed: {
     linePairs () {
-      return this.connectors.filter(c => {
+      return this.root.connectors.filter(c => {
         return c.socket.to && c.type === 'output'
       })
     }
@@ -115,13 +117,25 @@ export default {
         anime({
           targets: box.size,
           w: 500,
-          h: 200
+          h: 200,
+          update: () => {
+            this.$emit('animateBox', { box })
+          },
+          complete: () => {
+            this.$emit('saveBox', { box })
+          }
         })
       } else {
         anime({
           targets: box.size,
           w: 200,
-          h: 40
+          h: 40,
+          update: () => {
+            this.$emit('animateBox', { box })
+          },
+          complete: () => {
+            this.$emit('saveBox', { box })
+          }
         })
       }
     },
@@ -133,13 +147,15 @@ export default {
     },
     onConnect (v) {
       v.from.socket.to = v.to.socket.from
-      v.to.socket.to = v.from.socket.to
+      v.to.socket.to = v.from.socket.to // to already has it
       console.log('con', v)
+      this.$emit('connect', v)
     },
     onDisconnect (v) {
-      v.from.socket.to = false
-      v.to.socket.to = false
+      v.from.socket.to = ''
+      v.to.socket.to = ''
       console.log('dis', v)
+      this.$emit('disconnect', v)
     },
     scrolHome () {
       anime({
@@ -239,8 +255,10 @@ export default {
     onMoveBox (evt) {
       evt.box.pos.x += evt.dx
       evt.box.pos.y += evt.dy
+
+      this.$emit('moveBox', { box: evt.box })
     },
-    onMove (evt) {
+    onMoveCable (evt) {
       evt.box.rect.x += evt.dx
       evt.box.rect.y += evt.dy
     },

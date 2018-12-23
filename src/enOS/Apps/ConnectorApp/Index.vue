@@ -5,7 +5,17 @@
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
       <!-- Lok Lok -->
-      <SVGArea v-if="portal && ready" :Doc="Doc" :meta="portal.data" :connectors="connectors" :modules="modules" :uiAPI="uiAPI" :Data="Data" :root="root" :win="portal.win" />
+      <SVGArea
+
+      @saveBox="updateBox"
+      @animateBox="animateBox"
+      @disconnect="updateBothSocket"
+      @connect="updateBothSocket"
+      @moveBox="updateBox"
+      v-if="portal && ready && root" :Doc="Doc" :meta="portal.data" :connectors="connectors" :modules="root.modules" :uiAPI="uiAPI" :Data="Data" :root="root" :win="portal.win" />
+    </div>
+    <div class="buttons">
+      <button @click="addModule">4by4</button>
     </div>
   </div>
 </template>
@@ -31,6 +41,13 @@ export default {
     // this.$on('resize', ({ portal }) => {
     //   this.portal = portal
     // })
+    let Data = this.uiAPI.hive.Data
+    Data.ts.modules.$forceUpdate = () => {
+      this.$forceUpdate()
+    }
+    Data.ts.connectors.$forceUpdate = () => {
+      this.$forceUpdate()
+    }
   },
   data () {
     return {
@@ -42,6 +59,26 @@ export default {
     }
   },
   methods: {
+    updateBothSocket ({ from, to }) {
+      let Data = this.uiAPI.hive.Data
+      Data.ts.connectors.update(from)
+      Data.ts.connectors.update(to)
+    },
+    animateBox ({ box }) {
+      let Data = this.uiAPI.hive.Data
+      // let Doc = this.uiAPI.hive.Doc
+      Data.ts.modules.animate(box)
+    },
+    updateBox ({ box }) {
+      let Data = this.uiAPI.hive.Data
+      // let Doc = this.uiAPI.hive.Doc
+      Data.ts.modules.update(box)
+    },
+    addModule () {
+      let Data = this.uiAPI.hive.Data
+      let Doc = this.uiAPI.hive.Doc
+      Data.makein4out4Mod({ Doc })
+    },
     init () {
       let { Doc, Data } = this.uiAPI.hive
       console.log(this.uiAPI.hive)
@@ -54,7 +91,7 @@ export default {
   computed: {
     connectors () {
       if (this.root) {
-        let modIDs = this.root.modules.map(m => m.id)
+        let modIDs = this.modules.map(m => m.id)
         return this.root.connectors.filter(c => {
           return modIDs.includes(c.mod.from) || modIDs.includes(c.mod.to)
         })
@@ -96,5 +133,11 @@ export default {
 
 .quotes-list{
   margin: 20px;
+}
+
+.buttons{
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
 }
 </style>
