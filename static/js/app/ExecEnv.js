@@ -6,7 +6,8 @@
     init: (uiAPI) => {
       return new Promise((resolve) => {
         let Sys = ExecEnv.makeLgocialStructure(uiAPI)
-        resolve({ ExecEnv, Sys })
+        uiAPI.execEnv = { ExecEnv, Sys }
+        resolve(uiAPI)
       })
     },
     makeLgocialStructure: (uiAPI) => {
@@ -45,10 +46,18 @@
             await this.instantiate()
             this.$emit('made', this.instance)
           } catch (e) {
+            console.log(e)
           }
         },
         async beforeDestroy () {
           this.$emit('clean', this.instance)
+          this.sockets.forEach(i => {
+            i.mod.to = false
+            i.socket.to = false
+          })
+          if (this.instance) {
+            this.FlowYo.$emit('onClean', { modID: this.mod.id })
+          }
         },
         methods: {
           instantiate () {
@@ -65,6 +74,8 @@
                     inputs: this.sockets.filter(s => s.type === 'input'),
                     outputs: this.sockets.filter(s => s.type === 'output')
                   })
+                  console.log('INSTANCE', this.instance)
+                  this.FlowYo.$emit('onReady', { modID: this.mod.id })
                   resolve()
                 } catch (e) {
                   reject(e)
@@ -78,15 +89,27 @@
 
       return new Vue({
         template: `
-          <div>
-            <module-runner :key="mod.id" :sockets="sockets" :mod="mod" v-for="mod in modules"></module-runner>
+          <div style="width: 100%; height: 100%;">
+            <div style="width: 100%; height: 100%" ref="rootDOM"></div>
+            <span style="display: none;">{{ root }}</span>
+            <div v-if="ready">
+              <module-runner :key="mod.id" :sockets="sockets" :mod="mod" v-for="mod in modules"></module-runner>
+            </div>
           </div>
         `,
         el: document.createElement('div'),
+        mounted () {
+          Resources.set('rootDOM', this.$refs.rootDOM)
+          this.ready = true
+        },
         data: {
-          modules: Data.getAllModulesOfProject({ Doc, projectID }),
-          sockets: Data.getAllSocketsOfProject({ Doc, projectID }),
+          ready: false,
+          root: Doc.root,
           FlowYo
+        },
+        computed: {
+          modules: () => Data.getAllModulesOfProject({ Doc, projectID }),
+          sockets: () => Data.getAllSocketsOfProject({ Doc, projectID })
         }
       })
     }

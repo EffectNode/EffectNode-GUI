@@ -1,7 +1,7 @@
 <template>
   <div class="full quotes-app" >
     <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
-      {{ portal.win.name }}
+      {{ portal.app }}
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
       <div ref="mounter" class="full">
@@ -63,7 +63,8 @@ export default {
       this.ready = true
 
       // console.log('OMG', )
-      this.$refs.mounter.appendChild(this.uiAPI.execEnv.Sys.$el)
+
+      // this.$refs.mounter.appendChild(this.uiAPI.execEnv.Sys.$el)
 
       // return Hive.get({ doc: 'happy' }).then(({ Data, Doc }) => {
       //   this.Doc = Doc

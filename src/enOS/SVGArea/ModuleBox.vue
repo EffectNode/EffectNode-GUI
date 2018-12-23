@@ -92,9 +92,31 @@ export default {
   mounted () {
     let h = {
       onMD: (evt) => {
+        if (evt.touches && evt.touches[0]) {
+          evt.preventDefault()
+          h.tsx = evt.touches[0].pageX
+          h.tsy = evt.touches[0].pageY
+        }
+
         this.isDown = true
       },
       onMM: (evt) => {
+        if (evt.touches && evt.touches[0]) {
+          evt.preventDefault()
+          h.dx = evt.touches[0].pageX - h.tsx
+          h.dy = evt.touches[0].pageY - h.tsy
+          h.tsx = evt.touches[0].pageX
+          h.tsy = evt.touches[0].pageY
+          if (this.isDown) {
+            this.$emit('move', {
+              box: this.box,
+              dx: h.dx,
+              dy: h.dy
+            })
+          }
+          return
+        }
+
         if (this.isDown) {
           this.$emit('move', {
             box: this.box,
@@ -108,6 +130,11 @@ export default {
         this.isDown = false
       }
     }
+
+    this.$refs.rect.addEventListener('touchstart', h.onMD, false)
+    this.$refs.rect.addEventListener('touchend', h.onMU, false)
+    this.$refs.rect.addEventListener('touchmove', h.onMM, false)
+    this.$refs.rect.addEventListener('touchcancel', h.onMU, false)
 
     this.$refs.rect.addEventListener('mousedown', h.onMD, false)
     this.$refs.rect.addEventListener('mouseup', h.onMU, false)

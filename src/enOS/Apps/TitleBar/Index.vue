@@ -1,5 +1,5 @@
 <template>
-  <div class="drag title" :class="{ inactive: !portal.win.active }">
+  <div class="drag-title title" :class="{ inactive: !portal.win.active }" ref="title">
       <slot></slot>
       <div class="minify" @click="hide"></div>
       <div class="close" @click="close"></div>
@@ -14,6 +14,13 @@ export default {
   },
   mounted () {
     this.$parent.$emit('activated')
+    let title = this.$refs.title
+    title.addEventListener('touchstart', (evt) => {
+      evt.preventDefault()
+    })
+    title.addEventListener('touchmove', (evt) => {
+      evt.preventDefault()
+    })
   },
   methods: {
     close () {
@@ -34,7 +41,9 @@ export default {
   border-radius: 10px 10px 0px 0px;
   cursor: move;
 }
-.drag{
+.drag-title{
+  touch-action: manipulation;
+
   background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(149,219,254,1) 0%, rgba(7,134,197,1) 90.1% );
   width: 100%;
   height: 30px;

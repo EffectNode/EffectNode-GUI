@@ -197,6 +197,11 @@ export default {
       }
     }
 
+    // this.$el.addEventListener('touchstart', h.onMD, false)
+    // this.$el.addEventListener('touchend', h.onMU, false)
+    // this.$el.addEventListener('touchmove', h.onMM, false)
+    // this.$el.addEventListener('touchcancel', h.onMU, false)
+
     this.$el.addEventListener('mouseenter', h.onME, false)
     this.$el.addEventListener('mouseleave', h.onML, false)
     this.$el.addEventListener('mouseup', h.onMUBox, false)

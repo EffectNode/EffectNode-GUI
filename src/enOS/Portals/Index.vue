@@ -1,5 +1,5 @@
 <template>
-  <div class="full ll-perspective">
+  <div class="full ll-perspective dont-move">
     <div tag="div" class="full ll-cam" name="zoomba" :style="getGroupCSS()">
       <vue-draggable-resizable
         :key="ip.id"
@@ -14,7 +14,7 @@
         :minh="122"
         :minw="198"
 
-        drag-handle=".drag"
+        drag-handle=".drag-title"
         drag-cancel=".cancel"
         @dragging="(x, y) => {
           onDrag(x, y, ip)
@@ -241,4 +241,5 @@ export default {
   opacity: 0;
   transform: scale(0);
 }
+
 </style>

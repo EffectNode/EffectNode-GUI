@@ -71,6 +71,9 @@ export default {
 .over-hidden{
   overflow: hidden;
 }
+.avoid-clicks {
+  pointer-events: none;
+}
 
 .word-lite {
   color: white;
