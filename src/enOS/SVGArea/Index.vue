@@ -27,6 +27,11 @@
             <stop offset="0%" style="stop-color:#FC466B;stop-opacity:1" />
             <stop offset="100%" style="stop-color:#3F5EFB;stop-opacity:1" />
           </linearGradient>
+
+          <linearGradient :id="`${uniq}danger`" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#FF0000;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          </linearGradient>
         </defs>
 
         <Panner
@@ -41,7 +46,7 @@
           <ModuleBox
           @editBox="editBox"
           @toggle-size="toggleSize"
-          :uniq="uniq" :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :win="win" :box="box" :svg="$refs['svg']" v-if="$refs.svg" @move="onMoveBox">
+          :uniq="uniq" :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :win="win" :box="box" :svg="$refs['svg']" v-if="$refs.svg" @move="onMoveBox" @removeBox="removeBox">
             <!-- <div class="full">
               <button @click="toggleSize(box)">Happy</button>
               {{ box }}
@@ -107,14 +112,19 @@ export default {
   },
   computed: {
     outputCable () {
-      return this.root.connectors.slice().sort((a, b) => {
-        return a.idx - b.idx
-      }).filter((c, idx) => {
+      return this.root.connectors.filter((c, idx) => {
         return c.socket.to && c.socket.from && c.type === 'output'
       })
+        .slice()
+        .sort((a, b) => {
+          return b.idx - a.idx
+        })
     }
   },
   methods: {
+    removeBox (v) {
+      this.$emit('removeBox', v)
+    },
     editBox (v) {
       this.$emit('editBox', v)
     },
@@ -153,7 +163,7 @@ export default {
     },
     onConnect (v) {
       v.from.socket.to = v.to.socket.from
-      v.to.socket.to = v.from.socket.from // to already has it
+      v.to.socket.to = v.from.socket.from
 
       v.from.mod.to = v.to.mod.from
       v.to.mod.to = v.from.mod.from
@@ -164,6 +174,10 @@ export default {
     onDisconnect (v) {
       v.from.socket.to = ''
       v.to.socket.to = ''
+
+      v.from.mod.to = ''
+      v.to.mod.to = ''
+
       console.log('dis', v)
       this.$emit('disconnect', v)
     },

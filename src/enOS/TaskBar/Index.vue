@@ -15,7 +15,7 @@
         <div
         class="taskbar-icon win" :key="ipk"
         :class="{ 'is-on': ip.win.minimised }"
-        v-for="(ip, ipk) in uiAPI.portal.portals.slice().sort((a, b) => { return a.date - b.date })"
+        v-for="(ip, ipk) in uiAPI.portal.portals.slice().sort((a, b) => { return new Date(a.date) - new Date(b.date) })"
 
           @touchstart="$emit('activated', { portal: ip })"
           @click="$emit('activated', { portal: ip })"

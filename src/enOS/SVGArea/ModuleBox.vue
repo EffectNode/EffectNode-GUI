@@ -29,6 +29,8 @@
     <circle style="cursor: pointer;" :cx="box.pos.x + 7.5 + 1" :cy="box.pos.y + 7.5 + 1" :r="7.5" :height="20" @click="$emit('toggle-size', box)" :fill="`url(#${uniq}disco-club)`"></circle>
     <circle style="cursor: pointer;" :cx="box.pos.x + 7.5 * 2.0 * 2.0 + 1" :cy="box.pos.y + 7.5 * 1.0 + 1" :r="7.5" :height="20" @click="$emit('editBox', box)" :fill="`url(#${uniq}kale-salad)`"></circle>
 
+    <circle style="cursor: pointer;" :cx="box.pos.x + boxW - 7.5 * 1.0 - 1.0" :cy="box.pos.y + 7.5 * 1.0 + 1" :r="7.5" :height="20" @click="$emit('removeBox', { box, inputs, outputs })" :fill="`url(#${uniq}danger)`"></circle>
+
     <text :x="box.pos.x + 2" :y="box.pos.y + 7.5 * 4.0 + 1">{{ box.name }}</text>
   </g>
 </template>

@@ -78,18 +78,22 @@ export default {
     connectedInputs () {
       return this.connectors.filter((c) => {
         return c.socket.to && c.type === 'input'
+      }).slice().sort((a, b) => {
+        return b.idx - a.idx
       })
     },
     connectedOutputs () {
       return this.connectors.filter((c) => {
         return c.socket.to && c.type === 'output'
+      }).slice().sort((a, b) => {
+        return b.idx - a.idx
       })
     },
     connectors () {
       if (this.root) {
         // let modIDs = this.root.modules.map(m => m.id)
         return this.root.connectors.slice().sort((a, b) => {
-          return a.idx - b.idx
+          return b.idx - a.idx
         })
         // .filter(c => {
         //   return modIDs.includes(c.mod.from) || modIDs.includes(c.mod.to)

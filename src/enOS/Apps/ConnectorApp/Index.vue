@@ -7,6 +7,7 @@
       <!-- Lok Lok -->
       <SVGArea
 
+      @removeBox="removeBox"
       @editBox="editBox"
       @saveBox="updateBox"
       @animateBox="animateBox"
@@ -61,6 +62,18 @@ export default {
     }
   },
   methods: {
+    removeBox ({ box, inputs, outputs }) {
+      if (window.prompt('remove this module and its connnections?')) {
+        let Data = this.uiAPI.hive.Data
+        Data.ts.modules.remove(box)
+        inputs.forEach((input) => {
+          Data.ts.connectors.remove(input)
+        })
+        outputs.forEach((output) => {
+          Data.ts.connectors.remove(output)
+        })
+      }
+    },
     editBox (box) {
       console.log('editBox', box)
       this.uiAPI.portal.addWindow({
@@ -121,7 +134,7 @@ export default {
         //   return modIDs.includes(c.mod.from) || modIDs.includes(c.mod.to)
         // })
         return this.root.connectors.slice().sort((a, b) => {
-          return a.idx - b.idx
+          return b.idx - a.idx
         })
       } else {
         return []

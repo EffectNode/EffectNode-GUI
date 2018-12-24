@@ -112,8 +112,12 @@
                     Signal,
                     box: this.mod,
                     sockets: this.sockets,
-                    inputs: this.sockets.filter(s => s.type === 'input' && s.modID === this.mod.id),
-                    outputs: this.sockets.filter(s => s.type === 'output' && s.modID === this.mod.id)
+                    inputs: this.sockets.filter(s => s.type === 'input' && s.modID === this.mod.id).slice().sort((a, b) => {
+                      return b.idx - a.idx
+                    }),
+                    outputs: this.sockets.filter(s => s.type === 'output' && s.modID === this.mod.id).slice().sort((a, b) => {
+                      return b.idx - a.idx
+                    })
                   })
                   console.log('INSTANCE', this.instance)
                   this.readyInstance()
