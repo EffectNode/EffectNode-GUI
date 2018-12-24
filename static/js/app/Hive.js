@@ -58,7 +58,7 @@ this.onReady = () => {
   console.log('onReady')
 
   let send = (output) => {
-    let inc = Math.floor((rAFID * 0.1) % 100) / 100;
+    let inc = Math.floor((Date.now() * 0.01) % 100) / 100;
     Signal.$emit(output.id, inc);
   }
   let rAFID = 0
@@ -73,7 +73,6 @@ this.onReady = () => {
     console.log('onClean', box.id)
   }
 }
-
 `
 
   let Data = g.HiveData = {
