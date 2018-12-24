@@ -179,14 +179,14 @@ export default {
       return this.connectors.filter((c) => {
         return c.socket.to && c.type === 'input'
       }).slice().sort((a, b) => {
-        return b.idx - a.idx
+        return a.idx - b.idx
       })
     },
     activeOutputs () {
       return this.connectors.filter((c) => {
         return c.socket.to && c.type === 'output'
       }).slice().sort((a, b) => {
-        return b.idx - a.idx
+        return a.idx - b.idx
       })
     },
     connectors () {
@@ -195,7 +195,7 @@ export default {
         return this.root.connectors.filter(c => {
           return c.mod.from === this.portal.data.boxUUID
         }).slice().sort((a, b) => {
-          return b.idx - a.idx
+          return a.idx - b.idx
         })
         // .filter(c => {
         //   return modIDs.includes(c.mod.from) || modIDs.includes(c.mod.to)

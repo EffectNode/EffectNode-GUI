@@ -117,7 +117,8 @@ export default {
       })
         .slice()
         .sort((a, b) => {
-          return b.idx - a.idx
+          console.log(a.idx, b.idx)
+          return a.idx - b.idx
         })
     }
   },

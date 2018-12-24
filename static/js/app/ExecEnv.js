@@ -113,10 +113,10 @@
                     box: this.mod,
                     sockets: this.sockets,
                     inputs: this.sockets.filter(s => s.type === 'input' && s.modID === this.mod.id).slice().sort((a, b) => {
-                      return b.idx - a.idx
+                      return a.idx - b.idx
                     }),
                     outputs: this.sockets.filter(s => s.type === 'output' && s.modID === this.mod.id).slice().sort((a, b) => {
-                      return b.idx - a.idx
+                      return a.idx - b.idx
                     })
                   })
                   console.log('INSTANCE', this.instance)

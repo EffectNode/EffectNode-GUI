@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     removeBox ({ box, inputs, outputs }) {
-      if (window.prompt('remove this module and its connnections?')) {
+      if (window.prompt('type yes to remove this module and its connnections?') === 'yes') {
         let Data = this.uiAPI.hive.Data
         Data.ts.modules.remove(box)
         inputs.forEach((input) => {
@@ -100,12 +100,12 @@ export default {
       let Data = this.uiAPI.hive.Data
       // let Doc = this.uiAPI.hive.Doc
 
-      // Data.ts.modules.animate(box)
-      // clearTimeout(this.boxTimeout)
-      // this.boxTimeout = setTimeout(() => {
-      //   Data.ts.modules.update(box)
-      // }, 1000)
-      Data.ts.modules.update(box)
+      Data.ts.modules.animate(box)
+      clearTimeout(this.boxTimeout)
+      this.boxTimeout = setTimeout(() => {
+        Data.ts.modules.update(box)
+      }, 500)
+      // Data.ts.modules.update(box)
     },
     makePulseMod () {
       let Data = this.uiAPI.hive.Data
@@ -134,7 +134,7 @@ export default {
         //   return modIDs.includes(c.mod.from) || modIDs.includes(c.mod.to)
         // })
         return this.root.connectors.slice().sort((a, b) => {
-          return b.idx - a.idx
+          return a.idx - b.idx
         })
       } else {
         return []
