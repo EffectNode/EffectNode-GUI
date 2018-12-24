@@ -88,7 +88,9 @@ export default {
     connectors () {
       if (this.root) {
         // let modIDs = this.root.modules.map(m => m.id)
-        return this.root.connectors
+        return this.root.connectors.slice().sort((a, b) => {
+          return a.idx - b.idx
+        })
         // .filter(c => {
         //   return modIDs.includes(c.mod.from) || modIDs.includes(c.mod.to)
         // })

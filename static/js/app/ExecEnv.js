@@ -175,7 +175,7 @@
                 Signal.$off(soc.socket.from, this.h[soc.socket.from])
               }
               this.h[soc.socket.from] = (v) => {
-                console.log(soc.socket.from, soc.socket.to)
+                // console.log(soc.socket.from, soc.socket.to)
                 Signal.$emit(soc.socket.to, v)
               }
               Signal.$on(soc.socket.from, this.h[soc.socket.from])

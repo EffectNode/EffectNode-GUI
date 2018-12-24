@@ -1,0 +1,177 @@
+[debug] [2018-12-24T23:03:02.521Z] ----------------------------------------------------------------------
+[debug] [2018-12-24T23:03:02.523Z] Command:       /Users/lok/.nvm/versions/node/v8.10.0/bin/node /Users/lok/.nvm/versions/node/v8.10.0/bin/firebase deploy
+[debug] [2018-12-24T23:03:02.523Z] CLI Version:   6.1.1
+[debug] [2018-12-24T23:03:02.523Z] Platform:      darwin
+[debug] [2018-12-24T23:03:02.523Z] Node Version:  v8.10.0
+[debug] [2018-12-24T23:03:02.524Z] Time:          Tue Dec 25 2018 07:03:02 GMT+0800 (HKT)
+[debug] [2018-12-24T23:03:02.524Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-12-24T23:03:02.530Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-12-24T23:03:02.530Z] > authorizing via signed-in user
+[debug] [2018-12-24T23:03:02.531Z] [iam] checking project effectnode for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasedatabase.instances.update","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2018-12-24T23:03:02.532Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/effectnode:testIamPermissions  
+
+[debug] [2018-12-24T23:03:03.769Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-24T23:03:03.770Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/effectnode  
+ 
+[debug] [2018-12-24T23:03:04.579Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'effectnode'...
+[info] 
+[info] i  deploying database, storage, firestore, functions, hosting
+[info] i  database: checking rules syntax...
+[debug] [2018-12-24T23:03:06.028Z] >>> HTTP REQUEST PUT https://effectnode.firebaseio.com/.settings/rules.json?dryRun=true  
+ {
+  "rules": {
+    "html-acl": {
+      "$usr": {
+        ".read": "$usr === auth.uid",
+        "$prj": {
+          ".read": "$usr === auth.uid",
+          ".write": "$usr === auth.uid"
+        }
+      }
+    },
+    "html-db": {
+      "$usr": {
+        "$prj": {
+          ".read": true,
+          ".write": "root.child('html-acl' + '/' + $usr + '/' + $prj).val() === true"
+        }
+      }
+    },
+    "refresh-db": {
+      "$usr": {
+        "$prj": {
+          ".read": true,
+          ".write": "root.child('html-acl' + '/' + $usr + '/' + $prj).val() === true"
+        }
+      }
+    }
+  }
+}
+
+[debug] [2018-12-24T23:03:06.862Z] <<< HTTP RESPONSE 200
+[info] ✔  database: rules syntax for database effectnode is valid
+[debug] [2018-12-24T23:03:06.863Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/effectnode  
+ 
+[debug] [2018-12-24T23:03:08.281Z] <<< HTTP RESPONSE 200
+[info] i  storage: checking storage.rules for compilation errors...
+[debug] [2018-12-24T23:03:08.283Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/effectnode:test  
+
+[debug] [2018-12-24T23:03:09.496Z] <<< HTTP RESPONSE 200
+[info] ✔  storage: rules file storage.rules compiled successfully
+[info] i  firestore: checking firestore.rules for compilation errors...
+[debug] [2018-12-24T23:03:09.498Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/effectnode:test  
+
+[debug] [2018-12-24T23:03:10.676Z] <<< HTTP RESPONSE 200
+[info] ✔  firestore: rules file firestore.rules compiled successfully
+[debug] [2018-12-24T23:03:10.677Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "firebase-admin": "^5.13.1",
+    "firebase-functions": "^2.0.2"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2018-12-24T23:03:10.678Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/effectnode?view=CONSUMER_VIEW  
+ 
+[debug] [2018-12-24T23:03:10.679Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/effectnode?view=CONSUMER_VIEW  
+ 
+[debug] [2018-12-24T23:03:12.325Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-24T23:03:12.345Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: all necessary APIs are enabled
+[debug] [2018-12-24T23:03:12.346Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/effectnode  
+ 
+[debug] [2018-12-24T23:03:13.405Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-24T23:03:13.405Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/316567530740:getServerAppConfig  
+ 
+[debug] [2018-12-24T23:03:14.205Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-24T23:03:14.207Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/effectnode/versions  
+
+[debug] [2018-12-24T23:03:15.845Z] <<< HTTP RESPONSE 200
+[info] i  storage: uploading rules storage.rules...
+[debug] [2018-12-24T23:03:15.847Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/effectnode/rulesets  
+
+[debug] [2018-12-24T23:03:17.193Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-24T23:03:17.193Z] [rules] created ruleset projects/effectnode/rulesets/be98b7c6-04c8-4e5c-aeb6-5327bd6d64c7
+[info] i  firestore: uploading rules firestore.rules...
+[debug] [2018-12-24T23:03:17.194Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/effectnode/rulesets  
+
+[debug] [2018-12-24T23:03:17.194Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1beta1/projects/effectnode/databases/(default)/indexes  
+ 
+[debug] [2018-12-24T23:03:18.089Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-24T23:03:18.487Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-24T23:03:18.487Z] [rules] created ruleset projects/effectnode/rulesets/90c0bc5d-2519-4803-8693-f33d5d5a4f1c
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2018-12-24T23:03:18.489Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/effectnode/configs  
+ 
+[debug] [2018-12-24T23:03:19.006Z] <<< HTTP RESPONSE 200
+[info] i  functions: packaged functions (40.16 KB) for uploading
+[debug] [2018-12-24T23:03:19.279Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/effectnode/locations/us-central1/functions:generateUploadUrl  
+ 
+[debug] [2018-12-24T23:03:20.028Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-24T23:03:20.029Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-7f4fd41e-a8c1-40a9-884f-3663c65cb547/8c2c4ecf-9992-44d9-bdef-0b94009274a6.zip?GoogleAccessId=service-316567530740@gcf-admin-robot.iam.gserviceaccount.com&Expires=1545694399&Signature=Myixd3KXVGT%2F%2BOEEuIM3GPn5HTCotFzefxyv%2F7zflYqWOXYcq%2FVhL3H40BzGi43nS5GjaYpnYK0CnfZsi2LvrLc6AEQMBpxNoSVPRlw5ZbYGIcpWjH97W0J6LCM0E72TUdCSWpc%2FfffXc5YPKAM%2F2I9%2FGjoHlyqHjXWAEc8xfj%2FzXhORL0N%2FGydDOulXhCBg2zaewAxK0lvoajtpfCxQFVXVt6wO9TfCqqFNt5kdJoxgX04o2bqb%2Bpb27UvQxGSDgoSZJKTYAL8Kn38kNPRWIrpkYpYo8vK%2BxPF8yzS9S6iRf66Fw%2Bb0s9xpPuMFKO9Io3CCH8PHxPw3PPhg0K5XLA%3D%3D  
+
+[debug] [2018-12-24T23:03:21.058Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: functions folder uploaded successfully
+[info] i  hosting[effectnode]: beginning deploy...
+[info] i  hosting[effectnode]: found 69 files in dist
+[debug] [2018-12-24T23:03:21.076Z] [hosting] hash cache [ZGlzdA] load error: lines is not defined
+[debug] [2018-12-24T23:03:22.529Z] [hosting] hash cache [ZGlzdA] stored for 69 files
+[debug] [2018-12-24T23:03:22.530Z] [hosting][hash queue][FINAL]
+[debug] [2018-12-24T23:03:22.530Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/effectnode/versions/89af17cfe6a7aa7e:populateFiles  
+ <request body omitted>
+[debug] [2018-12-24T23:03:24.180Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-24T23:03:24.183Z] [hosting][populate queue][FINAL]
+[debug] [2018-12-24T23:03:24.183Z] [hosting] uploads queued: 5
+[debug] [2018-12-24T23:03:27.577Z] [hosting][upload queue][FINAL]
+[info] ✔  hosting[effectnode]: file upload complete
+[debug] [2018-12-24T23:03:27.578Z] [hosting] deploy completed after 6518ms
+[info] i  database: releasing rules...
+[debug] [2018-12-24T23:03:27.579Z] >>> HTTP REQUEST PUT https://effectnode.firebaseio.com/.settings/rules.json  
+ {
+  "rules": {
+    "html-acl": {
+      "$usr": {
+        ".read": "$usr === auth.uid",
+        "$prj": {
+          ".read": "$usr === auth.uid",
+          ".write": "$usr === auth.uid"
+        }
+      }
+    },
+    "html-db": {
+      "$usr": {
+        "$prj": {
+          ".read": true,
+          ".write": "root.child('html-acl' + '/' + $usr + '/' + $prj).val() === true"
+        }
+      }
+    },
+    "refresh-db": {
+      "$usr": {
+        "$prj": {
+          ".read": true,
+          ".write": "root.child('html-acl' + '/' + $usr + '/' + $prj).val() === true"
+        }
+      }
+    }
+  }
+}
+
+[debug] [2018-12-24T23:03:28.403Z] <<< HTTP RESPONSE 200
+[info] ✔  database: rules for database effectnode released successfully
+[debug] [2018-12-24T23:03:28.404Z] [rules] releasing firebase.storage/effectnode.appspot.com with ruleset projects/effectnode/rulesets/be98b7c6-04c8-4e5c-aeb6-5327bd6d64c7
+[debug] [2018-12-24T23:03:28.404Z] >>> HTTP REQUEST PATCH https://firebaserules.googleapis.com/v1/projects/effectnode/releases/firebase.storage/effectnode.appspot.com  
+
+[debug] [2018-12-24T23:03:29.770Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-24T23:03:29.770Z] [rules] updated release projects/effectnode/releases/firebase.storage/effectnode.appspot.com
+[info] ✔  storage: released rules storage.rules to firebase.storage/effectnode.appspot.com
+[debug] [2018-12-24T23:03:29.770Z] [rules] releasing cloud.firestore with ruleset projects/effectnode/rulesets/90c0bc5d-2519-4803-8693-f33d5d5a4f1c
+[debug] [2018-12-24T23:03:29.770Z] >>> HTTP REQUEST PATCH https://firebaserules.googleapis.com/v1/projects/effectnode/releases/cloud.firestore  
+

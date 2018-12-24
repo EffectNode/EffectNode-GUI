@@ -188,7 +188,9 @@ export default {
     connectors () {
       if (this.root) {
         // let modIDs = this.root.modules.map(m => m.id)
-        return this.root.connectors.filter(c => {
+        return this.root.connectors.slice().sort((a, b) => {
+          return a.idx - b.idx
+        }).filter(c => {
           return c.mod.from === this.portal.data.boxUUID
         })
         // .filter(c => {

@@ -120,7 +120,9 @@ export default {
         // return this.root.connectors.filter(c => {
         //   return modIDs.includes(c.mod.from) || modIDs.includes(c.mod.to)
         // })
-        return this.root.connectors
+        return this.root.connectors.slice().sort((a, b) => {
+          return a.idx - b.idx
+        })
       } else {
         return []
       }

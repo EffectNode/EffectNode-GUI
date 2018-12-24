@@ -107,7 +107,9 @@ export default {
   },
   computed: {
     outputCable () {
-      return this.root.connectors.filter((c, idx) => {
+      return this.root.connectors.slice().sort((a, b) => {
+        return a.idx - b.idx
+      }).filter((c, idx) => {
         return c.socket.to && c.socket.from && c.type === 'output'
       })
     }

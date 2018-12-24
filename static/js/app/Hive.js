@@ -130,28 +130,28 @@ this.onReady = () => {
       })
 
       // Data.addModToDoc({ mod, Doc })
-      Data.makeSocket({ Doc, type: 'input', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 0, type: 'input', modID: mod.id })
       // Data.addSocketToDoc({ socket: in1, Doc })
 
-      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 0, type: 'output', modID: mod.id })
       // Data.addSocketToDoc({ socket: in2, Doc })
 
-      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 1, type: 'output', modID: mod.id })
       // Data.addSocketToDoc({ socket: in3, Doc })
 
-      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 2, type: 'output', modID: mod.id })
       // Data.addSocketToDoc({ socket: in4, Doc })
 
-      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 3, type: 'output', modID: mod.id })
       // Data.addSocketToDoc({ socket: out1, Doc })
 
-      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 4, type: 'output', modID: mod.id })
       // Data.addSocketToDoc({ socket: out2, Doc })
 
-      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 5, type: 'output', modID: mod.id })
       // Data.addSocketToDoc({ socket: out3, Doc })
 
-      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 6, type: 'output', modID: mod.id })
       // Data.addSocketToDoc({ socket: ou4, Doc })
       return mod
     },
@@ -163,33 +163,33 @@ this.onReady = () => {
       })
 
       // Data.addModToDoc({ mod, Doc })
-      Data.makeSocket({ Doc, type: 'input', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 0, type: 'input', modID: mod.id })
       // Data.addSocketToDoc({ socket: in1, Doc })
 
-      Data.makeSocket({ Doc, type: 'input', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 1, type: 'input', modID: mod.id })
       // Data.addSocketToDoc({ socket: in2, Doc })
 
-      Data.makeSocket({ Doc, type: 'input', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 2, type: 'input', modID: mod.id })
       // Data.addSocketToDoc({ socket: in3, Doc })
 
-      Data.makeSocket({ Doc, type: 'input', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 3, type: 'input', modID: mod.id })
       // Data.addSocketToDoc({ socket: in4, Doc })
 
-      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 0, type: 'output', modID: mod.id })
       // Data.addSocketToDoc({ socket: out1, Doc })
 
-      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 1, type: 'output', modID: mod.id })
       // Data.addSocketToDoc({ socket: out2, Doc })
 
-      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 2, type: 'output', modID: mod.id })
       // Data.addSocketToDoc({ socket: out3, Doc })
 
-      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      Data.makeSocket({ Doc, idx: 3, type: 'output', modID: mod.id })
       // Data.addSocketToDoc({ socket: ou4, Doc })
       return mod
     },
     getAllSockets ({ Doc }) {
-      return Doc.root.connectors
+      return Doc.root.connectors.slice().sort((a, b) => { return a.idx - b.idx })
     },
     getAllModules ({ Doc }) {
       return Doc.root.modules
@@ -198,7 +198,7 @@ this.onReady = () => {
       return Doc.root.modules
     },
     getAllSocketsOfProject ({ Doc }) {
-      return Doc.root.connectors
+      return Doc.root.connectors.slice().sort((a, b) => { return a.idx - b.idx })
     },
     addSocketToDoc ({ socket, Doc }) {
       Doc.root.connectors.push(socket)
