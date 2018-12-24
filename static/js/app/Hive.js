@@ -3,6 +3,79 @@
   var getID = (prefix = '') => {
     return '_hive_' + prefix + '_' + (1024 * 1024 * 1024 * 1024 * Math.random()).toFixed(0)
   }
+  let DomModule = `/* global env */
+/* eslint-disable */
+let {
+  Signal,
+  Resources,
+  sockets,
+  box,
+  inputs,
+  outputs
+} = env
+/* esltint-enable */
+console.log('Environment is ready for you!::', box.id)
+
+let h = {
+  fillBackground: (degree) => {
+    let gradBg = ''
+    gradBg += 'linear-gradient(45deg, '
+    gradBg += '    hsl(' + Math.floor(Math.abs(0.5 - degree) * 360)  + ', 50%, 50%), '
+    gradBg += '    hsl(' + Math.floor(Math.abs(1.25 - degree) * 360)  + ', 50%, 50%) '
+    gradBg += ')'
+
+    Resources.get('rootDOM')
+      .style
+      .background = gradBg
+  }
+}
+
+Signal.$on(inputs[0].id, (progress) => {
+  h.fillBackground(progress);
+});
+
+this.onReady = () => {
+  console.log('onReady', box.id)
+  this.onClean = () => {
+    console.log('onClean', box.id)
+  }
+}
+  `
+  let PulseModule = `/* global env */
+/* eslint-disable */
+let {
+  Signal,
+  Resources,
+  sockets,
+  box,
+  inputs,
+  outputs
+} = env
+/* esltint-enable */
+console.log('Environment is ready for you!::', box.id)
+// sender
+this.onReady = () => {
+  console.log('onReady')
+
+  let send = (output) => {
+    let inc = Math.floor((rAFID * 0.1) % 100) / 100;
+    Signal.$emit(output.id, inc);
+  }
+  let rAFID = 0
+  let rAF = () => {
+    rAFID = window.requestAnimationFrame(rAF);
+    outputs.forEach(send)
+  }
+  rAFID = window.requestAnimationFrame(rAF);
+
+  this.onClean = () => {
+    window.cancelAnimationFrame(rAFID);
+    console.log('onClean', box.id)
+  }
+}
+
+`
+
   let Data = g.HiveData = {
     init: (api) => {
       return new Promise((resolve, reject) => {
@@ -49,11 +122,47 @@
       let sockets = Data.getAllSockets({ Doc })
       return sockets.filter(s => s.modID === modID && s.type === 'output')
     },
-    async makein4out4Mod ({ Doc }) {
-      let mod = await Data.makeModule({ Doc })
+    async makePulseMod ({ Doc }) {
+      let mod = await Data.makeModule({
+        Doc,
+        name: 'Main Loop Module',
+        src: PulseModule
+      })
 
       // Data.addModToDoc({ mod, Doc })
+      Data.makeSocket({ Doc, type: 'input', modID: mod.id })
+      // Data.addSocketToDoc({ socket: in1, Doc })
 
+      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      // Data.addSocketToDoc({ socket: in2, Doc })
+
+      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      // Data.addSocketToDoc({ socket: in3, Doc })
+
+      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      // Data.addSocketToDoc({ socket: in4, Doc })
+
+      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      // Data.addSocketToDoc({ socket: out1, Doc })
+
+      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      // Data.addSocketToDoc({ socket: out2, Doc })
+
+      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      // Data.addSocketToDoc({ socket: out3, Doc })
+
+      Data.makeSocket({ Doc, type: 'output', modID: mod.id })
+      // Data.addSocketToDoc({ socket: ou4, Doc })
+      return mod
+    },
+    async makeDomMod ({ Doc }) {
+      let mod = await Data.makeModule({
+        Doc,
+        name: 'DOM Updater Module',
+        src: DomModule
+      })
+
+      // Data.addModToDoc({ mod, Doc })
       Data.makeSocket({ Doc, type: 'input', modID: mod.id })
       // Data.addSocketToDoc({ socket: in1, Doc })
 
@@ -77,6 +186,7 @@
 
       Data.makeSocket({ Doc, type: 'output', modID: mod.id })
       // Data.addSocketToDoc({ socket: ou4, Doc })
+      return mod
     },
     getAllSockets ({ Doc }) {
       return Doc.root.connectors
@@ -175,14 +285,14 @@
       let obj = resp.data.results
       return obj
     },
-    async makeModule ({ Doc }) {
+    async makeModule ({ Doc, src = '', name = '' }) {
       let modID = getID(Doc.projectID + 'module')
       let data = {
         userID: Doc.userID,
         projectID: Doc.projectID,
         id: modID,
         bg: '',
-        name: '',
+        name: name,
         pos: {
           x: 100,
           y: 100
@@ -191,7 +301,7 @@
           w: 200,
           h: 40
         },
-        src: ``
+        src: src
       }
 
       let resp = await Data.ts.modules.add(data)

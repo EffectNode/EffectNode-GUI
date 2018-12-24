@@ -58,11 +58,14 @@
               this.instantiate()
             }, 500)
           },
-          sockets () {
-            clearTimeout(this.sTimeout)
-            this.sTimeout = setTimeout(() => {
-              this.instantiate()
-            }, 500)
+          sockets: {
+            deep: true,
+            handler () {
+              clearTimeout(this.sTimeout)
+              this.sTimeout = setTimeout(() => {
+                this.instantiate()
+              }, 500)
+            }
           }
         },
         async beforeDestroy () {
@@ -81,6 +84,13 @@
         methods: {
           cleanInstance () {
             if (this.instance) {
+              this.sockets.filter(s => s.type === 'input' && s.modID === this.mod.id).forEach((input) => {
+                Signal.$off(input.id)
+              })
+              this.sockets.filter(s => s.type === 'output' && s.modID === this.mod.id).forEach((output) => {
+                Signal.$off(output.id)
+              })
+              this.$emit('refresh-sockets')
               this.instance.onClean && this.instance.onClean()
             }
           },
@@ -96,7 +106,7 @@
                 try {
                   this.cleanInstance()
                   this.function = new Function('env', this.mod.src)
-                  this.boxSignal = new Vue({})
+                  let self = this
                   this.instance = new this.function({
                     Resources,
                     Signal,
@@ -130,7 +140,7 @@
             <div v-if="ready" style="display: none; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;" >
               <pre>{{ modules }}</pre>
               <span style="display: none;">{{ root }}</span>
-              <modrunner :key="mod._id" :sockets="sockets" :mod="mod" v-for="mod in modules"></modrunner>
+              <modrunner :signal="Signal" @refresh-sockets="refreshSockets" :key="mod._id" :sockets="sockets" :mod="mod" v-for="mod in modules"></modrunner>
             </div>
             <div class="rootDOM" style="width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;" ref="rootDOM"></div>
           </div>
@@ -138,7 +148,7 @@
         el: document.createElement('div'),
         mounted () {
           Resources.set('rootDOM', this.$refs.rootDOM)
-          this.setupScoket()
+          this.refreshSockets()
           this.ready = true
           this.$forceUpdate()
         },
@@ -146,21 +156,29 @@
           return {
             ready: false,
             root: Doc.root,
-            Signal
+            Signal,
+            h: {}
           }
         },
         watch: {
-          sockets () {
-            this.setupScoket()
+          modules: {
+            deep: true,
+            handler () {
+              this.refreshSockets()
+            }
           }
         },
         methods: {
-          setupScoket () {
+          refreshSockets () {
             this.sockets.filter(s => s.socket.to && s.type === 'output').forEach((soc) => {
-              Signal.$on(soc.socket.from, (v) => {
+              if (this.h[soc.socket.from]) {
+                Signal.$off(soc.socket.from, this.h[soc.socket.from])
+              }
+              this.h[soc.socket.from] = (v) => {
                 console.log(soc.socket.from, soc.socket.to)
                 Signal.$emit(soc.socket.to, v)
-              })
+              }
+              Signal.$on(soc.socket.from, this.h[soc.socket.from])
             })
           }
         },

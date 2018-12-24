@@ -58,7 +58,7 @@ export default {
       }
     },
     goUpdate ({ project }) {
-      this.ts.project.update({ data: project })
+      this.ts.project.update(project)
     },
     showLogin () {
       this.mode = 'login'
@@ -78,7 +78,7 @@ export default {
       this.reload()
     },
     async removeProject ({ project }) {
-      this.ts.project.remove({ data: project })
+      this.ts.project.remove(project)
     },
     async createProject () {
       this.ts.project.add({

@@ -71,6 +71,9 @@ export function makeSample (api) {
   api.portals.push(
     makePortal({ type: 'connector', data: {} })
   )
+  api.portals.push(
+    makePortal({ type: 'exec-env', data: {} })
+  )
 }
 
 export function addWindow (api, args) {

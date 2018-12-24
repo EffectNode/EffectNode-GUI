@@ -16,7 +16,8 @@
       v-if="portal && ready && root" :Doc="Doc" :meta="portal.data" :connectors="connectors" :modules="root.modules" :uiAPI="uiAPI" :Data="Data" :root="root" :win="portal.win" />
     </div>
     <div class="buttons">
-      <button @click="addModule">4by4</button>
+      <button @click="makePulseMod">Add Main Loop</button>
+      <button @click="makeDomMod">Add Dom Updater</button>
     </div>
   </div>
 </template>
@@ -86,16 +87,22 @@ export default {
       let Data = this.uiAPI.hive.Data
       // let Doc = this.uiAPI.hive.Doc
 
-      Data.ts.modules.animate(box)
-      clearTimeout(this.boxTimeout)
-      this.boxTimeout = setTimeout(() => {
-        Data.ts.modules.update(box)
-      }, 1000)
+      // Data.ts.modules.animate(box)
+      // clearTimeout(this.boxTimeout)
+      // this.boxTimeout = setTimeout(() => {
+      //   Data.ts.modules.update(box)
+      // }, 1000)
+      Data.ts.modules.update(box)
     },
-    addModule () {
+    makePulseMod () {
       let Data = this.uiAPI.hive.Data
       let Doc = this.uiAPI.hive.Doc
-      Data.makein4out4Mod({ Doc })
+      Data.makePulseMod({ Doc })
+    },
+    makeDomMod () {
+      let Data = this.uiAPI.hive.Data
+      let Doc = this.uiAPI.hive.Doc
+      Data.makeDomMod({ Doc })
     },
     init () {
       let { Doc, Data } = this.uiAPI.hive
