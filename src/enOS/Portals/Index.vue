@@ -65,6 +65,7 @@ import ParticleSeaApp from '@/enOS/Apps/ParticleSeaApp'
 import VolumetricApp from '@/enOS/Apps/VolumetricApp'
 import ConnectorApp from '@/enOS/Apps/ConnectorApp'
 import ExecEnvApp from '@/enOS/Apps/ExecEnvApp'
+import ModEditorApp from '@/enOS/Apps/ModEditorApp'
 import TaskBar from '../TaskBar'
 
 export default {
@@ -79,7 +80,8 @@ export default {
     TaskBar,
     VolumetricApp,
     ConnectorApp,
-    ExecEnvApp
+    ExecEnvApp,
+    ModEditorApp
   },
   created () {
   },

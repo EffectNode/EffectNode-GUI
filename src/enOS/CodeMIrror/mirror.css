@@ -1,0 +1,133 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: perspective(500px) translateZ(-50px) translateY(50px) rotateX(-30deg);
+  }
+  100%{
+    opacity: 1;
+    transform: perspective(500px) rotateX(0deg);
+  }
+}
+
+.CodeMirror {
+  font-family: 'Inconsolata', 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 17px;
+}
+.CodeMirror-gutters{
+  background-color: rgb(255,255,255,0.25);
+  color: black;
+}
+.CodeMirror{
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+}
+.CodeMirror-hints{
+  /* z-index: 10000; */
+  position: absolute;
+  background-color: white;
+  margin-bottom: 0px;
+  list-style: none;
+  padding: 2px 16px;
+  z-index: 1000;
+
+  animation: fadeIn 0.5s cubic-bezier(0.075, 0.82, 0.165, 1) 0.2s 1 normal both;
+}
+.CodeMirror-hint {
+  margin-bottom: 5px;
+}
+.CodeMirror-hint:hover {
+  text-decoration: underline;
+}
+.CodeMirror-hint-active{
+  font-weight: bold;
+  color: green;
+  /* text-decoration: underline; */
+}
+.cm-ParagraphTitle-1{
+  font-size: 35px;
+  font-weight: bold;
+  border-bottom: rgb(31, 182, 202) dashed 2px;
+}
+.cm-ParagraphTitle-2{
+  font-size: 25px;
+  font-weight: bold;
+  border-bottom: rgb(31, 182, 202) dashed 2px;
+}
+.cm-ParagraphTitle-3{
+  font-weight: bold;
+  border-bottom: rgb(31, 182, 202) dashed 2px;
+}
+
+.cm-Rhyme{
+  border-bottom: rgba(52, 209, 20, 0.55) solid 2px;
+}
+
+.cm-Quote{
+  background: rgb(253, 255, 134, 0.55);
+}
+
+.cm-StarQuote{
+  background: rgba(255, 227, 134, 0.8);
+}
+
+.cm-DoubleStarQuote{
+  background: rgb(255, 203, 134);
+}
+
+.cm-HiddenQuote{
+  background: rgba(255, 134, 255, 0.8);
+}
+
+.cm-DoubleHiddenQuote{
+  background: rgb(212, 0, 255, 0.8);
+}
+
+.cm-ControversialQuote{
+  color: white;
+  background: rgb(4, 0, 255);
+}
+
+.cm-Existence{
+  padding-bottom: 1px;
+  border-bottom: hotpink solid 2px;
+}
+.cm-Being{
+  padding-bottom: 1px;
+  border-bottom: rgb(31, 182, 202) solid 2px;
+}
+.cm-Quote.cm-Existence{
+  padding-bottom: 1px;
+  border-bottom: hotpink solid 2px;
+}
+.cm-Quote.cm-Being{
+  padding-bottom: 1px;
+  border-bottom: rgb(31, 182, 202) solid 2px;
+}
+
+
+/* folding */
+
+.CodeMirror-foldmarker {
+  color: blue;
+  text-shadow: #b9f 1px 1px 2px, #b9f -1px -1px 2px, #b9f 1px -1px 2px, #b9f -1px 1px 2px;
+  font-family: arial;
+  line-height: .3;
+  cursor: pointer;
+}
+.CodeMirror-foldgutter {
+  width: .7em;
+}
+.CodeMirror-foldgutter-open,
+.CodeMirror-foldgutter-folded {
+  color: #555;
+  cursor: pointer;
+}
+.CodeMirror-foldgutter-open:after {
+  content: "\25BE";
+}
+.CodeMirror-foldgutter-folded:after {
+  content: "\25B8";
+}

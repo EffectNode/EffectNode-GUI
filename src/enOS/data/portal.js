@@ -54,6 +54,8 @@ export function makePortal ({ type, data = {} }) {
     app = 'ConnectorApp'
   } else if (type === 'exec-env') {
     app = 'ExecEnvApp'
+  } else if (type === 'mod-editor') {
+    app = 'ModEditorApp'
   }
 
   return {

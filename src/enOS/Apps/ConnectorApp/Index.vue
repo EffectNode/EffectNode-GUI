@@ -7,6 +7,7 @@
       <!-- Lok Lok -->
       <SVGArea
 
+      @editBox="editBox"
       @saveBox="updateBox"
       @animateBox="animateBox"
       @disconnect="updateBothSocket"
@@ -59,6 +60,18 @@ export default {
     }
   },
   methods: {
+    editBox (box) {
+      console.log('editBox', box)
+      this.uiAPI.portal.addWindow({
+        type: 'mod-editor',
+        data: {
+          boxID: box._id,
+          userID: box.userID,
+          projectID: box.projectID,
+          boxUUID: box.id
+        }
+      })
+    },
     updateBothSocket ({ from, to }) {
       let Data = this.uiAPI.hive.Data
       Data.ts.connectors.update(from)

@@ -63,6 +63,7 @@ export default {
       this.ready = true
 
       // console.log('OMG', )
+
       this.$refs.mounter.appendChild(this.uiAPI.execEnv.Sys.$el)
 
       // return Hive.get({ doc: 'happy' }).then(({ Data, Doc }) => {

@@ -39,6 +39,7 @@
 
         <g :key="`${uniq}boxes-${box.id}`" v-for="box in modules">
           <ModuleBox
+          @editBox="editBox"
           @toggle-size="toggleSize"
           :uniq="uniq" :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :win="win" :box="box" :svg="$refs['svg']" v-if="$refs.svg" @move="onMoveBox">
             <!-- <div class="full">
@@ -112,6 +113,9 @@ export default {
     }
   },
   methods: {
+    editBox (v) {
+      this.$emit('editBox', v)
+    },
     toggleSize (box) {
       if (box.size.w === 200) {
         anime({

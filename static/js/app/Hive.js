@@ -84,11 +84,11 @@
     getAllModules ({ Doc }) {
       return Doc.root.modules
     },
-    getAllModulesOfProject ({ Doc, projectID }) {
-      return Doc.root.modules.filter(c => c.projectID === projectID)
+    getAllModulesOfProject ({ Doc }) {
+      return Doc.root.modules
     },
-    getAllSocketsOfProject ({ Doc, projectID }) {
-      return Doc.root.connectors.filter(c => c.projectID === projectID)
+    getAllSocketsOfProject ({ Doc }) {
+      return Doc.root.connectors
     },
     addSocketToDoc ({ socket, Doc }) {
       Doc.root.connectors.push(socket)
@@ -181,6 +181,8 @@
         userID: Doc.userID,
         projectID: Doc.projectID,
         id: modID,
+        bg: '',
+        name: '',
         pos: {
           x: 100,
           y: 100

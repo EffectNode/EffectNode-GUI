@@ -27,6 +27,7 @@
     </g>
 
     <circle style="cursor: pointer;" :cx="box.pos.x + 7.5 + 1" :cy="box.pos.y + 7.5 + 1" :r="7.5" :height="20" @click="$emit('toggle-size', box)" :fill="`url(#${uniq}disco-club)`"></circle>
+    <circle style="cursor: pointer;" :cx="box.pos.x + 7.5 * 2.0 * 2.0 + 1" :cy="box.pos.y + 7.5 * 1.0 + 1" :r="7.5" :height="20" @click="$emit('editBox', box)" :fill="`url(#${uniq}kale-salad)`"></circle>
 
   </g>
 </template>
@@ -66,6 +67,9 @@ export default {
     },
     outputs () {
       return this.Data.getModOutputs({ Doc: this.Doc, modID: this.box.id }) || []
+    },
+    bg () {
+      return this.box
     }
   },
   watch: {

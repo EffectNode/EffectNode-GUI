@@ -11,9 +11,10 @@
       })
     },
     makeLgocialStructure: (uiAPI) => {
-      let { Doc, Data, projectID } = uiAPI.hive
+      let { Doc, Data } = uiAPI.hive
+      let { projectID } = Doc
       let Vue = window.Vue
-      let FlowYo = new Vue({})
+      let Signal = new Vue({})
       let Resources = (() => {
         let api = {
           kvStore: {}
@@ -28,19 +29,20 @@
 
         return api
       })()
-      Vue.component('module-runner', {
+
+      let modRunner = {
         props: {
           sockets: {},
           mod: {}
         },
         data () {
           return {
-            FlowYo,
+            Signal,
             function: {},
             instance: {}
           }
         },
-        template: `<span></span>`,
+        template: `<span>{{ mod.src }}</span>`,
         async mounted () {
           try {
             await this.instantiate()
@@ -49,35 +51,66 @@
             console.log(e)
           }
         },
+        watch: {
+          code () {
+            clearTimeout(this.codeTimeout)
+            this.codeTimeout = setTimeout(() => {
+              this.instantiate()
+            }, 500)
+          },
+          sockets () {
+            clearTimeout(this.sTimeout)
+            this.sTimeout = setTimeout(() => {
+              this.instantiate()
+            }, 500)
+          }
+        },
         async beforeDestroy () {
+          // this.sockets.forEach(i => {
+          //   i.mod.to = false
+          //   i.socket.to = false
+          // })
+          this.cleanInstance()
           this.$emit('clean', this.instance)
-          this.sockets.forEach(i => {
-            i.mod.to = false
-            i.socket.to = false
-          })
-          if (this.instance) {
-            this.FlowYo.$emit('onClean', { modID: this.mod.id })
+        },
+        computed: {
+          code () {
+            return this.mod.src
           }
         },
         methods: {
+          cleanInstance () {
+            if (this.instance) {
+              this.instance.onClean && this.instance.onClean()
+            }
+          },
+          readyInstance () {
+            if (this.instance) {
+              this.instance.onReady && this.instance.onReady()
+            }
+          },
           instantiate () {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
               setTimeout(() => {
                 /* eslint-disable */
                 try {
+                  this.cleanInstance()
                   this.function = new Function('env', this.mod.src)
+                  this.boxSignal = new Vue({})
                   this.instance = new this.function({
                     Resources,
-                    FlowYo,
-                    mod: this.mod,
+                    Signal,
+                    box: this.mod,
                     sockets: this.sockets,
-                    inputs: this.sockets.filter(s => s.type === 'input'),
-                    outputs: this.sockets.filter(s => s.type === 'output')
+                    inputs: this.sockets.filter(s => s.type === 'input' && s.modID === this.mod.id),
+                    outputs: this.sockets.filter(s => s.type === 'output' && s.modID === this.mod.id)
                   })
                   console.log('INSTANCE', this.instance)
-                  this.FlowYo.$emit('onReady', { modID: this.mod.id })
+                  this.readyInstance()
                   resolve()
                 } catch (e) {
+                  console.log('======compiling======')
+                  console.error(e)
                   reject(e)
                 }
                 /* eslint-enable */
@@ -85,31 +118,64 @@
             })
           }
         }
-      })
+      }
+      modRunner = Vue.component('modrunner', modRunner)
 
       return new Vue({
+        components: {
+          'modrunner': modRunner
+        },
         template: `
-          <div style="width: 100%; height: 100%;">
-            <div style="width: 100%; height: 100%" ref="rootDOM"></div>
-            <span style="display: none;">{{ root }}</span>
-            <div v-if="ready">
-              <module-runner :key="mod.id" :sockets="sockets" :mod="mod" v-for="mod in modules"></module-runner>
+          <div style="width: 100%; height: 100%; position: relative;">
+            <div v-if="ready" style="display: none; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;" >
+              <pre>{{ modules }}</pre>
+              <span style="display: none;">{{ root }}</span>
+              <modrunner :key="mod._id" :sockets="sockets" :mod="mod" v-for="mod in modules"></modrunner>
             </div>
+            <div class="rootDOM" style="width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;" ref="rootDOM"></div>
           </div>
         `,
         el: document.createElement('div'),
         mounted () {
           Resources.set('rootDOM', this.$refs.rootDOM)
+          this.setupScoket()
           this.ready = true
+          this.$forceUpdate()
         },
-        data: {
-          ready: false,
-          root: Doc.root,
-          FlowYo
+        data () {
+          return {
+            ready: false,
+            root: Doc.root,
+            Signal
+          }
+        },
+        watch: {
+          sockets () {
+            this.setupScoket()
+          }
+        },
+        methods: {
+          setupScoket () {
+            this.sockets.filter(s => s.socket.to && s.type === 'output').forEach((soc) => {
+              Signal.$on(soc.socket.from, (v) => {
+                console.log(soc.socket.from, soc.socket.to)
+                Signal.$emit(soc.socket.to, v)
+              })
+            })
+          }
         },
         computed: {
-          modules: () => Data.getAllModulesOfProject({ Doc, projectID }),
-          sockets: () => Data.getAllSocketsOfProject({ Doc, projectID })
+          modules () {
+            return Data.getAllModulesOfProject({ Doc, projectID })
+          },
+          sockets () {
+            return Data.getAllSocketsOfProject({ Doc, projectID })
+          },
+          outputSignal () {
+            return Doc.root.connectors.filter((c) => {
+              return c.socket.to && c.socket.from && c.type === 'output'
+            })
+          }
         }
       })
     }
