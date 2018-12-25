@@ -1,7 +1,9 @@
 <template>
-  <div class="full quotes-app" >
+  <div class="full quotes-app">
     <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
-      {{ portal.app }}
+      <span  v-if="currentMod">
+        :: {{ currentMod.name }} ::
+      </span>
       <button @click="view = 'debug'">Debug</button>
       <button @click="view = 'code'">Code</button>
     </TitleBar>

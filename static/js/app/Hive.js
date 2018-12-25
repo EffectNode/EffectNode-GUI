@@ -34,11 +34,8 @@ Signal.$on(inputs[0].id, (progress) => {
   h.fillBackground(progress);
 });
 
-this.onReady = () => {
-  console.log('onReady', box.id)
-  this.onClean = () => {
-    console.log('onClean', box.id)
-  }
+this.onClean = () => {
+  console.log('onClean', box.id)
 }
   `
   let PulseModule = `/* global env */
@@ -53,25 +50,21 @@ let {
 } = env
 /* esltint-enable */
 console.log('Environment is ready for you!::', box.id)
-// sender
-this.onReady = () => {
-  console.log('onReady')
 
-  let send = (output) => {
-    let inc = Math.floor((Date.now() * 0.01) % 100) / 100;
-    Signal.$emit(output.id, inc);
-  }
-  let rAFID = 0
-  let rAF = () => {
-    rAFID = window.requestAnimationFrame(rAF);
-    outputs.forEach(send)
-  }
+let send = (output) => {
+  let inc = Math.floor((Date.now() * 0.01) % 100) / 100;
+  Signal.$emit(output.id, inc);
+}
+let rAFID = 0
+let rAF = () => {
   rAFID = window.requestAnimationFrame(rAF);
+  outputs.forEach(send)
+}
+rAFID = window.requestAnimationFrame(rAF);
 
-  this.onClean = () => {
-    window.cancelAnimationFrame(rAFID);
-    console.log('onClean', box.id)
-  }
+this.onClean = () => {
+  window.cancelAnimationFrame(rAFID);
+  console.log('onClean', box.id)
 }
 `
 

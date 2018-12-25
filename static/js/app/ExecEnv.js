@@ -2,6 +2,44 @@
   var getID = (prefix = '') => {
     return '_exec_' + prefix + '_' + (1024 * 1024 * 1024 * Math.random()).toFixed(0)
   }
+
+  function getScript (source) {
+    return new Promise((resolve, reject) => {
+      var script = document.createElement('script')
+      var prior = document.getElementsByTagName('script')[0]
+      script.onload = () => { resolve() }
+      script.src = source
+      prior.parentNode.insertBefore(script, prior)
+    })
+  }
+
+  function loadAllJS (allJS) {
+    allJS = allJS || [
+      'https://cdnjs.cloudflare.com/ajax/libs/rasterizehtml/1.3.0/rasterizeHTML.allinone.js',
+
+      'https://threejs.org/build/three.min.js',
+      'https://threejs.org/examples/js/controls/OrbitControls.js',
+
+      'https://threejs.org/examples/js/postprocessing/EffectComposer.js',
+      'https://threejs.org/examples/js/postprocessing/RenderPass.js',
+      'https://threejs.org/examples/js/postprocessing/ShaderPass.js',
+      'https://threejs.org/examples/js/shaders/CopyShader.js',
+      'https://threejs.org/examples/js/shaders/LuminosityHighPassShader.js',
+      'https://threejs.org/examples/js/postprocessing/UnrealBloomPass.js'
+    ]
+    function loopLoad () {
+      let js = allJS.shift()
+      return getScript(js)
+        .then(() => {
+          if (allJS.length > 0) {
+            return loopLoad()
+          } else {
+            return Promise.resolve()
+          }
+        })
+    }
+    return loopLoad()
+  }
   let ExecEnv = {
     init: (uiAPI) => {
       return new Promise((resolve) => {
@@ -17,7 +55,8 @@
       let Signal = new Vue({})
       let Resources = (() => {
         let api = {
-          kvStore: {}
+          kvStore: {},
+          notifiers: []
         }
 
         api.set = (key, value) => {
@@ -25,6 +64,33 @@
         }
         api.get = (key) => {
           return api.kvStore[key]
+        }
+        let js = api.js = {}
+        js.need = (key, jsArr) => {
+          loadAllJS(jsArr)
+            .then(() => {
+              api.set(key, true)
+            })
+        }
+        js.ensure = api.ensure = (keys) => {
+          console.log(keys)
+          return Promise.all(
+            keys.map((key) => {
+              return new Promise((resolve) => {
+                if (api.get(key)) {
+                  resolve(api.get(key))
+                } else {
+                  let interval = setInterval(() => {
+                    if (api.get(key)) {
+                      console.log('ensure, got', key)
+                      clearTimeout(interval)
+                      resolve(api.get(key))
+                    }
+                  }, 100)
+                }
+              })
+            })
+          )
         }
 
         return api
@@ -91,12 +157,20 @@
                 Signal.$off(output.id)
               })
               this.$emit('refresh-sockets')
-              this.instance.onClean && this.instance.onClean()
+              try {
+                this.instance.onClean && this.instance.onClean()
+              } catch (e) {
+                console.log(e)
+              }
             }
           },
           readyInstance () {
             if (this.instance) {
-              this.instance.onReady && this.instance.onReady()
+              try {
+                this.instance.onReady && this.instance.onReady()
+              } catch (e) {
+                console.log(e)
+              }
             }
           },
           instantiate () {
@@ -108,6 +182,7 @@
                   this.function = new Function('env', this.mod.src)
                   let self = this
                   this.instance = new this.function({
+                    loadAllJS,
                     Resources,
                     Signal,
                     box: this.mod,

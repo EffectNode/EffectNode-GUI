@@ -76,15 +76,23 @@ export default {
     },
     editBox (box) {
       console.log('editBox', box)
-      this.uiAPI.portal.addWindow({
-        type: 'mod-editor',
-        data: {
-          boxID: box._id,
-          userID: box.userID,
-          projectID: box.projectID,
-          boxUUID: box.id
-        }
-      })
+
+      let found = this.uiAPI.portal.portals.find(p => p.data.boxID === box._id)
+      if (found) {
+        this.$nextTick(() => {
+          this.uiAPI.portal.activate(found)
+        })
+      } else {
+        this.uiAPI.portal.addWindow({
+          type: 'mod-editor',
+          data: {
+            boxID: box._id,
+            userID: box.userID,
+            projectID: box.projectID,
+            boxUUID: box.id
+          }
+        })
+      }
     },
     updateBothSocket ({ from, to }) {
       let Data = this.uiAPI.hive.Data
