@@ -50,7 +50,12 @@ export default new Router({
         if (await API.checkLogin()) {
           next()
         } else {
-          next('/menu')
+          next({
+            path: '/menu',
+            query: {
+              redirect: from.fullPath
+            }
+          })
         }
       },
       component: enOS

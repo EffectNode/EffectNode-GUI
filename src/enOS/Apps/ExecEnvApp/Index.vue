@@ -1,7 +1,7 @@
 <template>
   <div class="full quotes-app" >
     <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
-      {{ portal.win.name }}
+      {{ portal.win.name }} <button @click="uiAPI.execEnv.Sys.reset()">Reset</button>
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
       <div ref="mounter" class="full">

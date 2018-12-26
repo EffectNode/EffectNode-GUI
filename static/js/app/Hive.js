@@ -38,7 +38,7 @@ this.onClean = () => {
   console.log('onClean', box.id)
 }
   `
-  let PulseModule = `/* global env */
+  let MainLoopModule = `/* global env */
 /* eslint-disable */
 let {
   Signal,
@@ -50,17 +50,24 @@ let {
 } = env
 /* esltint-enable */
 console.log('Environment is ready for you!::', box.id)
+// sender
+
+box.name = 'Main Loop Module'
+
+console.log('onReady')
 
 let send = (output) => {
   let inc = Math.floor((Date.now() * 0.01) % 100) / 100;
   Signal.$emit(output.id, inc);
 }
+
 let rAFID = 0
 let rAF = () => {
   rAFID = window.requestAnimationFrame(rAF);
   outputs.forEach(send)
 }
 rAFID = window.requestAnimationFrame(rAF);
+
 
 this.onClean = () => {
   window.cancelAnimationFrame(rAFID);
@@ -75,7 +82,7 @@ this.onClean = () => {
 
         Doc.projectID = api.projectID
         Doc.userID = api.userID
-        Data.ts = Data.ts || {}
+        Data.ts = {}
         Data.TableSync = api.TableSync
         Data.RT = api.RT
         Data.listen({ Data, Doc })
@@ -91,6 +98,8 @@ this.onClean = () => {
         Data.RT.en.emit('open-hive', {
           projectID: Doc.projectID
         }, async () => {
+          Doc.root.modules = []
+          Doc.root.connectors = []
           Data.ts.modules.sync()
           Data.ts.connectors.sync()
 
@@ -122,7 +131,7 @@ this.onClean = () => {
       let mod = await Data.makeModule({
         Doc,
         name: 'Main Loop Module',
-        src: PulseModule
+        src: MainLoopModule
       })
 
       // Data.addModToDoc({ mod, Doc })

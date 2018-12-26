@@ -24,7 +24,7 @@ var baseURL = 'http://localhost:3003/'
 
 // console.log(process.env.NODE_ENV)
 // debug
-baseURL = `https://effectnode-heroku.herokuapp.com/`
+// baseURL = `https://effectnode-heroku.herokuapp.com/`
 
 if (process.env.NODE_ENV === 'production') {
   baseURL = 'https://effectnode-heroku.herokuapp.com/'
@@ -227,8 +227,8 @@ export class TableSync {
         let newItem = results
         let arr = this.getArray()
         let idx = arr.findIndex(a => a._id === newItem._id)
+        let oldItem = arr[idx]
         Object.keys(newItem).forEach((keyname) => {
-          let oldItem = arr[idx]
           if (newItem && oldItem) {
             oldItem[keyname] = newItem[keyname]
           }

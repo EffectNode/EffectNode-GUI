@@ -53,7 +53,7 @@
       let { projectID } = Doc
       let Vue = window.Vue
       let Signal = new Vue({})
-      let Resources = (() => {
+      let MakeResources = () => {
         let api = {
           kvStore: {},
           notifiers: []
@@ -86,7 +86,7 @@
                       clearTimeout(interval)
                       resolve(api.get(key))
                     }
-                  }, 100)
+                  }, 1000 / 20)
                 }
               })
             })
@@ -94,7 +94,8 @@
         }
 
         return api
-      })()
+      }
+      let Resources = MakeResources()
 
       let modRunner = {
         props: {
@@ -103,6 +104,7 @@
         },
         data () {
           return {
+            cleanHandler () {},
             Signal,
             function: {},
             instance: {}
@@ -180,7 +182,6 @@
                 try {
                   this.cleanInstance()
                   this.function = new Function('env', this.mod.src)
-                  let self = this
                   this.instance = new this.function({
                     loadAllJS,
                     Resources,
@@ -219,7 +220,7 @@
             <div v-if="ready" style="display: none; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;" >
               <pre>{{ modules }}</pre>
               <span style="display: none;">{{ root }}</span>
-              <modrunner :signal="Signal" @refresh-sockets="refreshSockets" :key="mod._id" :sockets="sockets" :mod="mod" v-for="mod in modules"></modrunner>
+              <modrunner v-if="canRunSystem" :signal="Signal" @refresh-sockets="refreshSockets" :key="mod._id" :sockets="sockets" :mod="mod" v-for="mod in modules"></modrunner>
             </div>
             <div class="rootDOM" style="width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;" ref="rootDOM"></div>
           </div>
@@ -233,6 +234,7 @@
         },
         data () {
           return {
+            canRunSystem: true,
             ready: false,
             root: Doc.root,
             Signal,
@@ -248,6 +250,15 @@
           }
         },
         methods: {
+          reset () {
+            Resources = MakeResources()
+            Resources.set('rootDOM', this.$refs.rootDOM)
+            this.refreshSockets()
+            this.canRunSystem = false
+            setTimeout(() => {
+              this.canRunSystem = true
+            }, 100)
+          },
           refreshSockets () {
             this.sockets.filter(s => s.socket.to && s.type === 'output').forEach((soc) => {
               if (this.h[soc.socket.from]) {

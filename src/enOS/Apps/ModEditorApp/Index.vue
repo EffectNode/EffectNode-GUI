@@ -5,9 +5,27 @@
         :: {{ currentMod.name }} ::
       </span>
       <button @click="view = 'debug'">Debug</button>
+      <button @click="view = 'ui'">UI</button>
       <button @click="view = 'code'">Code</button>
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
+
+      <div v-if="view === 'ui'" class="full">
+        UI Controls
+        <button @click="addRange">Add Range</button>
+        <br />
+        <div v-if="currentMod">
+
+          <div :key="m.id" v-for="m in currentMod.meta" v-if="m.type === 'range'">
+            <button @click="removeMeta(m)">X</button>
+            {{ m.type }}
+            <input v-model="m.label" @input="saveMeta(m)" style="width: 100px;" />
+            <input type="range" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)"  />
+            <input type="text" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)" style="width: 50px;" />
+          </div>
+
+        </div>
+      </div>
 
       <codemirror
         class="code-editor"
@@ -95,8 +113,14 @@ export default {
   },
   data () {
     let self = this
+    this.portal.data.view = this.portal.data.view || 'ui'
     return {
-      view: 'code',
+      get view () {
+        return self.portal.data.view
+      },
+      set view (v) {
+        self.portal.data.view = v
+      },
       Doc: false,
       Data: false,
       root: false,
@@ -129,6 +153,36 @@ export default {
     }
   },
   methods: {
+    saveMeta (m) {
+      if (m.type === 'range') {
+        m.value = Number(m.value)
+      }
+      this.Data.ts.modules.animate(this.currentMod)
+      clearTimeout(this.metaDelay)
+      this.metaDelay = setTimeout(() => {
+        this.Data.ts.modules.update(this.currentMod)
+      }, 500)
+    },
+    addRange () {
+      this.addMeta({
+        id: '_r' + (Math.random() * 1024 * 1024 * 1024).toFixed(0),
+        label: 'translateX',
+        type: 'range',
+        min: -100,
+        max: 100,
+        step: 0.1,
+        value: 0
+      })
+    },
+    addMeta (v) {
+      this.currentMod.meta.push(v)
+      this.Data.ts.modules.update(this.currentMod)
+    },
+    removeMeta (v) {
+      let idx = this.currentMod.meta.findIndex(e => e.id === v.id)
+      this.currentMod.meta.splice(idx, 1)
+      this.Data.ts.modules.update(this.currentMod)
+    },
     saveMe () {
       this.Data.ts.modules.update(this.currentMod)
     },
@@ -154,11 +208,24 @@ export default {
       console.log('the editor is readied!', cm)
       let doc = cm.getDoc()
       doc.setValue(this.currentMod.src)
+      this.Data.ts.modules.onLocal({
+        handler: ({ results }) => {
+          this.stopWatch = true
+          // console.log(results.src)
+          cm.setValue(results.src)
+          cm.focus()
+          this.stopWatch = false
+        },
+        method: 'update'
+      })
     },
     onCmFocus (cm) {
       console.log('the editor is focus!', cm)
     },
     onCmCodeChange (newCode) {
+      if (this.stopWatch) {
+        return
+      }
       console.log('this is new code', newCode)
       this.currentMod.src = newCode
       // this.$forceUpdate()
@@ -171,6 +238,9 @@ export default {
   watch: {
   },
   computed: {
+    meta () {
+      return this.currentMod.meta
+    },
     codemirror () {
       return this.$refs.myCm.codemirror
     },

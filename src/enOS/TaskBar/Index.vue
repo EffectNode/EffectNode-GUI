@@ -20,7 +20,7 @@
           @touchstart="$emit('activated', { portal: ip })"
           @click="$emit('activated', { portal: ip })"
         >
-          {{ ip.app }}
+          {{ ip.name || ip.app }}
         </div>
       </div>
     </div>
