@@ -221,7 +221,7 @@
             <div v-if="ready" style="display: none; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;" >
               <pre>{{ modules }}</pre>
               <span style="display: none;">{{ root }}</span>
-              <modrunner v-if="canRunSystem" :signal="Signal" @refresh-sockets="refreshSockets" :key="mod._id" :sockets="sockets" :mod="mod" v-for="mod in modules"></modrunner>
+              <modrunner v-if="canRunSystem" :signal="Signal" @refresh-sockets="refreshSockets" :key="mod._id + mod.id" :sockets="sockets" :mod="mod" v-for="mod in modules"></modrunner>
             </div>
             <div class="rootDOM" style="width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;" ref="rootDOM"></div>
           </div>

@@ -14,7 +14,8 @@ export default {
     uniq: {},
     socketuis: {},
     pair: {},
-    svg: {}
+    svg: {},
+    running: { default: false }
     // bridge: {
     //   required: true
     // }
@@ -53,11 +54,10 @@ export default {
       return '--' + (Math.random() * 1024 * 1024 * 1024).toFixed(0)
     }
     return {
-
       bridge: {
         id: getID(),
         line: {
-          running: false,
+          running: true,
           stroke: `green`
         },
         a: {
@@ -98,8 +98,8 @@ export default {
     },
     getStyle () {
       return {
-        'stroke-dasharray': this.bridge.line.running ? '8px' : '0px',
-        'animation-play-state': this.bridge.line.running ? 'running' : 'paused',
+        'stroke-dasharray': this.running ? '8px' : '0px',
+        'animation-play-state': this.running ? 'running' : 'paused',
         'animation-direction': this.bridge.a.voltage > this.bridge.b.voltage ? `normal` : `reverse`
       }
     },
@@ -112,7 +112,7 @@ export default {
       // }
     },
     getFromCenter (a, b) {
-      console.log(a, b)
+      // console.log(a, b)
       let ax = a.rect.x + a.rect.w / 2
       let ay = a.rect.y + a.rect.h / 2
       let bx = b.rect.x + b.rect.w / 2

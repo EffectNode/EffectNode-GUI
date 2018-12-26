@@ -137,20 +137,28 @@ export class TableSync {
     this.namespace = namespace
     this.getArray = getArray
     this.$forceUpdate = $forceUpdate
+
+    setInterval(() => {
+      NProgress.done()
+    }, 777)
   }
   get socket () {
     return RT.en || { emit () {}, on () {} }
   }
   add (data) {
+    NProgress.start()
     return this.doRemote({ data: data, method: 'add' })
   }
   remove (data) {
+    NProgress.start()
     return this.doRemote({ data: data, method: 'remove' })
   }
   update (data) {
+    NProgress.start()
     return this.doRemote({ data: data, method: 'update' })
   }
   hydrate (data) {
+    NProgress.start()
     return this.doRemote({ data: data, method: 'hydrate' })
   }
   animate (data) {

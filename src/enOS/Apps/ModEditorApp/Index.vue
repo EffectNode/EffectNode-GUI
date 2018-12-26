@@ -4,7 +4,7 @@
       <span  v-if="currentMod">
         :: {{ currentMod.name }} ::
       </span>
-      <button @click="view = 'debug'">Debug</button>
+      <button @click="view = 'inspect'">I/O</button>
       <button @click="view = 'ui'">UI</button>
       <button @click="view = 'code'">Code</button>
     </TitleBar>
@@ -17,13 +17,13 @@
         <div v-if="currentMod">
 
           <div :key="m.id" v-for="m in currentMod.meta" v-if="m.type === 'range'">
-            <button @click="removeMeta(m)">X</button>
+            <button @click="removeMeta(m)">x</button>
             {{ m.type }}
             <input v-model="m.label" @input="saveMeta(m)" style="width: 100px;" />
             <input type="range" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)"  />
-            <input type="text" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)" style="width: 45px;" />
-            <!-- <input type="text" v-model="m.min" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)" style="width: 45px;" />
-            <input type="text" v-model="m.max" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)" style="width: 45px;" /> -->
+            <input type="number" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)" style="width: 45px;" />
+            <input type="number" v-model="m.min" :step="m.step" @input="saveMeta(m)" style="width: 40px;" />
+            <input type="number" v-model="m.max" :step="m.step" @input="saveMeta(m)" style="width: 40px;" />
           </div>
 
         </div>
@@ -46,19 +46,50 @@
       </div>
 
 
-      <div v-show="view === 'debug'">
-        <h1>
-          Mod Editor
-        </h1>
+      <div v-show="view === 'inspect'">
+        <div style="width: 90%; margin: 0px 5%;" v-if="currentMod && inputs && outputs">
 
-        <pre>{{ currentMod }}</pre>
-        <h1>portal</h1>
-        <pre>{{ portal }}</pre>
+          <h1>Inspector</h1>
+          <h2 v-if="currentMod">{{ currentMod.name }}</h2>
+          <input type="text" v-if="currentMod" v-model="currentMod.name" @input="saveModuleBox()" style="width: 400px;" />
 
-        <h1>Active Inputs</h1>
-        <pre>{{ activeInputs }}</pre>
-        <h2>Active Outpus</h2>
-        <pre>{{ activeOutputs }}</pre>
+          <h2>
+            Input Sockets
+          </h2>
+          <ul>
+            <li :key="input._id" v-for="(input, ii) in inputs">
+              <input type="color" v-model="input.color" @change="saveConnection(input)" />
+              env.inputs[{{ ii }}]
+              <input type="text" v-model="input.name" @input="saveModuleBox()" /> <button class="en-btn en-btn-danger" @click="removeSocket(input)">-</button>
+            </li>
+            <li><button class="en-btn en-btn-successful" @click="addSocket(currentMod, 'input')">+</button></li>
+
+          </ul>
+          <h2>
+            Output Sockets
+          </h2>
+          <ul>
+            <li :key="output._id" v-for="(output, ii) in outputs">
+              <input type="color" v-model="output.color" @change="saveConnection(output)" />
+              env.outputs[{{ ii }}]
+              <input type="text" v-model="output.name" @input="saveModuleBox()" /> <button class="en-btn en-btn-danger" @click="removeSocket(output)">-</button>
+            </li>
+            <li><button class="en-btn en-btn-successful" @click="addSocket(currentMod, 'output')">+</button></li>
+          </ul>
+
+          <h1>Current Module</h1>
+          <pre>{{ currentMod }}</pre>
+          <h1>Portal</h1>
+          <pre>{{ portal }}</pre>
+
+          <h1>
+            Module I/O Inspector
+          </h1>
+          <h2>Active & Connected Inputs</h2>
+          <pre>{{ activeInputs }}</pre>
+          <h2>Active & Connected Outpus</h2>
+          <pre>{{ activeOutputs }}</pre>
+        </div>
       </div>
 
       <!--
@@ -141,10 +172,10 @@ export default {
       // cmOptions: {
       //   extraKeys: {
       //     'Cmd-S': () => {
-      //       self.saveMe()
+      //       self.saveModuleBox()
       //     },
       //     'Ctrl-S': () => {
-      //       self.saveMe()
+      //       self.saveModuleBox()
       //     },
       //     // 'Ctrl-Space': 'autocomplete',
       //     'Ctrl-Q': function (cm) {
@@ -165,6 +196,16 @@ export default {
     }
   },
   methods: {
+    addSocket (currentMod, type) {
+      if (type === 'input' || type === 'output') {
+        this.Data.makeSocket({ Doc: this.Doc, idx: this.Data.getIDX(), type, modID: currentMod.id })
+      } else {
+        console.error('bad types')
+      }
+    },
+    removeSocket (socket) {
+      this.Data.removeSocketFromMod({ socket })
+    },
     setDefaultView () {
       let defaultView = this.currentMod.meta.length > 0 ? 'ui' : 'code'
       this.portal.data.view = this.portal.data.view || defaultView
@@ -199,8 +240,19 @@ export default {
       this.currentMod.meta.splice(idx, 1)
       this.Data.ts.modules.update(this.currentMod)
     },
-    saveMe () {
-      this.Data.ts.modules.update(this.currentMod)
+    saveConnection (v) {
+      this.Data.ts.connectors.animate(v)
+      clearTimeout(this.connTimeout)
+      this.connTimeout = setTimeout(() => {
+        this.Data.ts.connectors.update(v)
+      }, 500)
+    },
+    saveModuleBox () {
+      this.Data.ts.modules.animate(this.currentMod)
+      clearTimeout(this.modTimeout)
+      this.modTimeout = setTimeout(() => {
+        this.Data.ts.modules.update(this.currentMod)
+      }, 500)
     },
     init () {
       let { Doc, Data } = this.uiAPI.hive
@@ -240,6 +292,7 @@ export default {
         this.currentMod.src = newCode
         this.Data.ts.modules.update(this.currentMod)
       })
+
       // on data down
       this.Data.ts.modules.onLocal({
         handler: ({ results }) => {
@@ -363,6 +416,20 @@ export default {
     // },
     currentMod () {
       return this.getCurrentMod()
+    },
+    inputs () {
+      return this.connectors.filter((c) => {
+        return c.type === 'input'
+      }).slice().sort((a, b) => {
+        return a.idx - b.idx
+      })
+    },
+    outputs () {
+      return this.connectors.filter((c) => {
+        return c.type === 'output'
+      }).slice().sort((a, b) => {
+        return a.idx - b.idx
+      })
     },
     activeInputs () {
       return this.connectors.filter((c) => {

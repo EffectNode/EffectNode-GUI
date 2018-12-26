@@ -1,12 +1,12 @@
 <template>
   <g>
-    <rect ref="socket" v-if="type === 'input'" class="mover cross-hair input" :x="x" :y="y" :width="w" :height="h" />
-    <rect ref="socket" v-else-if="type === 'output'" class="mover cross-hair output" :x="x" :y="y" :width="w" :height="h" />
+    <rect ref="socket" v-if="type === 'input'" class="mover cross-hair" stroke="black" :fill="socket.color" :x="x" :y="y" :width="w" :height="h" />
+    <rect ref="socket" v-else-if="type === 'output'" class="mover cross-hair" stroke="black" :fill="socket.color" :x="x" :y="y" :width="w" :height="h" />
 
-    <circle ref="socket" v-if="type === 'input'" class="mover cross-hair stroke-only" :cx="x + w / 2" :cy="y + h / 2" :dwidth="w" :r="h / 4" />
-    <circle ref="socket" v-else-if="type === 'output'" class="mover cross-hair stroke-only " :cx="x + w / 2" :cy="y + h / 2" :dwidth="w" :r="h / 4" />
+    <circle ref="socket" v-if="type === 'input'" class="mover cross-hair stroke-only" :stroke="'black'" :fill="'none'" :cx="x + w / 2" :cy="y + h / 2" :dwidth="w" :r="h / 4" />
+    <circle ref="socket" v-else-if="type === 'output'" class="mover cross-hair stroke-only " :stroke="'black'" :fill="'none'" :cx="x + w / 2" :cy="y + h / 2" :dwidth="w" :r="h / 4" />
 
-    <path class="path" :stroke="`url(#${uniq}kale-salad)`" v-if="isDown" :style="getStyle()" :d="getFromNode(bridge.a, bridge.b)" fill="none" :marker-start="`url(#${uniq}circle-ok)`" marker-mid="url(#${uniq}square)" :marker-end="`url(#${uniq}circle-ok)`" />
+    <path class="path" :stroke="`url(#${uniq}kale-salad)`" v-if="isDown" :style="getStyle()" :d="getFromNode(bridge.a, bridge.b)" :fill="'none'" :marker-start="`url(#${uniq}circle-ok)`" marker-mid="url(#${uniq}square)" :marker-end="`url(#${uniq}circle-ok)`" />
   </g>
 </template>
 
@@ -224,7 +224,33 @@ export default {
     }
   },
   methods: {
-
+    invertColor (hex) {
+      /* eslint-disable */
+      if (hex.indexOf('#') === 0) {
+          hex = hex.slice(1);
+      }
+      // convert 3-digit hex to 6-digits.
+      if (hex.length === 3) {
+          hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+      }
+      if (hex.length !== 6) {
+          throw new Error('Invalid HEX color.');
+      }
+      // invert color components
+      var r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
+          g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
+          b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
+      // pad each with zeros and return
+      return '#' + this.padZero(r) + this.padZero(g) + this.padZero(b);
+      /* eslint-enable */
+    },
+    padZero (str, len) {
+      /* eslint-disable */
+      len = len || 2;
+      var zeros = new Array(len).join('0');
+      return (zeros + str).slice(-len);
+      /* eslint-enable */
+    },
     getFromNode (a, b) {
       let ax = a.rect.x + a.rect.w / 2
       let ay = a.rect.y + a.rect.h / 2
@@ -259,23 +285,24 @@ export default {
 .is-down .crosshair{
   cursor: crosshair;
 }
-.input{
+/* .input{
   stroke: black;
   fill: rgb(201, 201, 201);
 }
 .output{
   stroke: black;
   fill: rgb(201, 201, 201);
-}
+} */
+
 @keyframes dash {
   to {
     stroke-dashoffset: 1000;
   }
 }
-.stroke-only{
+/* .stroke-only{
   fill: transparent;
   stroke: black;
-}
+} */
 .path {
   /* stroke: url('#kale-salad'); */
   animation: dash 30s linear infinite;

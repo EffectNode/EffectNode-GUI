@@ -260,6 +260,12 @@ this.onClean = () => {
       let idx = modules.findIndex(m => m.id === mod.id)
       modules.splice(idx, 1)
     },
+    removeSocketFromMod ({ socket }) {
+      // let connectors = Doc.root.connectors
+      // let idx = connectors.findIndex(m => m._id === socket._id)
+      // connectors.splice(idx, 1)
+      return Data.ts.connectors.remove(socket)
+    },
     makeDocumentStack () {
       return {
         root: {
@@ -282,6 +288,7 @@ this.onClean = () => {
         id: sID,
         type,
         idx,
+        color: '#bababa',
         modID,
         mod: {
           from: modID,

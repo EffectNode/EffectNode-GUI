@@ -42,7 +42,7 @@
           @move="onPannerMove"
         ></Panner>
 
-        <g :key="`${uniq}boxes-${box.id}`" v-for="box in modules">
+        <g :key="`${uniq}boxes-${box._id}`" v-for="box in modules">
           <ModuleBox
           @editBox="editBox"
           @toggle-size="toggleSize"
@@ -55,7 +55,7 @@
         </g>
 
         <g :key="`${uniq}cabel-${pair.socket.from + pair.socket.to}`" v-for="(pair) in outputCable">
-          <Cable :Data="Data" :Doc="Doc" :uniq="uniq" :pair="pair" :socketuis="socketuis" :svg="$refs['svg']" v-if="$refs.svg" @move="onMoveCable"></Cable>
+          <Cable :running="flowYo" :Data="Data" :Doc="Doc" :uniq="uniq" :pair="pair" :socketuis="socketuis" :svg="$refs['svg']" v-if="$refs.svg" @move="onMoveCable"></Cable>
         </g>
 
         <!-- <rect :x="box.b.x" :y="box.b.y" :width="box.b.w" :height="box.b.h" fill="lightgreen" stroke="black" >
@@ -69,6 +69,7 @@
         <span style="display: none;">{{ root }}</span>
         <button @click="scrolHome">Home View</button>
         <button @click="duplicateWindow">Duplicate Window</button>
+        <button @click="flowYo = !flowYo">Toggle FlowYo</button>
       </div>
   </div>
 </template>
@@ -297,6 +298,7 @@ export default {
   },
   data () {
     return {
+      flowYo: false,
       ui: {
         aX: 0,
         aY: 0,
