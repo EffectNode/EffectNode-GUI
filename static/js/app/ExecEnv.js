@@ -201,6 +201,7 @@
                 } catch (e) {
                   console.log('======compiling======')
                   console.error(e)
+                  console.error(this.mod.src)
                   reject(e)
                 }
                 /* eslint-enable */

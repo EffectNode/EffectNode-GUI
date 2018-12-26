@@ -66,9 +66,11 @@ export default {
       if (window.prompt('type yes to remove this module and its connnections?') === 'yes') {
         let Data = this.uiAPI.hive.Data
         Data.ts.modules.remove(box)
+
         inputs.forEach((input) => {
           Data.ts.connectors.remove(input)
         })
+
         outputs.forEach((output) => {
           Data.ts.connectors.remove(output)
         })

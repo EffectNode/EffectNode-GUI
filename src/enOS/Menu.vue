@@ -113,25 +113,17 @@ export default {
   },
   methods: {
     loadProject ({ project }) {
-      // window.location.assign(`/enOS/${project._id}`)
-      this.$router.push(`/enOS/${project._id}`)
+      window.location.assign(`/enOS/${project._id}`)
+      // this.$router.push(`/enOS/${project._id}`)
     },
     quickOpen ({ project }) {
       this.$router.push(`/enOS/${project._id}`)
-    },
-    loadProjectNewWindow ({ project }) {
-      var href = `/enOS/${project._id}`
-      var a = document.createElement('a')
-      a.target = '_blank'
-      a.href = href
-
-      a.click()
     },
     cloneProject ({ project }) {
       API.RT.en.emit('clone-project', { projectID: project._id, userID: API.myself._id }, (resp) => {
         console.log(resp)
         if (resp.signal === 'ok') {
-          this.quickOpen({ project: resp.newProject })
+          this.loadProject({ project: resp.newProject })
         } else {
           alert('cannot clone project')
         }

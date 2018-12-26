@@ -10,7 +10,7 @@
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
 
-      <div v-if="view === 'ui'" class="full">
+      <div v-show="view === 'ui'" class="full">
         UI Controls
         <button @click="addRange">Add Range</button>
         <br />
@@ -21,24 +21,32 @@
             {{ m.type }}
             <input v-model="m.label" @input="saveMeta(m)" style="width: 100px;" />
             <input type="range" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)"  />
-            <input type="text" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)" style="width: 50px;" />
+            <input type="text" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)" style="width: 45px;" />
+            <!-- <input type="text" v-model="m.min" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)" style="width: 45px;" />
+            <input type="text" v-model="m.max" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)" style="width: 45px;" /> -->
           </div>
 
         </div>
       </div>
 
-      <codemirror
-        class="code-editor"
-        v-if="currentMod && view === 'code'"
-        ref="myCm"
+      <div v-show="view === 'code'" class="full" ref="editor">
 
-        :options="cmOptions"
-        @ready="onCmReady"
-        @focus="onCmFocus"
-        @input="onCmCodeChange">
-      </codemirror>
+        <!-- <codemirror
+          class="code-editor"
 
-      <div v-if="view === 'debug'">
+          ref="myCm"
+
+          :options="cmOptions"
+          @ready="onCmReady"
+          @d-focus="onCmFocus"
+          @d-blur="onCmBlur"
+          @input="onCmCodeChange">
+        </codemirror> -->
+
+      </div>
+
+
+      <div v-show="view === 'debug'">
         <h1>
           Mod Editor
         </h1>
@@ -66,9 +74,12 @@
 </template>
 
 <script>
-import { codemirror } from 'vue-codemirror'
+// import { codemirror } from 'vue-codemirror'
 import TitleBar from '../TitleBar'
-import 'codemirror/mode/javascript/javascript.js'
+// import 'codemirror/mode/javascript/javascript.js'
+import * as brace from 'brace'
+import 'brace/mode/javascript'
+import 'brace/theme/monokai'
 
 // import axios from 'axios'
 // import SVGArea from '../../SVGArea/Index.vue'
@@ -98,7 +109,7 @@ import 'codemirror/mode/javascript/javascript.js'
 
 export default {
   components: {
-    codemirror,
+    // codemirror,
     TitleBar// ,
     // SVGArea
   },
@@ -110,13 +121,14 @@ export default {
     // this.$on('resize', ({ portal }) => {
     //   this.portal = portal
     // })
+
   },
   data () {
     let self = this
-    this.portal.data.view = this.portal.data.view || 'ui'
+
     return {
       get view () {
-        return self.portal.data.view
+        return self.portal.data.view || 'code'
       },
       set view (v) {
         self.portal.data.view = v
@@ -124,35 +136,39 @@ export default {
       Doc: false,
       Data: false,
       root: false,
-      ready: false,
+      ready: false // ,
 
-      cmOptions: {
-        extraKeys: {
-          'Cmd-S': () => {
-            self.saveMe()
-          },
-          'Ctrl-S': () => {
-            self.saveMe()
-          },
-          'Ctrl-Space': 'autocomplete',
-          'Ctrl-Q': function (cm) {
-            cm.foldCode(cm.getCursor())
-          }
-        },
-        // codemirror options
-        keyMap: 'sublime',
-        tabSize: 2,
-        // codemirror options
-        mode: 'text/javascript',
-        theme: 'monokai',
-        lineNumbers: true,
-        line: true
-        // more codemirror options, 更多 codemirror 的高级配置...
-      }
+      // cmOptions: {
+      //   extraKeys: {
+      //     'Cmd-S': () => {
+      //       self.saveMe()
+      //     },
+      //     'Ctrl-S': () => {
+      //       self.saveMe()
+      //     },
+      //     // 'Ctrl-Space': 'autocomplete',
+      //     'Ctrl-Q': function (cm) {
+      //       cm.foldCode(cm.getCursor())
+      //     }
+      //   },
+      //   // codemirror options
+      //   keyMap: 'sublime',
+      //   tabSize: 2,
+      //   // codemirror options
+      //   mode: 'text/javascript',
+      //   theme: 'monokai',
+      //   lineNumbers: true// ,
+      //   // line: true
+      //   // more codemirror options, 更多 codemirror 的高级配置...
+      // }
       // portal: false
     }
   },
   methods: {
+    setDefaultView () {
+      let defaultView = this.currentMod.meta.length > 0 ? 'ui' : 'code'
+      this.portal.data.view = this.portal.data.view || defaultView
+    },
     saveMeta (m) {
       if (m.type === 'range') {
         m.value = Number(m.value)
@@ -204,46 +220,147 @@ export default {
       //   this.ready = true
       // })
     },
-    onCmReady (cm) {
-      console.log('the editor is readied!', cm)
-      let doc = cm.getDoc()
-      doc.setValue(this.currentMod.src)
+
+    setupBrace () {
+      this.$refs.editor.innerHTML = ''
+      var editor = this.editor = brace.edit(this.$refs.editor)
+      editor.setTheme('ace/theme/monokai')
+      editor.setFontSize(14)
+      this.editor.$blockScrolling = Infinity
+
+      this.$on('resize', () => {
+        this.editor.resize()
+      })
+
+      this.editor.on('change', () => {
+        if (this.stopWatch) {
+          return
+        }
+        let newCode = this.editor.getValue()
+        this.currentMod.src = newCode
+        this.Data.ts.modules.update(this.currentMod)
+      })
+      // on data down
       this.Data.ts.modules.onLocal({
         handler: ({ results }) => {
           this.stopWatch = true
           // console.log(results.src)
-          cm.setValue(results.src)
-          cm.focus()
+          this.currentMod.src = results.src
+          this.editor.setValue(this.currentMod.src, 1)
+          // this.editor.moveCursorTo(0, 0)
+          // this.editor.focus()
+          // cm.focus()
           this.stopWatch = false
         },
         method: 'update'
       })
+
+      var session = editor.getSession()
+      session.setUseWrapMode(false)
+      session.setUseWorker(false)
+      session.setMode('ace/mode/javascript')
+      session.setOptions({ tabSize: 2, useSoftTabs: true })
+
+      var commands = [
+        {
+          name: 'save',
+          bindKey: { win: 'Ctrl-S', mac: 'Command-S' },
+          exec: () => {
+            let newCode = this.editor.getValue()
+            this.currentMod.src = newCode
+            this.Data.ts.modules.update(this.currentMod)
+          },
+          readOnly: true // false if this command should not apply in readOnly mode
+        },
+        {
+          name: 'multicursor',
+          bindKey: { win: 'Ctrl-D', mac: 'Command-D' },
+          exec: function (editor) {
+            editor.selectMore(1)
+          },
+          // multiSelectAction: 'forEach',
+          scrollIntoView: 'cursor',
+          readOnly: true // false if this command should not apply in readOnly mode
+        }
+      ]
+
+      commands.forEach((command) => {
+        this.editor.commands.addCommand(command)
+      })
+
+      this.editor.setValue(this.currentMod.src, 1)
     },
-    onCmFocus (cm) {
-      console.log('the editor is focus!', cm)
-    },
-    onCmCodeChange (newCode) {
-      if (this.stopWatch) {
-        return
-      }
-      console.log('this is new code', newCode)
-      this.currentMod.src = newCode
-      // this.$forceUpdate()
-      this.Data.ts.modules.update(this.currentMod)
-    },
+
+    // onCmReady (cm) {
+    //   console.log('the editor is readied!', cm)
+    //   let doc = cm.getDoc()
+    //   doc.setValue(this.currentMod.src)
+    //   // this.Data.ts.modules.onLocal({
+    //   //   handler: ({ results }) => {
+    //   //     this.stopWatch = true
+    //   //     // console.log(results.src)
+    //   //     this.currentMod.src = results.src
+    //   //     doc.setValue(results.src, {scroll: false})
+    //   //     // cm.focus()
+    //   //     this.stopWatch = false
+    //   //   },
+    //   //   method: 'update'
+    //   // })
+    // },
+    // onCmFocus (cm) {
+    //   console.log('the editor is focus!', this.scrollInfo)
+    //   // cm.focus()
+    //   if (this.scrollInfo) {
+    //     // cm.scrollTo(this.scrollInfo.left, this.scrollInfo.top)
+    //     // setInterval(() => {
+    //     //   cm.scrollTo(this.scrollInfo.left, this.scrollInfo.top)
+    //     // }, 1000)
+    //   }
+    // },
+    // onCmBlur (cm) {
+    //   this.scrollInfo = cm.getScrollInfo()
+    //   console.log('the editor is blur!', this.scrollInfo)
+    // },
+    // onCmCodeChange (newCode) {
+    //   if (this.stopWatch) {
+    //     return
+    //   }
+    //   console.log('this is new code', newCode)
+    //   this.currentMod.src = newCode
+    //   // this.$forceUpdate()
+    //   this.Data.ts.modules.update(this.currentMod)
+    // },
     getCurrentMod () {
       return this.modules.find(m => m._id === this.portal.data.boxID)
     }
   },
   watch: {
+    meta () {
+      if (this.meta.length > 0) {
+        this.setDefaultView()
+      }
+    },
+    currentMod () {
+      if (this.currentMod) {
+        this.setupBrace()
+      }
+    },
+    view () {
+      if (this.view === 'code' && !this.editor) {
+        this.setupBrace()
+      }
+    }
   },
   computed: {
     meta () {
+      if (!this.currentMod) {
+        return []
+      }
       return this.currentMod.meta
     },
-    codemirror () {
-      return this.$refs.myCm.codemirror
-    },
+    // codemirror () {
+    //   return this.$refs.myCm.codemirror
+    // },
     currentMod () {
       return this.getCurrentMod()
     },
@@ -292,6 +409,7 @@ export default {
 
 <style scoped>
 @import url(../../jot.css);
+@import url(../../CodeMirror/mirror.css);
 
 .quotes-app{
   /* background: linear-gradient(90deg, #eef3ff 0%, #8aa3d4 100%); */

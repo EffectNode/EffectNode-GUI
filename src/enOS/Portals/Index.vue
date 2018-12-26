@@ -182,7 +182,7 @@ export default {
       })
     },
     onActivated (ip) {
-      console.log(ip)
+      // console.log(ip)
       this.uiAPI.portal.activate(ip)
 
       this.$forceUpdate()

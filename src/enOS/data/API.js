@@ -24,7 +24,7 @@ var baseURL = 'http://localhost:3003/'
 
 // console.log(process.env.NODE_ENV)
 // debug
-// baseURL = `https://effectnode-heroku.herokuapp.com/`
+baseURL = `https://effectnode-heroku.herokuapp.com/`
 
 if (process.env.NODE_ENV === 'production') {
   baseURL = 'https://effectnode-heroku.herokuapp.com/'
