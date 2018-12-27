@@ -3,6 +3,8 @@ import '../../../static/js/app/Hive.js'
 import '../../../static/js/app/ExecEnv.js'
 import * as API from './API'
 
+import * as Builder from './builder'
+
 export const HiveData = window.HiveData
 export const ExecEnv = window.ExecEnv
 
@@ -12,7 +14,8 @@ export const loadProject = ({ projectID, userID }) => {
       projectID,
       userID,
       RT: API.RT,
-      TableSync: API.TableSync
+      TableSync: API.TableSync,
+      Builder: Builder
     }
     Promise.all([
       Portal.init($uiAPI),
@@ -21,7 +24,8 @@ export const loadProject = ({ projectID, userID }) => {
       .then((res) => {
         $uiAPI.portal = res[0]
         $uiAPI.hive = res[1]
-        return ExecEnv.init($uiAPI)
+        // return $uiAPI
+        // return ExecEnv.init($uiAPI)
       })
       .then(() => {
         resolve($uiAPI)

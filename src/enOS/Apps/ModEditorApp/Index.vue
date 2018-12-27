@@ -16,14 +16,14 @@
         <br />
         <div v-if="currentMod">
 
-          <div :key="m.id" v-for="m in currentMod.meta" v-if="m.type === 'range'">
+          <div :key="m.id" v-for="(m, mi) in currentMod.meta" v-if="m.type === 'range'">
             <button @click="removeMeta(m)">x</button>
             {{ m.type }}
-            <input v-model="m.label" @input="saveMeta(m)" style="width: 100px;" />
-            <input type="range" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)"  />
-            <input type="number" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m)" style="width: 45px;" />
-            <input type="number" v-model="m.min" :step="m.step" @input="saveMeta(m)" style="width: 40px;" />
-            <input type="number" v-model="m.max" :step="m.step" @input="saveMeta(m)" style="width: 40px;" />
+            <input v-model="m.label" @input="saveMeta(m, mi)" style="width: 100px;" />
+            <input type="range" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m, mi)"  />
+            <input type="number" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m, mi)" style="width: 45px;" />
+            <input type="number" v-model="m.min" :step="m.step" @input="saveMeta(m, mi)" style="width: 40px;" />
+            <input type="number" v-model="m.max" :step="m.step" @input="saveMeta(m, mi)" style="width: 40px;" />
           </div>
 
         </div>
@@ -58,7 +58,8 @@
           </h2>
           <ul>
             <li :key="input._id" v-for="(input, ii) in inputs">
-              <input type="color" v-model="input.color" @change="saveConnection(input)" />
+              <input type="color" v-model="input.color" @change="saveConnection(input)" style="width: 20px;" />
+              <input type="text" v-model="input.color" @change="saveConnection(input)" style="width: 40px;" />
               env.inputs[{{ ii }}]
               <input type="text" v-model="input.name" @input="saveModuleBox()" /> <button class="en-btn en-btn-danger" @click="removeSocket(input)">-</button>
             </li>
@@ -70,7 +71,8 @@
           </h2>
           <ul>
             <li :key="output._id" v-for="(output, ii) in outputs">
-              <input type="color" v-model="output.color" @change="saveConnection(output)" />
+              <input type="color" v-model="output.color" @change="saveConnection(output)" style="width: 20px;" />
+              <input type="text" v-model="output.color" @change="saveConnection(output)" style="width: 40px;" />
               env.outputs[{{ ii }}]
               <input type="text" v-model="output.name" @input="saveModuleBox()" /> <button class="en-btn en-btn-danger" @click="removeSocket(output)">-</button>
             </li>
@@ -152,7 +154,6 @@ export default {
     // this.$on('resize', ({ portal }) => {
     //   this.portal = portal
     // })
-
   },
   data () {
     let self = this
@@ -210,10 +211,13 @@ export default {
       let defaultView = this.currentMod.meta.length > 0 ? 'ui' : 'code'
       this.portal.data.view = this.portal.data.view || defaultView
     },
-    saveMeta (m) {
+    saveMeta (m, mi) {
       if (m.type === 'range') {
         m.value = Number(m.value)
       }
+
+      window.dispatchEvent(new CustomEvent('iframe-post-message', { detail: { type: 'send-module-meta', module: this.currentMod, meta: m, idx: mi } }))
+
       this.Data.ts.modules.animate(this.currentMod)
       clearTimeout(this.metaDelay)
       this.metaDelay = setTimeout(() => {
@@ -251,6 +255,7 @@ export default {
       this.Data.ts.modules.animate(this.currentMod)
       clearTimeout(this.modTimeout)
       this.modTimeout = setTimeout(() => {
+        window.dispatchEvent(new Event('refresh-iframe'))
         this.Data.ts.modules.update(this.currentMod)
       }, 500)
     },
@@ -290,7 +295,8 @@ export default {
         }
         let newCode = this.editor.getValue()
         this.currentMod.src = newCode
-        this.Data.ts.modules.update(this.currentMod)
+        // this.Data.ts.modules.update(this.currentMod)
+        this.saveModuleBox()
       })
 
       // on data down

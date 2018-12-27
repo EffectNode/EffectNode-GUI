@@ -1,9 +1,14 @@
 <template>
   <div class="full quotes-app" >
     <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
-      {{ portal.win.name }} <button @click="uiAPI.execEnv.Sys.reset()">Reset</button>
+      {{ portal.win.name }} <button @click="runIframe()">Reset</button>
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
+      <iframe
+
+      sandbox="allow-same-origin allow-scripts allow-forms"
+      :src="iframe.src" ref="iframe" class="full" v-if="iframe.enabled" frameborder="0"></iframe>
+
       <div ref="mounter" class="full">
 
       </div>
@@ -47,6 +52,10 @@ export default {
   },
   data () {
     return {
+      iframe: {
+        enabled: false,
+        src: ''
+      },
       Doc: false,
       Data: false,
       root: false,
@@ -54,7 +63,41 @@ export default {
       // portal: false
     }
   },
+  watch: {
+    modules: {
+      deep: false,
+      handler (newV, oldV) {
+        clearTimeout(this.iFrameTimeout)
+        this.iFrameTimeout = setTimeout(() => {
+          this.runIframe()
+        }, 500)
+      }
+    },
+    connectors: {
+      deep: true,
+      handler () {
+        clearTimeout(this.iFrameTimeout)
+        this.iFrameTimeout = setTimeout(() => {
+          this.runIframe()
+        }, 500)
+      }
+    }
+  },
   methods: {
+    async runIframe () {
+      let html = await this.uiAPI.Builder.fromDocToHTMLProd({ Doc: this.Doc })
+      let link = this.uiAPI.Builder.makeHTMLLink({ HTML: html })
+      this.iframe.src = link
+      this.iframe.enabled = true
+      if (this.iframe.postMessage) {
+        window.removeEventListener('iframe-post-message', this.iframe.postMessage)
+      }
+      this.iframe.postMessage = (evt) => {
+        console.log(evt)
+        this.$refs.iframe.contentWindow.postMessage(evt.detail)
+      }
+      window.addEventListener('iframe-post-message', this.iframe.postMessage, false)
+    },
     init () {
       let { Doc, Data } = this.uiAPI.hive
       this.Doc = Doc
@@ -62,10 +105,14 @@ export default {
       this.root = Doc.root
       this.ready = true
 
+      this.runIframe()
+
+      window.addEventListener('refresh-iframe', () => {
+        this.runIframe()
+      })
+
       // console.log('OMG', )
-
-      this.$refs.mounter.appendChild(this.uiAPI.execEnv.Sys.$el)
-
+      // this.$refs.mounter.appendChild(this.uiAPI.execEnv.Sys.$el)
       // return Hive.get({ doc: 'happy' }).then(({ Data, Doc }) => {
       //   this.Doc = Doc
       //   this.Data = Data
@@ -131,6 +178,8 @@ export default {
 .content-div{
   height: calc(100% - 30px);
   overflow: auto;
+  border-radius: 0px 0px 10px 10px;
+  overflow: hidden;
   /* -webkit-overflow-scrolling: touch;
   overflow: auto; */
 }

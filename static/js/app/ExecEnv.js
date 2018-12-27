@@ -49,8 +49,6 @@
       })
     },
     makeLgocialStructure: (uiAPI) => {
-      let { Doc, Data } = uiAPI.hive
-      let { projectID } = Doc
       let Vue = window.Vue
       let Signal = new Vue({})
       let MakeResources = () => {
@@ -136,7 +134,7 @@
             }
           }
         },
-        async beforeDestroy () {
+        beforeDestroy () {
           // this.sockets.forEach(i => {
           //   i.mod.to = false
           //   i.socket.to = false
@@ -220,7 +218,7 @@
           <div style="width: 100%; height: 100%; position: relative;">
             <div v-if="ready" style="display: none; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;" >
               <pre>{{ modules }}</pre>
-              <span style="display: none;">{{ root }}</span>
+              <span style="display: none;">{{ Doc }}</span>
               <modrunner v-if="canRunSystem" :signal="Signal" @refresh-sockets="refreshSockets" :key="mod._id + mod.id" :sockets="sockets" :mod="mod" v-for="mod in modules"></modrunner>
             </div>
             <div class="rootDOM" style="width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;" ref="rootDOM"></div>
@@ -237,7 +235,9 @@
           return {
             canRunSystem: true,
             ready: false,
-            root: Doc.root,
+            get Doc () {
+              return uiAPI.hive.Doc
+            },
             Signal,
             h: {}
           }
@@ -275,13 +275,13 @@
         },
         computed: {
           modules () {
-            return Data.getAllModulesOfProject({ Doc, projectID })
+            return this.Doc.root.modules
           },
           sockets () {
-            return Data.getAllSocketsOfProject({ Doc, projectID })
+            return this.Doc.root.connectors
           },
           outputSignal () {
-            return Doc.root.connectors.filter((c) => {
+            return this.Doc.root.connectors.filter((c) => {
               return c.socket.to && c.socket.from && c.type === 'output'
             })
           }

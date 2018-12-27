@@ -69,7 +69,7 @@
         <span style="display: none;">{{ root }}</span>
         <button @click="scrolHome">Home View</button>
         <button @click="duplicateWindow">Duplicate Window</button>
-        <button @click="flowYo = !flowYo">Toggle FlowYo</button>
+        <button @click="flowYo = !flowYo">Toggle Flow</button>
       </div>
   </div>
 </template>
