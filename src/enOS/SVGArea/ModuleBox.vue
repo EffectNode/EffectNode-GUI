@@ -26,11 +26,13 @@
       <IOSocket :boxH="boxH" :uniq="uniq" :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :socket="output" :win="win" :svg="svg" type="output" :x="box.pos.x + ii * outputW" :y="box.pos.y + boxH - 13 + 13" :w="outputW" :h="13" />
     </g>
 
-    <!-- left -->
+    <!-- title -->
     <text class="noselect" style="cursor: grab;" ref="drag" :x="3.5 + box.pos.x + 2" :y="3.5 + box.pos.y + 10 + 2">{{ box.name }}</text>
-    <text @click="$emit('editBox', box)" style="text-decoration: underline; cursor: pointer;"  :height="10" :x="3.5 + box.pos.x + 2" :y="3.5 + box.pos.y + 25 + 2" :fill="`url(#${uniq}disco-club)`">Edit</text>
-    <text @click="$emit('cloneModule', { box })" style="text-decoration: underline; cursor: pointer;"  :height="10" :x="3.5 + box.pos.x + 30 + 2" :y="3.5 + box.pos.y + 25 + 2" :fill="`url(#${uniq}disco-club)`">Clone</text>
-    <text @click="$emit('removeBox', { box, inputs, outputs })" style="text-decoration: underline; cursor: pointer;"  :height="10" :x="3.5 + box.pos.x + 30 + 36 + 2" :y="3.5 + box.pos.y + 25 + 2" :fill="`url(#${uniq}disco-club)`">Remove</text>
+
+    <!-- left buttons -->
+    <text class="noselect" @click="$emit('editBox', box)" style="text-decoration: underline; cursor: pointer;"  :height="10" :x="3.5 + box.pos.x + 2" :y="3.5 + box.pos.y + 25 + 2" :fill="`url(#${uniq}disco-club)`">Edit</text>
+    <text class="noselect" @click="$emit('cloneModule', { box })" style="text-decoration: underline; cursor: pointer;"  :height="10" :x="3.5 + box.pos.x + 30 + 2" :y="3.5 + box.pos.y + 25 + 2" :fill="`url(#${uniq}disco-club)`">Clone</text>
+    <text class="noselect" @click="$emit('removeBox', { box, inputs, outputs })" style="text-decoration: underline; cursor: pointer;"  :height="10" :x="3.5 + box.pos.x + 30 + 36 + 2" :y="3.5 + box.pos.y + 25 + 2" :fill="`url(#${uniq}disco-club)`">Remove</text>
 
     <!-- <circle style="cursor: pointer;" :cx="box.pos.x + 7.5 + 1" :cy="box.pos.y + 7.5 + 1" :r="7.5" :height="20" @click="$emit('toggle-size', box)" :fill="`url(#${uniq}disco-club)`"></circle>
     <circle style="cursor: pointer;" :cx="box.pos.x + 7.5 * 4.0 + 1" :cy="box.pos.y + 7.5 * 1.0 + 1" :r="7.5" :height="20" @click="$emit('editBox', box)" :fill="`url(#${uniq}kale-salad)`"></circle>

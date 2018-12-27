@@ -3,7 +3,7 @@
     <div tag="div" class="full ll-cam" name="zoomba" :style="getGroupCSS()">
       <vue-draggable-resizable
         :key="ip.id"
-        v-show="!ip.win.minimised"
+        v-if="!ip.win.minimised"
         v-for="(ip) in uiAPI.portal.portals"
         :w="ip.win.width"
         :h="ip.win.height"
@@ -29,18 +29,20 @@
         @activated="onActivated(ip)"
         :style="getWindowStyle(ip)"
         >
-          <Component
-            v-show="!ip.win.minimised"
-            :ref="`p-compo-${ip.id}`"
-            @mouseenter="() => { ip.win.active = true; }"
-            @mouseout="() => { ip.win.active = true; }"
-            @activated="onActivated(ip)"
-            class="full"
-            @click="onActivated(ip)"
-            :uiAPI="uiAPI"
-            :is="ip.app"
-            :portal="ip"
-          ></Component>
+          <keep-alive>
+            <Component
+              v-if="!ip.win.minimised"
+              :ref="`p-compo-${ip.id}`"
+              @mouseenter="() => { ip.win.active = true; }"
+              @mouseout="() => { ip.win.active = true; }"
+              @activated="onActivated(ip)"
+              class="full"
+              @click="onActivated(ip)"
+              :uiAPI="uiAPI"
+              :is="ip.app"
+              :portal="ip"
+            ></Component>
+          </keep-alive>
       </vue-draggable-resizable>
     </div>
 

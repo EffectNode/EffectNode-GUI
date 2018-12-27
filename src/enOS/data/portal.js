@@ -149,7 +149,6 @@ export function init ({ projectID }) {
   mod.projectID = projectID
   mod.meta = {}
   mod.portals = []
-  mod.meta.space3DMode = false
   mod.makeSample = () => {
     makeSample(mod)
   }

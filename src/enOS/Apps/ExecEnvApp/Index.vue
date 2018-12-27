@@ -1,16 +1,14 @@
 <template>
-  <div class="full quotes-app" >
-    <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
+  <div class="full quotes-app">
+    <TitleBar ref="title-bar" :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
       {{ portal.win.name }} <button @click="runIframe()">Reset</button> <button @click="downloadFrame()">Download</button>
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
       <iframe
-
       sandbox="allow-same-origin allow-scripts allow-forms"
       :src="iframe.src" ref="iframe" class="full" v-if="iframe.enabled" frameborder="0"></iframe>
 
-      <div ref="mounter" class="full">
-
+      <div ref="dragger-prevent-loss-mouse" class="full" style="position: absolute; top: 30px; left: 0px; height: calc(100% - 30px);" v-show="isDown">
       </div>
       <!--
       <h1>Inputs</h1>
@@ -52,6 +50,7 @@ export default {
   },
   data () {
     return {
+      isDown: false,
       iframe: {
         enabled: false,
         src: ''
@@ -93,6 +92,7 @@ export default {
       a.click()
     },
     async runIframe () {
+      console.log('run iframe')
       let html = await this.uiAPI.Builder.fromDocToHTMLProd({ Doc: this.Doc })
       let link = this.uiAPI.Builder.makeHTMLLink({ HTML: html })
       this.iframe.src = link
@@ -104,6 +104,20 @@ export default {
         this.$refs.iframe.contentWindow.postMessage(evt.detail)
       }
       window.addEventListener('iframe-post-message', this.iframe.postMessage, false)
+    },
+    isDescendant (parent, child) {
+      var node = child.parentNode
+      if (parent === child) {
+        return true
+      }
+
+      while (node !== null) {
+        if (node === parent) {
+          return true
+        }
+        node = node.parentNode
+      }
+      return false
     },
     init () {
       let { Doc, Data } = this.uiAPI.hive
@@ -117,6 +131,15 @@ export default {
       window.addEventListener('refresh-iframe', () => {
         this.runIframe()
       })
+      window.addEventListener('mousedown', (evt) => {
+        if (this.isDescendant(this.$refs['title-bar'], evt.target) || !this.isDescendant(this.$refs['iframe'], evt.target)) {
+          this.isDown = true
+          this.$forceUpdate()
+        }
+      }, true)
+      window.addEventListener('mouseup', (evt) => {
+        this.isDown = false
+      }, true)
 
       // console.log('OMG', )
       // this.$refs.mounter.appendChild(this.uiAPI.execEnv.Sys.$el)

@@ -9,7 +9,8 @@
             <circle r="3" :fill="'lime'" />
           </marker>
           <marker :id="`${uniq}circle-ready`" style="overflow:visible; cursor: move;">
-            <circle r="3" :fill="`url(#${uniq}kale-salad)`" />
+            <!-- <circle r="3" :fill="`url(#${uniq}kale-salad)`" /> -->
+            <circle r="3" :stroke="`rgba(255,255,255,0.2)`" :fill="`rgba(255,255,255,0.2)`" />
           </marker>
            <marker :id="`${uniq}circle-error`" style="overflow:visible; cursor: move;">
             <circle r="3" :fill="'red'" />

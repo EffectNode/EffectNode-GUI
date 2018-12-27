@@ -2,7 +2,7 @@
   <g>
     <!-- <TerminalBox :box="bridge.a" :svg="svg" @move="onMove" />
     <TerminalBox :box="bridge.b" :svg="svg" @move="onMove" /> -->
-    <path class="path" v-if="aBridge && bBridge" :style="getStyle()" :d="getFromNode(aBridge, bBridge)" :stroke="`url(#${uniq}kale-salad)`" fill="none" :marker-start="`url(#${uniq}circle-ready)`" :marker-mid="`url(#${uniq}square)`" :marker-end="`url(#${uniq}circle-ready)`" />
+    <path class="path" v-if="aBridge && bBridge" :style="getStyle()" :d="getFromNode(aBridge, bBridge)" fill="none" :marker-start="`url(#${uniq}circle-ready)`" :marker-mid="`url(#${uniq}square)`" :marker-end="`url(#${uniq}circle-ready)`" />
   </g>
 </template>
 
@@ -98,6 +98,7 @@ export default {
     },
     getStyle () {
       return {
+        'stroke': this.pair.color, // `url(#${this.uniq}kale-salad)`,
         'stroke-dasharray': this.running ? '8px' : '0px',
         'animation-play-state': this.running ? 'running' : 'paused',
         'animation-direction': this.bridge.a.voltage > this.bridge.b.voltage ? `normal` : `reverse`

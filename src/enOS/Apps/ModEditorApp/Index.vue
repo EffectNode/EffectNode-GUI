@@ -11,22 +11,18 @@
     <div class="content-div" @click="$emit('activated')">
 
       <div v-show="view === 'ui'" class="full">
-        UI Controls
-        <button @click="addRange">Add Range</button>
-        <br />
-        <div v-if="currentMod">
+        <Remix
+          v-if="currentMod"
+          @addRange="addRange"
+          @addTimelineTrack="addTimelineTrack"
+          @removeMeta="removeMeta"
+          @saveMeta="saveMeta"
 
-          <div :key="m.id" v-for="(m, mi) in currentMod.meta" v-if="m.type === 'range'">
-            <button @click="removeMeta(m)">x</button>
-            <span>{{ m.type }}</span>
-            <input v-model="m.label" @input="saveMeta(m, mi)" style="width: 100px;" />
-            <input type="range" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m, mi)"  />
-            <input type="number" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m, mi)" style="width: 45px;" />
-            <input type="text" v-model="m.min" :step="m.step" @input="saveMeta(m, mi)" style="width: 40px;" />
-            <input type="text" v-model="m.max" :step="m.step" @input="saveMeta(m, mi)" style="width: 40px;" />
-          </div>
-
-        </div>
+          :hasTimeTrack="hasTimeTrack"
+          :hasRange="hasRange"
+          :currentMod="currentMod"
+          :portal="portal"
+        ></Remix>
       </div>
 
       <div v-show="view === 'code'" class="full" ref="editor">
@@ -113,6 +109,7 @@ import TitleBar from '../TitleBar'
 import * as brace from 'brace'
 import 'brace/mode/javascript'
 import 'brace/theme/monokai'
+import Remix from './Remix'
 
 // import axios from 'axios'
 // import SVGArea from '../../SVGArea/Index.vue'
@@ -142,6 +139,7 @@ import 'brace/theme/monokai'
 
 export default {
   components: {
+    Remix,
     // codemirror,
     TitleBar// ,
     // SVGArea
@@ -234,6 +232,19 @@ export default {
         max: 100,
         step: 0.1,
         value: 0
+      })
+    },
+    addTimelineTrack () {
+      this.addMeta({
+        id: '_r' + (Math.random() * 1024 * 1024 * 1024).toFixed(0),
+        label: 'Timeline Track',
+        type: 'timeline-track',
+        value: {
+          startFrom: 0,
+          fadeInDone: 3,
+          fadeOutStart: 7,
+          endAt: 10
+        }
       })
     },
     addMeta (v) {
@@ -409,6 +420,12 @@ export default {
     }
   },
   computed: {
+    hasTimeTrack () {
+      return this.meta.filter(m => m.type === 'timeline-track').length > 0
+    },
+    hasRange () {
+      return this.meta.filter(m => m.type === 'range').length > 0
+    },
     meta () {
       if (!this.currentMod) {
         return []
