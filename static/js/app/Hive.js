@@ -198,6 +198,25 @@ this.onClean = () => {
       // Data.addSocketToDoc({ socket: ou4, Doc })
       return mod
     },
+    async cloneModule ({ Doc, mod }) {
+      let newMod = await Data.makeModule({
+        Doc,
+        name: mod.name,
+        src: mod.src,
+        pos: {
+          x: mod.pos.x + 30,
+          y: mod.pos.y + 30
+        },
+        meta: JSON.parse(JSON.stringify(mod.meta || []))
+      })
+
+      Doc.root.connectors.filter(c => c.modID === mod.id).sort((a, b) => { return a.idx - b.idx })
+        .forEach((e, ii) => {
+          Data.makeSocket({ Doc, idx: Data.getIDX(), color: e.color, type: e.type, modID: newMod.id })
+        })
+
+      return newMod
+    },
     getAllSockets ({ Doc }) {
       return Doc.root.connectors.slice().sort((a, b) => { return a.idx - b.idx })
     },
@@ -280,7 +299,7 @@ this.onClean = () => {
         ]
       }
     },
-    async makeSocket ({ Doc, idx = 0, type = 'input', modID }) {
+    async makeSocket ({ Doc, idx = 0, type = 'input', color = '#bababa', modID }) {
       let sID = getID(Doc.projectID + 'socket')
       let data = {
         userID: Doc.userID,
@@ -288,7 +307,7 @@ this.onClean = () => {
         id: sID,
         type,
         idx,
-        color: '#bababa',
+        color,
         modID,
         mod: {
           from: modID,
@@ -303,15 +322,16 @@ this.onClean = () => {
       let obj = resp.data.results
       return obj
     },
-    async makeModule ({ Doc, src = '', name = '' }) {
+    async makeModule ({ Doc, src = '', name = '', pos, meta }) {
       let modID = getID(Doc.projectID + 'module')
       let data = {
         userID: Doc.userID,
         projectID: Doc.projectID,
         id: modID,
+        meta: meta || [],
         bg: '',
         name: name,
-        pos: {
+        pos: pos || {
           x: 100,
           y: 100
         },

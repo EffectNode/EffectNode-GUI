@@ -32,6 +32,18 @@
             <stop offset="0%" style="stop-color:#FF0000;stop-opacity:1" />
             <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:1" />
           </linearGradient>
+
+          <linearGradient :id="`${uniq}calm-blue`" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#52ACFF;stop-opacity:1" />
+            <stop offset="25%" style="stop-color:#52ACFF;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#FFE32C;stop-opacity:1" />
+          </linearGradient>
+
+          <linearGradient :id="`${uniq}calm-pink`" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#FAACA8;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#DDD6F3;stop-opacity:1" />
+          </linearGradient>
+
         </defs>
 
         <Panner
@@ -44,6 +56,7 @@
 
         <g :key="`${uniq}boxes-${box._id}`" v-for="box in modules">
           <ModuleBox
+          @cloneModule="cloneModule"
           @editBox="editBox"
           @toggle-size="toggleSize"
           :uniq="uniq" :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :win="win" :box="box" :svg="$refs['svg']" v-if="$refs.svg" @move="onMoveBox" @removeBox="removeBox">
@@ -124,6 +137,9 @@ export default {
     }
   },
   methods: {
+    cloneModule (v) {
+      this.$emit('cloneModule', v)
+    },
     removeBox (v) {
       this.$emit('removeBox', v)
     },

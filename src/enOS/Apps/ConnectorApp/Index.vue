@@ -6,7 +6,7 @@
     <div class="content-div" @click="$emit('activated')">
       <!-- Lok Lok -->
       <SVGArea
-
+      @cloneModule="cloneModule"
       @removeBox="removeBox"
       @editBox="editBox"
       @saveBox="updateBox"
@@ -62,6 +62,13 @@ export default {
     }
   },
   methods: {
+    async cloneModule ({ box }) {
+      if (window.confirm('clone this module?\n' + box.name)) {
+        let Data = this.uiAPI.hive.Data
+        let Doc = this.uiAPI.hive.Doc
+        Data.cloneModule({ Doc, mod: box })
+      }
+    },
     removeBox ({ box, inputs, outputs }) {
       if (window.prompt('type yes to remove this module and its connnections?') === 'yes') {
         let Data = this.uiAPI.hive.Data

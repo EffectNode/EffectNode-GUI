@@ -18,12 +18,12 @@
 
           <div :key="m.id" v-for="(m, mi) in currentMod.meta" v-if="m.type === 'range'">
             <button @click="removeMeta(m)">x</button>
-            {{ m.type }}
+            <span>{{ m.type }}</span>
             <input v-model="m.label" @input="saveMeta(m, mi)" style="width: 100px;" />
             <input type="range" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m, mi)"  />
             <input type="number" v-model="m.value" :step="m.step" :min="m.min" :max="m.max" @input="saveMeta(m, mi)" style="width: 45px;" />
-            <input type="number" v-model="m.min" :step="m.step" @input="saveMeta(m, mi)" style="width: 40px;" />
-            <input type="number" v-model="m.max" :step="m.step" @input="saveMeta(m, mi)" style="width: 40px;" />
+            <input type="text" v-model="m.min" :step="m.step" @input="saveMeta(m, mi)" style="width: 40px;" />
+            <input type="text" v-model="m.max" :step="m.step" @input="saveMeta(m, mi)" style="width: 40px;" />
           </div>
 
         </div>
@@ -160,7 +160,8 @@ export default {
 
     return {
       get view () {
-        return self.portal.data.view || 'code'
+        self.portal.data.view = self.portal.data.view || 'inspect'
+        return self.portal.data.view
       },
       set view (v) {
         self.portal.data.view = v
@@ -348,7 +349,7 @@ export default {
       })
 
       this.editor.setValue(this.currentMod.src, 1)
-    },
+    }
 
     // onCmReady (cm) {
     //   console.log('the editor is readied!', cm)
@@ -389,23 +390,20 @@ export default {
     //   // this.$forceUpdate()
     //   this.Data.ts.modules.update(this.currentMod)
     // },
-    getCurrentMod () {
-      return this.modules.find(m => m._id === this.portal.data.boxID)
-    }
   },
   watch: {
-    meta () {
-      if (this.meta.length > 0) {
-        this.setDefaultView()
-      }
-    },
-    currentMod () {
-      if (this.currentMod) {
-        this.setupBrace()
-      }
-    },
+    // meta () {
+    //   if (this.meta.length > 0) {
+    //     this.setDefaultView()
+    //   }
+    // },
+    // currentMod () {
+    //   if (this.currentMod) {
+    //     this.setupBrace()
+    //   }
+    // },
     view () {
-      if (this.view === 'code' && !this.editor) {
+      if (!this.editor) {
         this.setupBrace()
       }
     }
@@ -421,7 +419,7 @@ export default {
     //   return this.$refs.myCm.codemirror
     // },
     currentMod () {
-      return this.getCurrentMod()
+      return this.modules.find(m => m._id === this.portal.data.boxID)
     },
     inputs () {
       return this.connectors.filter((c) => {

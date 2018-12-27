@@ -1,6 +1,6 @@
 <template>
   <g>
-    <rect ref="rect" :width="boxW" :height="boxH" :x="box.pos.x" :y="box.pos.y" class="box" :fill="`url(#${uniq}kale-salad)`"></rect>
+    <rect ref="rect" :width="boxW" :height="boxH" :x="box.pos.x" :y="box.pos.y" class="box" fill="white" d-fill="`url(#${uniq}calm-blue)`"></rect>
 
     <!-- <foreignObject :x="box.pos.x" :y="box.pos.y + 10" :width="boxW" :height="boxH - 10">
       <div class="" style="width: 100%; height: 100%; position: relative;" xmlns="http://www.w3.org/1999/xhtml" >
@@ -26,12 +26,21 @@
       <IOSocket :boxH="boxH" :uniq="uniq" :Data="Data" :Doc="Doc" @connect="onConnect" @disconnect="onDisconnect" :socketuis="socketuis" :hand="hand" :view="view" :socket="output" :win="win" :svg="svg" type="output" :x="box.pos.x + ii * outputW" :y="box.pos.y + boxH - 13 + 13" :w="outputW" :h="13" />
     </g>
 
-    <circle style="cursor: pointer;" :cx="box.pos.x + 7.5 + 1" :cy="box.pos.y + 7.5 + 1" :r="7.5" :height="20" @click="$emit('toggle-size', box)" :fill="`url(#${uniq}disco-club)`"></circle>
-    <circle style="cursor: pointer;" :cx="box.pos.x + 7.5 * 2.0 * 2.0 + 1" :cy="box.pos.y + 7.5 * 1.0 + 1" :r="7.5" :height="20" @click="$emit('editBox', box)" :fill="`url(#${uniq}kale-salad)`"></circle>
+    <!-- left -->
+    <text class="noselect" style="cursor: grab;" ref="drag" :x="3.5 + box.pos.x + 2" :y="3.5 + box.pos.y + 10 + 2">{{ box.name }}</text>
+    <text @click="$emit('editBox', box)" style="text-decoration: underline; cursor: pointer;"  :height="10" :x="3.5 + box.pos.x + 2" :y="3.5 + box.pos.y + 25 + 2" :fill="`url(#${uniq}disco-club)`">Edit</text>
+    <text @click="$emit('cloneModule', { box })" style="text-decoration: underline; cursor: pointer;"  :height="10" :x="3.5 + box.pos.x + 30 + 2" :y="3.5 + box.pos.y + 25 + 2" :fill="`url(#${uniq}disco-club)`">Clone</text>
+    <text @click="$emit('removeBox', { box, inputs, outputs })" style="text-decoration: underline; cursor: pointer;"  :height="10" :x="3.5 + box.pos.x + 30 + 36 + 2" :y="3.5 + box.pos.y + 25 + 2" :fill="`url(#${uniq}disco-club)`">Remove</text>
 
-    <circle style="cursor: pointer;" :cx="box.pos.x + boxW - 7.5 * 1.0 - 1.0" :cy="box.pos.y + 7.5 * 1.0 + 1" :r="7.5" :height="20" @click="$emit('removeBox', { box, inputs, outputs })" :fill="`url(#${uniq}danger)`"></circle>
+    <!-- <circle style="cursor: pointer;" :cx="box.pos.x + 7.5 + 1" :cy="box.pos.y + 7.5 + 1" :r="7.5" :height="20" @click="$emit('toggle-size', box)" :fill="`url(#${uniq}disco-club)`"></circle>
+    <circle style="cursor: pointer;" :cx="box.pos.x + 7.5 * 4.0 + 1" :cy="box.pos.y + 7.5 * 1.0 + 1" :r="7.5" :height="20" @click="$emit('editBox', box)" :fill="`url(#${uniq}kale-salad)`"></circle>
+    <circle style="cursor: pointer;" :cx="box.pos.x + 7.5 * 6.0 + 1" :cy="box.pos.y + 7.5 * 1.0 + 1" :r="7.5" :height="20" @click="$emit('cloneModule', { box })" :fill="`url(#${uniq}calm-blue)`"></circle> -->
 
-    <text class="noselect" :x="box.pos.x + 2" :y="box.pos.y + 7.5 * 4.0 + 1">{{ box.name }}</text>
+    <!-- right -->
+    <!-- <circle style="cursor: pointer;" :cx="box.pos.x + boxW - 7.5 * 1.0 - 1.0" :cy="box.pos.y + 7.5 * 1.0 + 1" :r="7.5" :height="20" @click="$emit('removeBox', { box, inputs, outputs })" :fill="`url(#${uniq}danger)`"></circle> -->
+
+
+
   </g>
 </template>
 
@@ -145,6 +154,10 @@ export default {
 
     this.$refs.rect.addEventListener('mousedown', h.onMD, false)
     this.$refs.rect.addEventListener('mouseup', h.onMU, false)
+
+    this.$refs.drag.addEventListener('mousedown', h.onMD, false)
+    this.$refs.drag.addEventListener('mouseup', h.onMU, false)
+
     this.svg.addEventListener('mousemove', h.onMM, false)
     this.svg.addEventListener('mouseleave', h.onMU, false)
     this.svg.addEventListener('mouseup', h.onMU, false)
@@ -152,6 +165,10 @@ export default {
     this.clean = () => {
       this.$refs.rect.removeEventListener('mousedown', h.onMD)
       this.$refs.rect.removeEventListener('mouseup', h.onMU)
+
+      this.$refs.drag.removeEventListener('mousedown', h.onMD)
+      this.$refs.drag.removeEventListener('mouseup', h.onMU)
+
       this.svg.removeEventListener('mousemove', h.onMM)
       this.svg.removeEventListener('mouseleave', h.onMU)
       this.svg.removeEventListener('mouseup', h.onMU)

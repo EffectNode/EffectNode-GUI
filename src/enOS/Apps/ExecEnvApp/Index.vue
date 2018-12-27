@@ -1,7 +1,7 @@
 <template>
   <div class="full quotes-app" >
     <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
-      {{ portal.win.name }} <button @click="runIframe()">Reset</button>
+      {{ portal.win.name }} <button @click="runIframe()">Reset</button> <button @click="downloadFrame()">Download</button>
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
       <iframe
@@ -84,6 +84,14 @@ export default {
     }
   },
   methods: {
+    async downloadFrame () {
+      let html = await this.uiAPI.Builder.fromDocToHTMLProd({ Doc: this.Doc })
+      let link = this.uiAPI.Builder.makeHTMLLink({ HTML: html })
+      var a = document.createElement('a')
+      a.href = link
+      a.download = 'EffectNode.html'
+      a.click()
+    },
     async runIframe () {
       let html = await this.uiAPI.Builder.fromDocToHTMLProd({ Doc: this.Doc })
       let link = this.uiAPI.Builder.makeHTMLLink({ HTML: html })
@@ -93,7 +101,6 @@ export default {
         window.removeEventListener('iframe-post-message', this.iframe.postMessage)
       }
       this.iframe.postMessage = (evt) => {
-        console.log(evt)
         this.$refs.iframe.contentWindow.postMessage(evt.detail)
       }
       window.addEventListener('iframe-post-message', this.iframe.postMessage, false)
