@@ -10,7 +10,7 @@
       </h1>
       <h2 @click="API.logout(); mode = 'login';">Logout</h2>
       <ul>
-        <li :key="prj._id" v-for="prj in gallery">
+        <li :key="prj._id" v-for="prj in gallery.slice().reverse()">
           Title: <br />
           <textarea disabled type="text" v-model="prj.title" />
           <br />
@@ -31,7 +31,7 @@
       </h1>
       <h2 @click="API.logout(); mode = 'login';">Logout</h2>
       <ul>
-        <li :key="prj._id" v-for="prj in templates">
+        <li :key="prj._id" v-for="prj in templates.slice().reverse()">
           Title: <br />
           <textarea disabled type="text" v-model="prj.title" />
           <br />
@@ -57,7 +57,7 @@
       <button @click="createProject">Make one project</button>
       <h2 v-if="popagaiting === 'projects'">Loaidng Projects</h2>
       <ul>
-        <li :key="prj._id" v-for="prj in projects">
+        <li :key="prj._id" v-for="prj in projects.slice().reverse()">
           Title: <br />
           <textarea type="text" v-model="prj.title" @input="goUpdate({ project: prj })" />
           <br />

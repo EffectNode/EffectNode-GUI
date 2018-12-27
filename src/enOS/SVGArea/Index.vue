@@ -298,7 +298,7 @@ export default {
   },
   data () {
     return {
-      flowYo: false,
+      flowYo: true,
       ui: {
         aX: 0,
         aY: 0,
