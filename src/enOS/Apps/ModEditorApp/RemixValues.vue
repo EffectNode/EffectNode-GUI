@@ -1,15 +1,14 @@
 <template>
-  <div>
-    <div class="adders">
-      UI Controls
-      <button @click="addRange()">Add Range</button>
-      <button @click="addTimelineTrack()">Add Timeline</button>
+  <div class="marginer">
+    <div class="adders" v-if="currentMod">
+      <div v-if="currentMod.meta.length > 0">
+        <button @click="addRange()">Add value slider</button>
+        <span v-if="currentMod.meta.length === 1">
+          <button @click="removeMeta(currentMod.meta[0])">Reset</button>
+        </span>
+      </div>
     </div>
-    <div v-if="hasTimeTrack">
-      <Timeline :meta="currentMod.meta" :win="portal.win">
-      </Timeline>
-    </div>
-    <div v-if="hasRange">
+    <div>
       <div :key="m.id" v-for="(m, mi) in currentMod.meta" v-if="m.type === 'range'">
         <button @click="removeMeta(m)">x</button>
         <span>{{ m.type }}</span>
@@ -30,24 +29,29 @@ export default {
   components: {
     Timeline
   },
+
   props: {
     portal: {},
-    hasTimeTrack: {},
-    hasRange: {},
     currentMod: {}
   },
+  data () {
+    return {
+      refresher: true
+    }
+  },
   methods: {
-    saveMeta (v) {
-      this.$emit('saveMeta', v)
+    saveMeta (v, mi) {
+      this.$emit('saveMeta', { m: v, mi })
     },
     removeMeta (v) {
+      this.refresher = false
       this.$emit('removeMeta', v)
+      this.$nextTick(() => {
+        this.refresher = true
+      })
     },
     addRange (v) {
       this.$emit('addRange', v)
-    },
-    addTimelineTrack (v) {
-      this.$emit('addTimelineTrack', v)
     }
   }
 }
@@ -56,5 +60,9 @@ export default {
 <style scoped>
 .adders{
   height: 30px;
+}
+.marginer{
+  width: 90%;
+  margin: 20px 5%;
 }
 </style>

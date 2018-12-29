@@ -4,15 +4,15 @@ export function getID () {
 }
 
 var temp = {
-  x: 0,
-  y: 0
+  x: 30,
+  y: 30
 }
 
 export function makeWin () {
   let win = {
     name: 'App',
-    width: 500,
-    height: 350,
+    width: 600,
+    height: 630,
     x: 30 + temp.x,
     y: 30 + temp.y,
     z: 100000,

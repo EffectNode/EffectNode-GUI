@@ -2,27 +2,42 @@
   <div class="full quotes-app">
     <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
       <span  v-if="currentMod">
-        :: {{ currentMod.name }} ::
+        {{ currentMod.name }}:
       </span>
-      <button @click="view = 'inspect'">I/O</button>
-      <button @click="view = 'ui'">UI</button>
-      <button @click="view = 'code'">Code</button>
+      <span style="cursor: pointer; margin: 0px 6px; text-decoration: underline;" @click="view = 'inspect'">Insepctor</span>
+      <span style="cursor: pointer; margin: 0px 6px; text-decoration: underline;" @click="view = 'remix'">Remixer</span>
+      <span style="cursor: pointer; margin: 0px 6px; text-decoration: underline;" @click="view = 'code'">Code</span>
+
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
 
-      <div v-show="view === 'ui'" class="full">
-        <Remix
-          v-if="currentMod"
-          @addRange="addRange"
+      <div v-show="view === 'remix'" class="full">
+         <div v-if="currentMod && currentMod.meta.length === 0">
+          Effect Settings, choose to use
+          <button v-show="currentMod.meta.length === 0" @click="addRange()">Value Sliders</button>
+          or
+          <button v-show="currentMod.meta.length === 0" @click="addTimelineTrack()">Timeline</button>
+        </div>
+
+        <RemixTimeline
+          v-if="currentMod && remixmode === 'timeline'"
           @addTimelineTrack="addTimelineTrack"
           @removeMeta="removeMeta"
           @saveMeta="saveMeta"
-
-          :hasTimeTrack="hasTimeTrack"
-          :hasRange="hasRange"
+          @saveModule="saveModule"
+          :outputs="outputs"
           :currentMod="currentMod"
           :portal="portal"
-        ></Remix>
+        ></RemixTimeline>
+        <RemixValues
+          v-if="currentMod && remixmode === 'values'"
+          @addRange="addRange"
+          @removeMeta="removeMeta"
+          @saveMeta="saveMeta"
+
+          :currentMod="currentMod"
+          :portal="portal"
+        ></RemixValues>
       </div>
 
       <div v-show="view === 'code'" class="full" ref="editor">
@@ -50,26 +65,26 @@
           <input type="text" v-if="currentMod" v-model="currentMod.name" @input="saveModuleBox()" style="width: 400px;" />
 
           <h2>
-            Input Sockets
+            I/O Input Sockets
           </h2>
           <ul>
             <li :key="input._id" v-for="(input, ii) in inputs">
               <input type="color" v-model="input.color" @change="saveConnection(input)" style="width: 20px;" />
               <input type="text" v-model="input.color" @change="saveConnection(input)" style="width: 40px;" />
-              env.inputs[{{ ii }}]
+              env.inputs[{{ ii }}].name
               <input type="text" v-model="input.name" @input="saveModuleBox()" /> <button class="en-btn en-btn-danger" @click="removeSocket(input)">-</button>
             </li>
             <li><button class="en-btn en-btn-successful" @click="addSocket(currentMod, 'input')">+</button></li>
 
           </ul>
           <h2>
-            Output Sockets
+            I/O Output Sockets
           </h2>
           <ul>
             <li :key="output._id" v-for="(output, ii) in outputs">
               <input type="color" v-model="output.color" @change="saveConnection(output)" style="width: 20px;" />
               <input type="text" v-model="output.color" @change="saveConnection(output)" style="width: 40px;" />
-              env.outputs[{{ ii }}]
+              env.outputs[{{ ii }}].name
               <input type="text" v-model="output.name" @input="saveModuleBox()" /> <button class="en-btn en-btn-danger" @click="removeSocket(output)">-</button>
             </li>
             <li><button class="en-btn en-btn-successful" @click="addSocket(currentMod, 'output')">+</button></li>
@@ -109,7 +124,9 @@ import TitleBar from '../TitleBar'
 import * as brace from 'brace'
 import 'brace/mode/javascript'
 import 'brace/theme/monokai'
-import Remix from './Remix'
+import 'brace/ext/searchbox'
+import RemixTimeline from './RemixTimeline'
+import RemixValues from './RemixValues'
 
 // import axios from 'axios'
 // import SVGArea from '../../SVGArea/Index.vue'
@@ -139,7 +156,8 @@ import Remix from './Remix'
 
 export default {
   components: {
-    Remix,
+    RemixValues,
+    RemixTimeline,
     // codemirror,
     TitleBar// ,
     // SVGArea
@@ -158,8 +176,7 @@ export default {
 
     return {
       get view () {
-        self.portal.data.view = self.portal.data.view || 'inspect'
-        return self.portal.data.view
+        return self.portal.data.view || 'inspect'
       },
       set view (v) {
         self.portal.data.view = v
@@ -207,17 +224,24 @@ export default {
       this.Data.removeSocketFromMod({ socket })
     },
     setDefaultView () {
-      let defaultView = this.currentMod.meta.length > 0 ? 'ui' : 'code'
+      let defaultView = this.currentMod.meta.length > 0 ? 'remix' : 'code'
       this.portal.data.view = this.portal.data.view || defaultView
     },
-    saveMeta (m, mi) {
+    saveModule () {
+      this.Data.ts.modules.animate(this.currentMod)
+      clearTimeout(this.metaDelay)
+      this.metaDelay = setTimeout(() => {
+        this.Data.ts.modules.update(this.currentMod)
+      }, 500)
+    },
+    saveMeta ({ m, mi }) {
       if (m.type === 'range') {
         m.value = Number(m.value)
       }
 
-      window.dispatchEvent(new CustomEvent('iframe-post-message', { detail: { type: 'send-module-meta', module: this.currentMod, meta: m, idx: mi } }))
+      window.dispatchEvent(new CustomEvent('iframe-post-message', { detail: { type: 'send-module-meta', module: this.currentMod, meta: m } }))
 
-      this.Data.ts.modules.animate(this.currentMod)
+      // this.Data.ts.modules.animate(this.currentMod)
       clearTimeout(this.metaDelay)
       this.metaDelay = setTimeout(() => {
         this.Data.ts.modules.update(this.currentMod)
@@ -237,13 +261,22 @@ export default {
     addTimelineTrack () {
       this.addMeta({
         id: '_r' + (Math.random() * 1024 * 1024 * 1024).toFixed(0),
-        label: 'Timeline Track',
+        label: window.prompt(`what's the name of the time track? like opacity, speed, amount and etc`) || 'my-track',
         type: 'timeline-track',
         value: {
-          startFrom: 0,
-          fadeInDone: 3,
-          fadeOutStart: 7,
-          endAt: 10
+          mode: 'starting',
+          starting: 0,
+          during: 0,
+          leaving: 0,
+          timebox: 0,
+          tick: 0,
+          now: 0,
+
+          start: 0,
+          afterStart: 3,
+          beforeEnd: 12,
+          end: 15,
+          totalTime: 15
         }
       })
     },
@@ -295,6 +328,9 @@ export default {
       var editor = this.editor = brace.edit(this.$refs.editor)
       editor.setTheme('ace/theme/monokai')
       editor.setFontSize(14)
+      editor.setOptions({
+        fontFamily: 'Inconsolata'
+      })
       this.editor.$blockScrolling = Infinity
 
       this.$on('resize', () => {
@@ -403,6 +439,15 @@ export default {
     // },
   },
   watch: {
+    // meta: {
+    //   deep: true,
+    //   handler () {
+    //     this.meta.forEach((m, mi) => {
+    //       window.dispatchEvent(new CustomEvent('iframe-post-message', { detail: { type: 'send-module-meta', module: this.currentMod, meta: m } }))
+    //     })
+    //   }
+    // },
+
     // meta () {
     //   if (this.meta.length > 0) {
     //     this.setDefaultView()
@@ -413,6 +458,15 @@ export default {
     //     this.setupBrace()
     //   }
     // },
+    currentMod (newVal, oldVal) {
+      if (newVal && !oldVal) {
+        let defaultView = 'inspect'
+        if (this.currentMod && this.currentMod.meta.length > 0) {
+          defaultView = 'remix'
+        }
+        this.view = defaultView
+      }
+    },
     view () {
       if (!this.editor) {
         this.setupBrace()
@@ -420,6 +474,13 @@ export default {
     }
   },
   computed: {
+    remixmode () {
+      if (this.hasTimeTrack) {
+        return 'timeline'
+      } else {
+        return 'values'
+      }
+    },
     hasTimeTrack () {
       return this.meta.filter(m => m.type === 'timeline-track').length > 0
     },

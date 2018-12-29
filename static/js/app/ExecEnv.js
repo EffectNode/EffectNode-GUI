@@ -5,6 +5,10 @@
 
   function getScript (source) {
     return new Promise((resolve, reject) => {
+      window.EFFECT_NODE_HAS_URL = window.EFFECT_NODE_HAS_URL || []
+      if (window.EFFECT_NODE_HAS_URL.indexOf(source) !== -1) {
+        return resolve()
+      }
       var script = document.createElement('script')
       var prior = document.getElementsByTagName('script')[0]
       script.onload = () => { resolve() }
@@ -198,7 +202,7 @@
                   resolve()
                 } catch (e) {
                   console.log('======compiling======')
-                  console.error(e)
+                  console.trace(e)
                   console.error(this.mod.src)
                   reject(e)
                 }

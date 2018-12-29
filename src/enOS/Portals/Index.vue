@@ -151,8 +151,6 @@ export default {
     },
     getWindowStyle (ip) {
       return {
-        borderRadius: '10px',
-        border: '1px solid rgba(255, 255, 255, 0.18)',
         transition: 'transform 0.5s',
         transform: this.uiAPI.portal.meta.space3DMode ? `rotateX(-30deg) rotateY(30deg)` : ``
       }

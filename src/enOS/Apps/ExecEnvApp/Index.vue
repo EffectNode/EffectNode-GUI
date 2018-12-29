@@ -101,7 +101,7 @@ export default {
         window.removeEventListener('iframe-post-message', this.iframe.postMessage)
       }
       this.iframe.postMessage = (evt) => {
-        this.$refs.iframe.contentWindow.postMessage(evt.detail)
+        this.$refs.iframe.contentWindow.postMessage(evt.detail, this.$refs.iframe.contentWindow.location.origin)
       }
       window.addEventListener('iframe-post-message', this.iframe.postMessage, false)
     },

@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <svg ref="svg" :width="win.width - 2" :height="win.height - marginTop"  :viewBox="`${view.x.toFixed(1)} ${(view.y * 0).toFixed(1)} ${win.width} ${win.height - marginTop}`">
+  <svg ref="svg" :width="win.width - 2" :height="win.height - marginTop"  :viewBox="`${view.x.toFixed(1)} ${(view.y).toFixed(1)} ${win.width} ${win.height - marginTop}`">
 
-      <g :key="m.id" v-for="(m, mi) in meta.filter(m => m.type === 'timeline-track')">
-        <TimeTrack :svg="$refs.svg" :marginLeft="40" :index="mi" :metaItem="m" :total="meta.filter(m => m.type === 'timeline-track').length"></TimeTrack>
-      </g>
+    <g :key="m.id" v-for="(m, mi) in timetracks" v-if="refresher">
+      <TimeTrack :currentMod="currentMod" :win="win" @save="saveModule" :outputs="outputs" @remove="removeMeta(m)" :view="view" :marginLeft="marginLeft" :index="mi" :metaItem="m" :total="timetracks.length"></TimeTrack>
+    </g>
 
-    </svg>
-  </div>
+  </svg>
 </template>
 
 <script>
@@ -18,11 +16,15 @@ export default {
     TimeTrack
   },
   props: {
+    currentMod: {},
+    outputs: {},
+    refresher: {},
     win: {},
     meta: {}
   },
   data () {
     return {
+      marginLeft: 50 + 140, // 50 = remove words, 120 = label and socket
       marginTop: 30 + 30, // 30 buttons, 30 title bar
       ui: false,
       view: {
@@ -34,7 +36,24 @@ export default {
   mounted () {
     this.setupWheel()
   },
+  watch: {
+  },
+  computed: {
+    svg () {
+      return this.$refs['svg']
+    },
+    timetracks () {
+      return this.meta.filter(m => m.type === 'timeline-track')
+    }
+  },
   methods: {
+    saveModule () {
+      this.$emit('saveModule')
+    },
+    removeMeta (v) {
+      this.$emit('removeMeta', v)
+      this.$forceUpdate()
+    },
     scrolHome () {
       anime({
         targets: this.ui,
@@ -108,13 +127,19 @@ export default {
           }
 
           this.view.x = -ui.aX * 1.3
+          this.view.y = -ui.aY * 1.3
           if (this.view.x < 0) {
             this.view.x = 0
             ui.inertia = 0
-            ui.aX = 0
+            // ui.aX = 0
             ui.inX = 0
           }
-          this.view.y = -ui.aY
+          if (this.view.y < 0) {
+            this.view.y = 0
+            ui.inertia = 0
+            // ui.aY = 0
+            ui.inY = 0
+          }
         }
       }
       this.rAFID = requestAnimationFrame(rAF)
