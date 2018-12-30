@@ -94,7 +94,7 @@ export default {
 }
 .slot{
   display: inline-block;
-  z-index: 100000;
-  transform: perspective(100px) translateZ(3px);
+  z-index: 1;
+  /* transform: perspective(100px) translateZ(3px); */
 }
 </style>

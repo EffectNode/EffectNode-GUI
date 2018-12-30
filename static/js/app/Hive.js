@@ -1,5 +1,4 @@
 (function () {
-  let g = window
   var getID = (prefix = '') => {
     return '_hive_' + prefix + '_' + (1024 * 1024 * 1024 * 1024 * Math.random()).toFixed(0)
   }
@@ -75,7 +74,7 @@ this.onClean = () => {
 }
 `
 
-  let Data = g.HiveData = {
+  let Data = window.HiveData = {
     init: (api) => {
       return new Promise((resolve, reject) => {
         let Doc = Data.makeDocumentStack()

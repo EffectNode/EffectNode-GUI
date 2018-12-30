@@ -93,9 +93,9 @@ export default {
           if (h.isDown) {
             h.aX += evt.movementX
 
-            let width = this.win.width - this.marginLeft
+            let width = this.ui.wb || 350
 
-            let delta = evt.movementX / width * this.metaItem.value.totalTime * 1.45
+            let delta = evt.movementX / width * this.metaItem.value.totalTime
 
             if (refID === 'timebox') {
               this.metaItem.value.start += delta
@@ -136,10 +136,10 @@ export default {
                 // this.metaItem.value.afterStart -= delta
                 this.metaItem.value.beforeEnd -= delta
                 this.metaItem.value.end -= delta
-                if (this.this.metaItem.value.beforeEnd > this.this.metaItem.value.totalTime) {
+                if (this.metaItem.value.beforeEnd > this.metaItem.value.totalTime) {
                   this.metaItem.value.beforeEnd += delta
                 }
-                if (this.this.metaItem.value.end > this.this.metaItem.value.totalTime) {
+                if (this.metaItem.value.end > this.metaItem.value.totalTime) {
                   this.metaItem.value.end += delta
                 }
               }
@@ -149,7 +149,7 @@ export default {
               this.metaItem.value.afterStart += delta
               if (this.metaItem.value.afterStart < this.metaItem.value.start || this.metaItem.value.afterStart > this.metaItem.value.end) {
                 this.metaItem.value.afterStart -= delta
-                if (this.this.metaItem.value.afterStart > this.this.metaItem.value.totalTime) {
+                if (this.metaItem.value.afterStart > this.metaItem.value.totalTime) {
                   this.metaItem.value.afterStart += delta
                 }
               }
@@ -159,7 +159,7 @@ export default {
               this.metaItem.value.beforeEnd += delta
               if (this.metaItem.value.beforeEnd < this.metaItem.value.start || this.metaItem.value.beforeEnd > this.metaItem.value.end) {
                 this.metaItem.value.beforeEnd -= delta
-                if (this.this.metaItem.value.beforeEnd > this.this.metaItem.value.totalTime) {
+                if (this.metaItem.value.beforeEnd > this.metaItem.value.totalTime) {
                   this.metaItem.value.beforeEnd += delta
                 }
               }

@@ -219,7 +219,7 @@
           'modrunner': modRunner
         },
         template: `
-          <div style="width: 100%; height: 100%; position: relative;">
+          <div ref="systemDOM" style="width: 100%; height: 100%; position: relative;">
             <div v-if="ready" style="display: none; width: 100%; height: 100%; position: absolute; top: 0px; left: 0px;" >
               <pre>{{ modules }}</pre>
               <span style="display: none;">{{ Doc }}</span>

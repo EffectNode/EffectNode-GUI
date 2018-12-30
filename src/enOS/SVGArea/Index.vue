@@ -315,7 +315,7 @@ export default {
   },
   data () {
     return {
-      flowYo: true,
+      flowYo: window.screen.width >= 1600,
       ui: {
         aX: 0,
         aY: 0,

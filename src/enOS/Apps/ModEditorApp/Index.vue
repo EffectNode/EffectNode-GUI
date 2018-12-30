@@ -233,6 +233,7 @@ export default {
       clearTimeout(this.metaDelay)
       this.metaDelay = setTimeout(() => {
         this.Data.ts.modules.update(this.currentMod)
+        window.dispatchEvent(new Event(`refresh-iframe`))
       }, 500)
     },
     saveMeta ({ m, mi }) {

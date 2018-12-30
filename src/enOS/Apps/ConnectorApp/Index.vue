@@ -1,7 +1,7 @@
 <template>
   <div class="full quotes-app" >
     <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
-      {{ portal.win.name }}
+      Flowzen Yogurt
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
       <!-- Lok Lok -->

@@ -93,7 +93,14 @@ export const fromDocToHTMLProd = async ({ Doc }) => {
       window.ExecEnv.init(uiAPI).then((uiAPI) => {
         let dom = document.querySelector(injectClassName)
         dom.appendChild(uiAPI.execEnv.Sys.$el)
+        window.addEventListener('resize', () => {
+          window.dispatchEvent(new CustomEvent('resize-dev', { detail: { width: window.innerWidth, height: window.innerHeight } }))
+        })
         window.addEventListener('message', (evt) => {
+          if (evt.data && evt.data.type === 'resize') {
+            window.dispatchEvent(new CustomEvent('resize-dev', { detail: { width: evt.data.width, height: evt.data.height } }))
+          }
+
           if (evt.data && evt.data.type === 'send-module-meta') {
             let module = evt.data.module
             let meta = evt.data.meta

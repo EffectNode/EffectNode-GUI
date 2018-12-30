@@ -43,7 +43,7 @@ export default {
       return this.$refs['svg']
     },
     timetracks () {
-      return this.meta.filter(m => m.type === 'timeline-track')
+      return (this.meta || []).filter(m => m.type === 'timeline-track')
     }
   },
   methods: {

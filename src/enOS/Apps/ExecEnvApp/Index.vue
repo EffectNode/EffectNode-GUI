@@ -1,12 +1,12 @@
 <template>
   <div class="full quotes-app">
     <TitleBar ref="title-bar" :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
-      {{ portal.win.name }} <button @click="runIframe()">Reset</button> <button @click="downloadFrame()">Download</button>
+      Preview <span class="linker" @click="runIframe()">Reset</span> <span class="linker" @click="downloadFrame()">Download</span>
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
       <iframe
       sandbox="allow-same-origin allow-scripts allow-forms"
-      :src="iframe.src" ref="iframe" class="full" v-if="iframe.enabled" frameborder="0"></iframe>
+      :src="iframe.src" ref="iframe" :width="portal.win.width" :height="portal.win.height - 30" :style="{ width: portal.win.width + 'px', height: (portal.win.height - 30) + 'px' }"  v-if="iframe.enabled" frameborder="0"></iframe>
 
       <div ref="dragger-prevent-loss-mouse" class="full" style="position: absolute; top: 30px; left: 0px; height: calc(100% - 30px);" v-show="isDown">
       </div>
@@ -189,12 +189,25 @@ export default {
   },
   mounted () {
     this.init()
+
+    this.resizeInterval = setInterval(() => {
+      if (this.$refs.iframe) {
+        this.$refs.iframe.contentWindow.postMessage({ type: 'resize', width: this.portal.win.width, height: this.portal.win.height }, window.location.origin)
+      }
+    }, 1000 / 60)
+  },
+  beforeDestroy () {
+    clearInterval(this.resizeInterval)
   }
 }
 </script>
 
 <style scoped>
 @import url(../../jot.css);
+
+.linker{
+  text-decoration: underline;
+}
 
 .quotes-app{
   /* background: linear-gradient(90deg, #eef3ff 0%, #8aa3d4 100%); */
