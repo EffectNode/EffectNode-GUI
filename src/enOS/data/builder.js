@@ -114,7 +114,7 @@ export const fromDocToHTMLProd = async ({ Doc }) => {
   htmlResp = htmlResp.replace('<!--=*+BODY_HTML+*=-->', `<div class="${injectClassName}"></div>`)
   htmlResp = htmlResp.replace('/*STYLE_HEAD*/', style)
   htmlResp = htmlResp.replace('/*VENDORS_HEAD*/', ``)
-  htmlResp = htmlResp.replace('/*SCRIPT_HEAD*/', `${vueResp}\n${execResp}\n${globalCache}`)
+  htmlResp = htmlResp.replace('/*SCRIPT_HEAD*/', `\n${globalCache}\n${vueResp}\n${execResp}`)
   htmlResp = htmlResp.replace('/*SCRIPT_BODY*/', `${runnerCode}`)
 
   // console.log(execResp, vueResp, htmlResp)

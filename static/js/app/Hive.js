@@ -299,7 +299,7 @@ this.onClean = () => {
         ]
       }
     },
-    async makeSocket ({ Doc, idx = 0, type = 'input', color = '#bababa', modID }) {
+    async makeSocket ({ Doc, idx = 0, type = 'input', color = '#e4e3e5', modID }) {
       let sID = getID(Doc.projectID + 'socket')
       let data = {
         userID: Doc.userID,

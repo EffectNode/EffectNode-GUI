@@ -24,7 +24,7 @@ export default {
   },
   data () {
     return {
-      marginLeft: 50 + 140, // 50 = remove words, 120 = label and socket
+      marginLeft: 50 + 100, // 50 = remove words, 100 = label and socket
       marginTop: 30 + 30, // 30 buttons, 30 title bar
       ui: false,
       view: {
@@ -126,8 +126,8 @@ export default {
             ui.inertia *= 0.98
           }
 
-          this.view.x = -ui.aX * 1.3
-          this.view.y = -ui.aY * 1.3
+          this.view.x = -ui.aX * 1.5
+          this.view.y = -ui.aY * 1.5
           if (this.view.x < 0) {
             this.view.x = 0
             ui.inertia = 0

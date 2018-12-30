@@ -14,7 +14,7 @@
         :minh="122"
         :minw="198"
 
-        drag-handle=".drag-title"
+        drag-handle=".touch-drag"
         drag-cancel=".cancel"
         @dragging="(x, y) => {
           onDrag(x, y, ip)

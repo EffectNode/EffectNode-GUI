@@ -95,7 +95,7 @@ export default {
 
             let width = this.win.width - this.marginLeft
 
-            let delta = evt.movementX / width * this.metaItem.value.totalTime
+            let delta = evt.movementX / width * this.metaItem.value.totalTime * 1.45
 
             if (refID === 'timebox') {
               this.metaItem.value.start += delta
@@ -282,7 +282,7 @@ export default {
       if (newName) {
         this.metaItem.label = newName
       }
-      this.$emit('save')
+      this.$emit('saveModule')
     },
     hydrate () {
 

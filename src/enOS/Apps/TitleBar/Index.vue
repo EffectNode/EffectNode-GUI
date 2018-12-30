@@ -1,9 +1,12 @@
 <template>
-  <div class="drag-title title" :class="{ inactive: !portal.win.active }" ref="title">
-      <slot></slot>
-      <div class="minify" @click="hide"></div>
-      <div class="close" @click="close"></div>
+  <div class="title" :class="{ inactive: !portal.win.active }" ref="title">
+    <div ref="dragger" class="dragger touch-drag">
     </div>
+    <div ref="slot" class="slot touch-drag"><slot></slot></div>
+
+    <div class="minify" @click="hide"></div>
+    <div class="close" @click="close"></div>
+  </div>
 </template>
 
 <script>
@@ -14,11 +17,18 @@ export default {
   },
   mounted () {
     this.$parent.$emit('activated')
-    let title = this.$refs.title
-    title.addEventListener('touchstart', (evt) => {
+    let dragger = this.$refs.dragger
+    dragger.addEventListener('touchstart', (evt) => {
       evt.preventDefault()
     })
-    title.addEventListener('touchmove', (evt) => {
+    dragger.addEventListener('touchmove', (evt) => {
+      evt.preventDefault()
+    })
+    let slot = this.$refs.slot
+    slot.addEventListener('touchstart', (evt) => {
+      // evt.preventDefault()
+    })
+    slot.addEventListener('touchmove', (evt) => {
       evt.preventDefault()
     })
   },
@@ -40,14 +50,9 @@ export default {
   justify-content: center;
   border-radius: 10px 10px 0px 0px;
   cursor: move;
-}
-.drag-title{
-  touch-action: manipulation;
-
-  background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(149,219,254,1) 0%, rgba(7,134,197,1) 90.1% );
+  background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgb(230, 167, 255) 0%, rgb(186, 227, 255) 90.1% );
   width: 100%;
   height: 30px;
-
   line-height: 30px;
   text-align: center;
 }
@@ -71,8 +76,25 @@ export default {
   top: calc((30px - 17px) / 2);
   cursor: pointer;
 }
-
+.touch-drag{
+  touch-action: manipulation;
+}
+.dragger{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
 .drag.inactive{
-  opacity: 0.5;
+  background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgb(49, 49, 49) 0%, rgb(216, 216, 216) 90.1% );
+}
+.title-words{
+  display: inline;
+}
+.slot{
+  display: inline-block;
+  z-index: 100000;
+  transform: perspective(100px) translateZ(3px);
 }
 </style>

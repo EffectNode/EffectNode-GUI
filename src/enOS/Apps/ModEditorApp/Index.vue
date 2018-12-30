@@ -123,6 +123,7 @@ import TitleBar from '../TitleBar'
 // import 'codemirror/mode/javascript/javascript.js'
 import * as brace from 'brace'
 import 'brace/mode/javascript'
+import 'brace/mode/glsl'
 import 'brace/theme/monokai'
 import 'brace/ext/searchbox'
 import RemixTimeline from './RemixTimeline'
@@ -264,13 +265,13 @@ export default {
         label: window.prompt(`what's the name of the time track? like opacity, speed, amount and etc`) || 'my-track',
         type: 'timeline-track',
         value: {
-          mode: 'starting',
-          starting: 0,
-          during: 0,
-          leaving: 0,
-          timebox: 0,
-          tick: 0,
-          now: 0,
+          // mode: 'starting',
+          // starting: 0,
+          // during: 0,
+          // leaving: 0,
+          // timebox: 0,
+          // tick: 0,
+          // now: 0,
 
           start: 0,
           afterStart: 3,
