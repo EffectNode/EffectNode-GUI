@@ -123,6 +123,14 @@ export function makeZList (api) {
     i.win.z = ii
   })
 }
+export function isIn3D (api) {
+  let firstPortal = api.portals[0]
+  if (firstPortal) {
+    return firstPortal.win.space3D
+  } else {
+    return false
+  }
+}
 
 export function enableSpace3D (api) {
   api.portals.forEach((i, ii) => {
@@ -151,6 +159,9 @@ export function init ({ projectID }) {
   mod.portals = []
   mod.makeSample = () => {
     makeSample(mod)
+  }
+  mod.isIn3D = () => {
+    return isIn3D(mod)
   }
   mod.addWindow = (arg) => {
     addWindow(mod, arg)

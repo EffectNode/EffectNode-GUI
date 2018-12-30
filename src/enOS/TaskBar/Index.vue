@@ -6,10 +6,10 @@
         <div class="taskbar-icon home" @click="startMenu = true">
           Open App
         </div>
-        <div class="taskbar-icon button3d" v-if="uiAPI.portal.meta.space3DMode && uiAPI.portal.portals.length > 0" @click="toggle3DSpace">
+        <div class="taskbar-icon button3d" v-if="toggle3D && uiAPI.portal.portals.length > 0" @click="toggle3DSpace">
           2D 🦄
         </div>
-        <div class="taskbar-icon button3d" v-if="!uiAPI.portal.meta.space3DMode && uiAPI.portal.portals.length > 0" @click="toggle3DSpace">
+        <div class="taskbar-icon button3d" v-if="!toggle3D && uiAPI.portal.portals.length > 0" @click="toggle3DSpace">
           3D 🌈
         </div>
         <div
@@ -35,6 +35,16 @@
           <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ type: 'animation' })">
             Roll
           </div> -->
+
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'connector' })">
+            Flow System Editor for Visaul Effects
+          </div>
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'exec-env' })">
+            Preview Window
+          </div>
+
+          <hr />
+
           <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'dimensional' })">
             Space & Dimension
           </div>
@@ -43,12 +53,6 @@
           </div>
           <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'volumetric' })">
             Volumetric Rendering
-          </div>
-          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'connector' })">
-            Connectors
-          </div>
-          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'exec-env' })">
-            ExecEnv
           </div>
         </div>
       </div>
@@ -67,6 +71,13 @@ export default {
   watch: {
     startMenu () {
       this.$emit('opened', this.startMenu)
+    },
+    toggle3D () {
+      if (this.toggle3D) {
+        this.uiAPI.portal.enableSpace3D()
+      } else {
+        this.uiAPI.portal.disableSpace3D()
+      }
     }
   },
   data () {
@@ -80,7 +91,7 @@ export default {
       this.startMenu = false
     },
     toggle3DSpace () {
-      this.uiAPI.portal.meta.space3DMode = !this.uiAPI.portal.meta.space3DMode
+      this.toggle3D = !this.toggle3D
     },
     goHome () {
       window.location.href = '/'
@@ -100,6 +111,11 @@ export default {
   width: 100%;
 
   background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.0784313725490196), rgba(255, 255, 255, 0.5215686274509804));
+}
+
+hr{
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .taskbar-content{

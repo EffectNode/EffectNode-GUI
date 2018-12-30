@@ -152,7 +152,7 @@ export default {
     getWindowStyle (ip) {
       return {
         transition: 'transform 0.5s',
-        transform: this.uiAPI.portal.meta.space3DMode ? `rotateX(-30deg) rotateY(30deg)` : ``
+        transform: this.uiAPI.portal.isIn3D() ? `rotateX(-30deg) rotateY(30deg)` : ``
       }
     },
     loadLS () {

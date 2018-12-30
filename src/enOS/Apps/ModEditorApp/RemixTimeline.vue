@@ -2,13 +2,13 @@
   <div>
     <div class="adders" v-if="currentMod">
       <div v-if="currentMod.meta.length > 0">
-        <button @click="addTimelineTrack()">Add TimeTrack</button>
+        <span class="linker" @click="addTimelineTrack()">Add TimeTrack</span>
         <span v-if="currentMod.meta.length === 1">
-          <button @click="removeMeta(currentMod.meta[0])">Reset</button>
+          <span class="linker" @click="removeMeta(currentMod.meta[0])">Reset</span>
         </span>
         <span v-if="currentMod.meta.length >= 1">
           Total Length: <input type="text" :value="currentMod.meta[0].value.totalTime" @input="updateTime" />
-          <button @click="resetAll">reset all</button>
+          <span class="linker" @click="removeAll">Remove all</span>
         </span>
       </div>
     </div>
@@ -49,8 +49,8 @@ export default {
         this.refresher = true
       })
     },
-    resetAll () {
-      if (window.prompt('reset all? type reset to confirm.') === 'reset') {
+    removeAll () {
+      if (window.prompt('reset all? type remove-all to confirm.') === 'remove-all') {
         this.currentMod.meta = []
         this.saveModule()
       }
@@ -80,6 +80,11 @@ export default {
 </script>
 
 <style scoped>
+.linker{
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 5px;
+}
 .adders{
   height: 30px;
 }

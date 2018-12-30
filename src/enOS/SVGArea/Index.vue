@@ -79,12 +79,12 @@
         <!-- M 100,75 C 150,75 150,125 200,125 -->
 
       </svg>
-      <div class="tools">
+      <!-- <div class="tools">
         <span style="display: none;">{{ root }}</span>
-        <button @click="scrolHome">Home View</button>
+        <button @click="scrollHome">Home View</button>
         <button @click="duplicateWindow">Duplicate Window</button>
-        <button @click="flowYo = !flowYo">Toggle Flow</button>
-      </div>
+        <button @click="toggleFlow">Toggle Flow</button>
+      </div> -->
   </div>
 </template>
 
@@ -138,6 +138,9 @@ export default {
     }
   },
   methods: {
+    toggleFlow () {
+      this.flowYo = !this.flowYo
+    },
     cloneModule (v) {
       this.$emit('cloneModule', v)
     },
@@ -200,7 +203,7 @@ export default {
       console.log('dis', v)
       this.$emit('disconnect', v)
     },
-    scrolHome () {
+    scrollHome () {
       anime({
         targets: this.ui,
         aX: 0,

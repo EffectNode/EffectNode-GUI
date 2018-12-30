@@ -12,8 +12,8 @@
       <!-- <text :height="socket.h" :x="socket.x" :y="socket.y + 17 / 2">socket{{ index }}</text> -->
     </g>
 
-    <text v-if="ii === 0" @click="remove" :height="ui.h" :x="0" :y="ui.y + 17 / 2">Remove</text>
-    <text v-if="ii === 1" @click="remove" :height="ui.h" :x="0" :y="ui.y + 17 / 2">Confirm</text>
+    <text v-if="ii === 0" @click="remove" :height="ui.h" :x="5" :y="ui.y + 17 / 2">Remove</text>
+    <text v-if="ii === 1" @click="remove" :height="ui.h" :x="5" :y="ui.y + 17 / 2">Confirm</text>
 
     <rect :fill="limit.fill" :width="limit.w" :height="limit.h" :x="limit.x" :y="limit.y"></rect>
 

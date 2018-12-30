@@ -1,11 +1,12 @@
 <template>
   <div class="full quotes-app" >
     <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
-      Flowzen Yogurt
+       Flow System Editor for Visual Effects
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
       <!-- Lok Lok -->
       <SVGArea
+      ref="svgarea"
       @cloneModule="cloneModule"
       @removeBox="removeBox"
       @editBox="editBox"
@@ -14,11 +15,17 @@
       @disconnect="updateBothSocket"
       @connect="updateBothSocket"
       @moveBox="updateBox"
-      v-if="portal && ready && root" :Doc="Doc" :meta="portal.data" :connectors="connectors" :modules="root.modules" :uiAPI="uiAPI" :Data="Data" :root="root" :win="portal.win" />
-    </div>
-    <div class="buttons">
-      <button @click="makePulseMod">Add Main Loop</button>
-      <button @click="makeDomMod">Add Dom Updater</button>
+      v-if="portal && ready && root" :Doc="Doc" :meta="portal.data" :connectors="connectors" :modules="root.modules" :uiAPI="uiAPI" :Data="Data" :root="root" :win="portal.win">
+      </SVGArea>
+      <div class="buttons bottom-left" v-if="$refs['svgarea']">
+        <span class="linker" @click="makePulseMod">Add Main Loop</span>
+        <span class="linker" @click="makeDomMod">Add Dom Updater</span>
+      </div>
+      <div class="tools top-left" v-if="$refs['svgarea']">
+        <span class="linker" @click="scrollHome">Home View</span>
+        <span class="linker" @click="duplicateWindow">Duplicate Window</span>
+        <span class="linker" @click="toggleFlow">Toggle Flow</span>
+      </div>
     </div>
   </div>
 </template>
@@ -62,6 +69,15 @@ export default {
     }
   },
   methods: {
+    scrollHome () {
+      this.$refs['svgarea'].scrollHome()
+    },
+    duplicateWindow () {
+      this.$refs['svgarea'].duplicateWindow()
+    },
+    toggleFlow () {
+      this.$refs['svgarea'].toggleFlow()
+    },
     async cloneModule ({ box }) {
       if (window.confirm('clone this module?\n' + box.name)) {
         let Data = this.uiAPI.hive.Data
@@ -174,6 +190,14 @@ export default {
 <style scoped>
 @import url(../../jot.css);
 
+.linker{
+  text-decoration: underline;
+  cursor: pointer;
+  color: black;
+  margin-left: 8px;
+  background-color: white;
+}
+
 .quotes-app{
   /* background: linear-gradient(90deg, #eef3ff 0%, #8aa3d4 100%); */
   box-sizing: border-box;
@@ -184,6 +208,7 @@ export default {
 }
 
 .content-div{
+  position: relative;
   height: calc(100% - 30px);
   /* -webkit-overflow-scrolling: touch;
   overflow: auto; */
@@ -196,6 +221,12 @@ export default {
 .buttons{
   position: absolute;
   bottom: 0px;
+  left: 0px;
+}
+
+.tools.top-left{
+  position: absolute;
+  top: 0px;
   left: 0px;
 }
 </style>
