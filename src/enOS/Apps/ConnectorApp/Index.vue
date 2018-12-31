@@ -1,7 +1,7 @@
 <template>
   <div class="full quotes-app" >
     <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
-       Flow System Editor for Visual Effects
+       Visual Effect Flow Editor
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
       <!-- Lok Lok -->
@@ -15,13 +15,14 @@
       @disconnect="updateBothSocket"
       @connect="updateBothSocket"
       @moveBox="updateBox"
+      @ready="hasSvg = true"
       v-if="portal && ready && root" :Doc="Doc" :meta="portal.data" :connectors="connectors" :modules="root.modules" :uiAPI="uiAPI" :Data="Data" :root="root" :win="portal.win">
       </SVGArea>
-      <div class="buttons bottom-left" v-if="$refs['svgarea']">
+      <div class="buttons bottom-left" v-if="hasSvg">
         <span class="linker" @click="makePulseMod">Add Main Loop</span>
         <span class="linker" @click="makeDomMod">Add Dom Updater</span>
       </div>
-      <div class="tools top-left" v-if="$refs['svgarea']">
+      <div class="tools top-left" v-if="hasSvg">
         <span class="linker" @click="scrollHome">Home View</span>
         <span class="linker" @click="duplicateWindow">Duplicate Window</span>
         <span class="linker" @click="toggleFlow">Toggle Flow</span>
@@ -61,6 +62,7 @@ export default {
   },
   data () {
     return {
+      hasSvg: false,
       Doc: false,
       Data: false,
       root: false,
@@ -110,6 +112,7 @@ export default {
       } else {
         this.uiAPI.portal.addWindow({
           type: 'mod-editor',
+          appName: box.name,
           data: {
             boxID: box._id,
             userID: box.userID,

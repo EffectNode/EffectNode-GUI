@@ -118,6 +118,7 @@ export default {
     console.log(this.meta)
     this.ready = true
     this.$nextTick(() => {
+      this.$emit('ready')
       this.setupWheel()
       // this.setupTouchTarget()
       // this.$forceUpdate()

@@ -12,6 +12,9 @@
         <div class="taskbar-icon button3d" v-if="!toggle3D && uiAPI.portal.portals.length > 0" @click="toggle3DSpace">
           3D 🌈
         </div>
+        <div class="taskbar-icon button3d" v-if="uiAPI.portal.portals.length > 0" @click="oragnise">
+          🎩 Organise
+        </div>
         <div
         class="taskbar-icon win" :key="ipk"
         :class="{ 'is-on': ip.win.minimised }"
@@ -20,7 +23,7 @@
           @touchstart="$emit('activated', { portal: ip })"
           @click="$emit('activated', { portal: ip })"
         >
-          {{ ip.name || ip.app }}
+          {{ ip.win.name || ip.app }}
         </div>
       </div>
     </div>
@@ -36,22 +39,22 @@
             Roll
           </div> -->
 
-          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'connector' })">
-            Flow System Editor for Visaul Effects
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: 'Visual Effect Flow Editor', type: 'connector' })">
+            Visual Effect Flow Editor
           </div>
-          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'exec-env' })">
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: 'Preview Window', type: 'exec-env' })">
             Preview Window
           </div>
 
           <hr />
 
-          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'dimensional' })">
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: 'Space & Dimension', type: 'dimensional' })">
             Space & Dimension
           </div>
-          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'particle-sea' })">
-            Sea & 彩雲追月
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: 'Particle Sea & 彩雲追月', type: 'particle-sea' })">
+            Particle Sea & 彩雲追月
           </div>
-          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, type: 'volumetric' })">
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: 'Volumetric Rendering', type: 'volumetric' })">
             Volumetric Rendering
           </div>
         </div>
@@ -87,6 +90,9 @@ export default {
     }
   },
   methods: {
+    oragnise () {
+      this.uiAPI.portal.organise()
+    },
     closeMenu () {
       this.startMenu = false
     },

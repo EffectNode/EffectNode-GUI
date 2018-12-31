@@ -8,13 +8,51 @@ var temp = {
   y: 30
 }
 
-export function makeWin () {
+export function organise (api) {
+  if (window.innerWidth <= 769) {
+    let w = window.innerWidth - 40
+    let h = 350
+    api.portals.forEach((ip, idx) => {
+      ip.win.x = 20
+      ip.win.y = 20
+      ip.win.width = w
+      ip.win.height = h
+      if (idx === 0) {
+        ip.win.minimised = true
+        setTimeout(() => {
+          ip.win.minimised = false
+        }, 100 * idx)
+      } else {
+        ip.win.minimised = true
+      }
+    })
+  } else {
+    let w = window.innerWidth - 40
+    let h = window.innerHeight - 70 - 30
+    api.portals.forEach((ip, idx) => {
+      ip.win.x = 30 * (idx + 1)
+      ip.win.y = 30 * (idx + 1)
+      ip.win.width = w > 600 ? 600 : w
+      ip.win.height = h > 500 ? 500 : h
+      ip.win.minimised = true
+      setTimeout(() => {
+        ip.win.minimised = false
+      }, 100 * idx)
+    })
+  }
+  temp.x = 30
+  temp.y = 30
+}
+
+export function makeWin (id, appName) {
+  let w = window.innerWidth - 40
+  let h = window.innerHeight - 70 - 30
   let win = {
-    name: 'App',
-    width: 600,
-    height: 630,
-    x: 30 + temp.x,
-    y: 30 + temp.y,
+    name: appName,
+    width: w > 600 ? 600 : w,
+    height: h > 500 ? 500 : h,
+    x: 20 + temp.x,
+    y: 20 + temp.y,
     z: 100000,
     active: true,
     minimised: false,
@@ -36,9 +74,9 @@ export function makeWin () {
   return win
 }
 
-export function makePortal ({ type, data = {} }) {
+export function makePortal ({ type, appName = 'App', data = {} }) {
   let id = getID()
-  let win = makeWin(id)
+  let win = makeWin(id, appName)
   let app = 'QuotesApp'
   if (type === 'animation') {
     app = 'AnimationApp'
@@ -189,6 +227,10 @@ export function init ({ projectID }) {
   }
   mod.activate = (current) => {
     activate(mod, current)
+  }
+
+  mod.organise = () => {
+    organise(mod)
   }
 
   return new Promise((resolve) => {

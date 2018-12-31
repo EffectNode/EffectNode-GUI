@@ -108,11 +108,12 @@
           return {
             cleanHandler () {},
             Signal,
+            onInputArrive: {},
             function: {},
             instance: {}
           }
         },
-        template: `<span>{{ mod.src }}</span>`,
+        template: `<span>{{ mod.src }}/span>`,
         async mounted () {
           try {
             await this.instantiate()
@@ -177,6 +178,23 @@
               }
             }
           },
+          Input (ei, onArrive, once = () => {}) {
+            this.$on('input' + ei, (v) => {
+              onArrive(v)
+              this.$emit('input-once' + ei)
+            })
+            this.$once('input-once' + ei, once)
+          },
+          Output (ei, valueToBeSent) {
+            this.$emit('output' + ei, valueToBeSent)
+          },
+          OutputAll (valueToBeSent) {
+            this.sockets.filter(s => s.type === 'output' && s.modID === this.mod.id).slice().sort((a, b) => {
+              return a.idx - b.idx
+            }).forEach((e, ei) => {
+              this.$emit('output' + ei, valueToBeSent)
+            })
+          },
           instantiate () {
             return new Promise((resolve, reject) => {
               setTimeout(() => {
@@ -188,13 +206,27 @@
                     loadAllJS,
                     Resources,
                     Signal,
+                    getMeta: (key) => {
+                      return (this.mod.meta.find(e => e.label === key) || {}).value
+                    },
                     box: this.mod,
                     sockets: this.sockets,
+                    IO: this,
                     inputs: this.sockets.filter(s => s.type === 'input' && s.modID === this.mod.id).slice().sort((a, b) => {
                       return a.idx - b.idx
+                    }).map((e, ei) => {
+                      Signal.$on(e.id, (v) => {
+                        this.$emit('input' + ei, v)
+                      })
+                      return e
                     }),
                     outputs: this.sockets.filter(s => s.type === 'output' && s.modID === this.mod.id).slice().sort((a, b) => {
                       return a.idx - b.idx
+                    }).map((e, ei) => {
+                      this.$on('output' + ei, (v) => {
+                        Signal.$emit(e.id, v)
+                      })
+                      return e
                     })
                   })
                   console.log('INSTANCE', this.instance)

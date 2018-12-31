@@ -32,6 +32,7 @@
         <RemixValues
           v-if="currentMod && remixmode === 'values'"
           @addRange="addRange"
+          @addColor="addColor"
           @removeMeta="removeMeta"
           @saveMeta="saveMeta"
 
@@ -258,6 +259,14 @@ export default {
         max: 100,
         step: 0.1,
         value: 0
+      })
+    },
+    addColor () {
+      this.addMeta({
+        id: '_r' + (Math.random() * 1024 * 1024 * 1024).toFixed(0),
+        label: 'color',
+        type: 'color',
+        value: `hsl(${(Math.random() * 360).toFixed(0)}, 50%, 50%)`
       })
     },
     addTimelineTrack () {

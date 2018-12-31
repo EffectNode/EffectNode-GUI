@@ -52,7 +52,7 @@ export default {
     return {
       isDown: false,
       iframe: {
-        enabled: false,
+        enabled: true,
         src: ''
       },
       Doc: false,

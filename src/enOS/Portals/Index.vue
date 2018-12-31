@@ -136,15 +136,17 @@ export default {
     loadResizer () {
       this.$nextTick(() => {
         this.uiAPI.portal.portals.forEach((ip) => {
-          let e = this.$refs['portals_' + ip.id][0]
-          if (e) {
-            let br = e.$el.querySelector('.handle.handle-br')
-            br.addEventListener('mousedown', () => {
-              this.onActivated(ip)
-            }, false)
-            br.addEventListener('touchstart', () => {
-              this.onActivated(ip)
-            }, false)
+          if (this.$refs['portals_' + ip.id]) {
+            let e = this.$refs['portals_' + ip.id][0]
+            if (e) {
+              let br = e.$el.querySelector('.handle.handle-br')
+              br.addEventListener('mousedown', () => {
+                this.onActivated(ip)
+              }, false)
+              br.addEventListener('touchstart', () => {
+                this.onActivated(ip)
+              }, false)
+            }
           }
         })
       })
