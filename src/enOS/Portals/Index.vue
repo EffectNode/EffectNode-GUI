@@ -23,7 +23,7 @@
           onResize(x, y, w, h, ip)
         }"
 
-        :handles="['br']"
+        :handles="['br', 'bl']"
         :ref="'portals_' + ip.id"
         :active="true"
         @activated="onActivated(ip)"
@@ -235,6 +235,28 @@ export default {
     /* bottom: -15px;
     right: -15px; */
     z-index: 1000 !important;
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .handle.handle-br:hover{
+    opacity: 1
+  }
+  .handle.handle-bl{
+    border: none !important;
+    /* background: linear-gradient(90deg, #FC466B 0%, cyan 100%) !important; */
+    background-image: linear-gradient( 135deg, #72EDF2 10%, #5151E5 100%) !important;
+    width: 25px !important;
+    height: 25px !important;
+    border-radius: 50% !important;
+    display: block !important;
+    /* bottom: -15px;
+    right: -15px; */
+    z-index: 1000 !important;
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .handle.handle-bl:hover{
+    opacity: 1
   }
 </style>
 

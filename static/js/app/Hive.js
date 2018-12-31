@@ -211,7 +211,7 @@ this.onClean = () => {
 
       Doc.root.connectors.filter(c => c.modID === mod.id).sort((a, b) => { return a.idx - b.idx })
         .forEach((e, ii) => {
-          Data.makeSocket({ Doc, idx: Data.getIDX(), color: e.color, type: e.type, modID: newMod.id })
+          Data.makeSocket({ Doc, idx: Data.getIDX(), color: e.color, type: e.type, name: e.name, modID: newMod.id })
         })
 
       return newMod
@@ -298,7 +298,7 @@ this.onClean = () => {
         ]
       }
     },
-    async makeSocket ({ Doc, idx = 0, type = 'input', color = '#e4e3e5', modID }) {
+    async makeSocket ({ Doc, idx = 0, type = 'input', color = '#e4e3e5', name = 'my socket', modID }) {
       let sID = getID(Doc.projectID + 'socket')
       let data = {
         userID: Doc.userID,
@@ -306,6 +306,7 @@ this.onClean = () => {
         id: sID,
         type,
         idx,
+        name,
         color,
         modID,
         mod: {

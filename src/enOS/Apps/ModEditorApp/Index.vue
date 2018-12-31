@@ -20,7 +20,7 @@
         </div>
 
         <RemixTimeline
-          v-if="currentMod && remixmode === 'timeline'"
+          v-if="view === 'remix' && currentMod && remixmode === 'timeline'"
           @addTimelineTrack="addTimelineTrack"
           @removeMeta="removeMeta"
           @saveMeta="saveMeta"
@@ -30,7 +30,7 @@
           :portal="portal"
         ></RemixTimeline>
         <RemixValues
-          v-if="currentMod && remixmode === 'values'"
+          v-if="view === 'remix' && currentMod && remixmode === 'values'"
           @addRange="addRange"
           @addColor="addColor"
           @removeMeta="removeMeta"
@@ -72,8 +72,8 @@
             <li :key="input._id" v-for="(input, ii) in inputs">
               <input type="color" v-model="input.color" @change="saveConnection(input)" style="width: 20px;" />
               <input type="text" v-model="input.color" @change="saveConnection(input)" style="width: 40px;" />
-              env.inputs[{{ ii }}].name
-              <input type="text" v-model="input.name" @input="saveModuleBox()" /> <button class="en-btn en-btn-danger" @click="removeSocket(input)">-</button>
+              IO.Input({{input.name === 'my socket' ? `${ii}` : `'${input.name}'`}}, handler);
+              <input type="text" v-model="input.name" @input="saveConnection(input)" /> <button class="en-btn en-btn-danger" @click="removeSocket(input)">-</button>
             </li>
             <li><button class="en-btn en-btn-successful" @click="addSocket(currentMod, 'input')">+</button></li>
 
@@ -85,8 +85,8 @@
             <li :key="output._id" v-for="(output, ii) in outputs">
               <input type="color" v-model="output.color" @change="saveConnection(output)" style="width: 20px;" />
               <input type="text" v-model="output.color" @change="saveConnection(output)" style="width: 40px;" />
-              env.outputs[{{ ii }}].name
-              <input type="text" v-model="output.name" @input="saveModuleBox()" /> <button class="en-btn en-btn-danger" @click="removeSocket(output)">-</button>
+              IO.Output({{output.name === 'my socket' ? `${ii}` : `'${output.name}'`}}, data);
+              <input type="text" v-model="output.name" @input="saveConnection(output)" /> <button class="en-btn en-btn-danger" @click="removeSocket(output)">-</button>
             </li>
             <li><button class="en-btn en-btn-successful" @click="addSocket(currentMod, 'output')">+</button></li>
           </ul>
@@ -234,7 +234,7 @@ export default {
       clearTimeout(this.metaDelay)
       this.metaDelay = setTimeout(() => {
         this.Data.ts.modules.update(this.currentMod)
-        window.dispatchEvent(new Event(`refresh-iframe`))
+        this.realodIframe()
       }, 500)
     },
     saveMeta ({ m, mi }) {
@@ -248,7 +248,11 @@ export default {
       clearTimeout(this.metaDelay)
       this.metaDelay = setTimeout(() => {
         this.Data.ts.modules.update(this.currentMod)
+        this.realodIframe()
       }, 500)
+    },
+    realodIframe () {
+      window.dispatchEvent(new Event(`refresh-iframe`))
     },
     addRange () {
       this.addMeta({
@@ -294,13 +298,17 @@ export default {
     addMeta (v) {
       this.currentMod.meta.push(v)
       this.Data.ts.modules.update(this.currentMod)
+      this.realodIframe()
     },
     removeMeta (v) {
       let idx = this.currentMod.meta.findIndex(e => e.id === v.id)
       this.currentMod.meta.splice(idx, 1)
       this.Data.ts.modules.update(this.currentMod)
+
+      this.realodIframe()
     },
     saveConnection (v) {
+      // this.Data.ts.connectors.update(v)
       this.Data.ts.connectors.animate(v)
       clearTimeout(this.connTimeout)
       this.connTimeout = setTimeout(() => {
@@ -311,7 +319,7 @@ export default {
       this.Data.ts.modules.animate(this.currentMod)
       clearTimeout(this.modTimeout)
       this.modTimeout = setTimeout(() => {
-        window.dispatchEvent(new Event('refresh-iframe'))
+        this.realodIframe()
         this.Data.ts.modules.update(this.currentMod)
       }, 500)
     },

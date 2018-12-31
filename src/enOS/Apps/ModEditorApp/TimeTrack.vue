@@ -2,22 +2,24 @@
   <g>
     <rect :fill="ui.fill" :width="ui.w" :height="ui.h" :x="ui.x" :y="ui.y"></rect>
 
+    <rect :fill="limit.fill" :width="limit.w" :height="limit.h" :x="limit.x" :y="limit.y"></rect>
+
 
     <g v-if="index > (outputs.length - 1)">
-      <text @click="changeLabel" :height="ui.h" :x="0 + 50" :y="ui.y + 17 / 2">{{ metaItem.label }}</text>
+      <text class="linker" @click="changeLabel" :height="ui.h" :x="0 + 50" :y="ui.y + 17 / 2">{{ metaItem.label }}</text>
       <!-- <text :height="socket.h" :x="socket.x" :y="socket.y + 17 / 2" fill="red">no-socket</text> -->
     </g>
     <g v-else>
-      <text @click="changeLabel" :height="ui.h" :x="0 + 50" :y="ui.y + 17 / 2">{{ metaItem.label }}</text>
+      <text class="linker" @click="changeLabel" :height="ui.h" :x="0 + 50" :y="ui.y + 17 / 2">{{ metaItem.label }}</text>
       <!-- <text :height="socket.h" :x="socket.x" :y="socket.y + 17 / 2">socket{{ index }}</text> -->
     </g>
 
-    <text v-if="ii === 0" @click="remove" :height="ui.h" :x="5" :y="ui.y + 17 / 2">Remove</text>
-    <text v-if="ii === 1" @click="remove" :height="ui.h" :x="5" :y="ui.y + 17 / 2">Confirm</text>
-
-    <rect :fill="limit.fill" :width="limit.w" :height="limit.h" :x="limit.x" :y="limit.y"></rect>
+    <text class="linker" v-if="ii === 0" @click="remove" :height="ui.h" :x="5" :y="ui.y + 17 / 2">Remove</text>
+    <text class="linker" v-if="ii === 1" @click="remove" :height="ui.h" :x="5" :y="ui.y + 17 / 2">Confirm</text>
 
     <rect ref="timebox" class="grab" :fill="box.fill" :width="box.w" :height="box.h" :x="box.x" :y="box.y"></rect>
+
+    <rect class="grab" :fill="cursor.fill" :width="cursor.w" :height="cursor.h" :x="cursor.x" :y="cursor.y"></rect>
 
     <circle ref="start" class="point" :fill="k1.fill" :r="k1.radius" :cx="k1.cx" :cy="k1.cy"></circle>
     <circle ref="end" class="point" :fill="k2.fill" :r="k2.radius" :cx="k2.cx" :cy="k2.cy"></circle>
@@ -33,10 +35,13 @@ export default {
     currentMod: {},
     outputs: {},
     win: {},
+    view: {},
     index: {},
     total: {},
     metaItem: {},
-    marginLeft: {}
+    marginLeft: {},
+    timeMode: {},
+    baseWidth: { default: 400 }
   },
   data () {
     return {
@@ -47,11 +52,14 @@ export default {
       k3: {}, // fade in end
       k4: {}, // fade out start
       box: {},
+      cursor: {},
       limit: {},
       socket: {},
       ui: {},
       time: {},
-      h: {}
+      h: {},
+      targetProgress: 0,
+      currnetProgress: 0
     }
   },
   computed: {
@@ -75,10 +83,53 @@ export default {
 
     this.h.beforeEnd = this.dragMaker('beforeEnd')
     this.h.beforeEnd.setup()
+
+    // let svg = this.$parent.$el
+    // svg.addEventListener('move', (evt) => {
+    //   let width = this.ui.wb || 1500
+    //   let delta = evt.movementX / width * this.metaItem.value.totalTime
+
+    // });
+    this.handleIframe()
   },
   beforeDestroy () {
   },
   methods: {
+    handleIframe () {
+      let svg = this.$parent.$el
+      // this.$emit('timeMode', '')
+      svg.addEventListener('mousemove', (evt) => {
+        this.$emit('timeMode', 'toEnv')
+        // this.relayoutCurosr(0)
+        let xPos = evt.offsetX - this.ui.x
+        let progress = xPos / this.ui.wb
+        if (progress <= 0) {
+          progress = 0
+        }
+        this.relayoutCurosr(progress)
+        window[this.currentMod.id + '-progress'] = progress
+      }, false)
+
+      // window[this.currentMod.id + '-progress']
+
+      window.addEventListener('message', (evt) => {
+        let data = evt.data
+        if (data.type === 'timeline' && data.modID === this.currentMod.id && this.timeMode === 'listen') {
+          this.relayoutCurosr(data.progress)
+        }
+      })
+    },
+    relayoutCurosr (progress) {
+      let cursor = this.cursor
+      cursor.w = 1
+      cursor.h = 1000000
+      if (this.ui) {
+        cursor.x = this.ui.x + this.view.x + this.ui.wb * progress
+        cursor.y = this.index * 13 + 2 * this.index
+        cursor.fill = `red`
+      }
+      this.$forceUpdate()
+    },
     dragMaker (refID) {
       let vm = this
       let svg = this.$parent.$el
@@ -93,7 +144,7 @@ export default {
           if (h.isDown) {
             h.aX += evt.movementX
 
-            let width = this.ui.wb || 350
+            let width = this.baseWidth
 
             let delta = evt.movementX / width * this.metaItem.value.totalTime
 
@@ -103,7 +154,7 @@ export default {
               this.metaItem.value.beforeEnd += delta
               this.metaItem.value.end += delta
 
-              if (this.metaItem.value.start < 0 || this.metaItem.value.end > this.metaItem.value.totalTime) {
+              if (this.metaItem.value.start < 0) {
                 this.metaItem.value.start -= delta
                 this.metaItem.value.afterStart -= delta
                 this.metaItem.value.beforeEnd -= delta
@@ -117,7 +168,7 @@ export default {
               // this.metaItem.value.beforeEnd += delta
               // this.metaItem.value.end += delta
 
-              if (this.metaItem.value.start < 0 || this.metaItem.value.end > this.metaItem.value.totalTime) {
+              if (this.metaItem.value.start < 0) {
                 this.metaItem.value.start -= delta
                 this.metaItem.value.afterStart -= delta
                 // this.metaItem.value.beforeEnd -= delta
@@ -131,7 +182,7 @@ export default {
               this.metaItem.value.beforeEnd += delta
               this.metaItem.value.end += delta
 
-              if (this.metaItem.value.start < 0 || this.metaItem.value.end > this.metaItem.value.totalTime) {
+              if (this.metaItem.value.start < 0) {
                 // this.metaItem.value.start -= delta
                 // this.metaItem.value.afterStart -= delta
                 this.metaItem.value.beforeEnd -= delta
@@ -190,7 +241,7 @@ export default {
     refresh () {
       let ui = this.ui
       ui.w = 500 * 5
-      ui.wb = 350 // baseline size
+      ui.wb = this.baseWidth // baseline size
       ui.h = 13
       ui.x = this.marginLeft + 0
       ui.y = this.index * 13 + 2 * this.index
@@ -283,12 +334,6 @@ export default {
         this.metaItem.label = newName
       }
       this.$emit('saveModule')
-    },
-    hydrate () {
-
-    },
-    putback () {
-
     }
   }
 }
@@ -300,5 +345,9 @@ export default {
 }
 .point{
   cursor: point;
+}
+.linker{
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

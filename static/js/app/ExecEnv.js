@@ -106,6 +106,12 @@
         },
         data () {
           return {
+            inputs: this.sockets.filter(s => s.type === 'input' && s.modID === this.mod.id).slice().sort((a, b) => {
+              return a.idx - b.idx
+            }),
+            outputs: this.sockets.filter(s => s.type === 'output' && s.modID === this.mod.id).slice().sort((a, b) => {
+              return a.idx - b.idx
+            }),
             cleanHandler () {},
             Signal,
             onInputArrive: {},
@@ -150,6 +156,9 @@
         computed: {
           code () {
             return this.mod.src
+          },
+          metaJSON () {
+            return JSON.stringify(this.mod.meta)
           }
         },
         methods: {
@@ -178,15 +187,47 @@
               }
             }
           },
-          Input (ei, onArrive, once = () => {}) {
-            this.$on('input' + ei, (v) => {
-              onArrive(v)
-              this.$emit('input-once' + ei)
-            })
-            this.$once('input-once' + ei, once)
+          Input (mixed, onArrive, once = () => {}) {
+            if (typeof mixed === 'number') {
+              this.$on('input' + mixed, (v) => {
+                onArrive(v)
+                this.$emit('input-once' + mixed, v)
+              })
+              this.$once('input-once' + mixed, once)
+            } else if (typeof mixed === 'string') {
+              mixed = this.inputs.findIndex(so => so.name === mixed)
+              this.$on('input' + mixed, (v) => {
+                onArrive(v)
+                this.$emit('input-once' + mixed, v)
+              })
+              this.$once('input-once' + mixed, once)
+            } else if (typeof mixed === 'object' && mixed instanceof Array) {
+              mixed.forEach(ee => {
+                if (typeof ee === 'string') {
+                  ee = this.inputs.findIndex(so => so.name === ee)
+                }
+                this.$on('input' + ee, (v) => {
+                  onArrive(v)
+                  this.$emit('input-once' + ee, v)
+                })
+                this.$once('input-once' + ee, once)
+              })
+            }
           },
-          Output (ei, valueToBeSent) {
-            this.$emit('output' + ei, valueToBeSent)
+          Output (mixed, valueToBeSent) {
+            if (typeof mixed === 'number') {
+              this.$emit('output' + mixed, valueToBeSent)
+            } else if (typeof mixed === 'string') {
+              mixed = this.outputs.findIndex(so => so.name === mixed)
+              this.$emit('output' + mixed, valueToBeSent)
+            } else if (typeof mixed === 'object' && mixed instanceof Array) {
+              mixed.forEach(ee => {
+                if (typeof ee === 'string') {
+                  ee = this.outputs.findIndex(so => so.name === ee)
+                }
+                this.$emit('output' + ee, valueToBeSent)
+              })
+            }
           },
           OutputAll (valueToBeSent) {
             this.sockets.filter(s => s.type === 'output' && s.modID === this.mod.id).slice().sort((a, b) => {
@@ -212,24 +253,23 @@
                     box: this.mod,
                     sockets: this.sockets,
                     IO: this,
-                    inputs: this.sockets.filter(s => s.type === 'input' && s.modID === this.mod.id).slice().sort((a, b) => {
-                      return a.idx - b.idx
-                    }).map((e, ei) => {
+                    Input: this.Input,
+                    Output: this.Output,
+                    OutputAll: this.OutputAll,
+                    inputs: this.inputs.map((e, ei) => {
                       Signal.$on(e.id, (v) => {
                         this.$emit('input' + ei, v)
                       })
                       return e
                     }),
-                    outputs: this.sockets.filter(s => s.type === 'output' && s.modID === this.mod.id).slice().sort((a, b) => {
-                      return a.idx - b.idx
-                    }).map((e, ei) => {
+                    outputs: this.outputs.map((e, ei) => {
                       this.$on('output' + ei, (v) => {
                         Signal.$emit(e.id, v)
                       })
                       return e
                     })
                   })
-                  console.log('INSTANCE', this.instance)
+                  // console.log('INSTANCE', this.instance)
                   this.readyInstance()
                   resolve()
                 } catch (e) {

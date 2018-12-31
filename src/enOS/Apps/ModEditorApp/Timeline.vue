@@ -2,7 +2,7 @@
   <svg ref="svg" :width="win.width - 2" :height="win.height - marginTop"  :viewBox="`${view.x.toFixed(1)} ${(view.y).toFixed(1)} ${win.width} ${win.height - marginTop}`">
 
     <g :key="m.id" v-for="(m, mi) in timetracks" v-if="refresher">
-      <TimeTrack :currentMod="currentMod" :win="win" @save="saveModule" :outputs="outputs" @remove="removeMeta(m)" :view="view" :marginLeft="marginLeft" :index="mi" :metaItem="m" :total="timetracks.length"></TimeTrack>
+      <TimeTrack :baseWidth="baseWidth" :currentMod="currentMod" @timeMode="(v) => { $emit('timeMode', v) }" :timeMode="timeMode" :win="win" @saveModule="saveModule" @save="saveModule" :outputs="outputs" @remove="removeMeta(m)" :view="view" :marginLeft="marginLeft" :index="mi" :metaItem="m" :total="timetracks.length"></TimeTrack>
     </g>
 
   </svg>
@@ -20,7 +20,9 @@ export default {
     outputs: {},
     refresher: {},
     win: {},
-    meta: {}
+    meta: {},
+    timeMode: {},
+    baseWidth: {}
   },
   data () {
     return {
@@ -158,5 +160,4 @@ export default {
   width: 90%;
   margin: 0px 5%;
 }
-
 </style>

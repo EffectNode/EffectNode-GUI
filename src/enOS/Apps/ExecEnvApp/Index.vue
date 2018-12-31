@@ -101,7 +101,9 @@ export default {
         window.removeEventListener('iframe-post-message', this.iframe.postMessage)
       }
       this.iframe.postMessage = (evt) => {
-        this.$refs.iframe.contentWindow.postMessage(evt.detail, this.$refs.iframe.contentWindow.location.origin)
+        if (this.$refs.iframe) {
+          this.$refs.iframe.contentWindow.postMessage(evt.detail, this.$refs.iframe.contentWindow.location.origin)
+        }
       }
       window.addEventListener('iframe-post-message', this.iframe.postMessage, false)
     },
@@ -140,6 +142,12 @@ export default {
       window.addEventListener('mouseup', (evt) => {
         this.isDown = false
       }, true)
+
+      window.addEventListener('iframe-time-mode', (evt) => {
+        if (this.$refs.iframe) {
+          this.$refs.iframe.contentWindow.postMessage(evt.detail, window.location.origin)
+        }
+      }, false)
 
       // console.log('OMG', )
       // this.$refs.mounter.appendChild(this.uiAPI.execEnv.Sys.$el)

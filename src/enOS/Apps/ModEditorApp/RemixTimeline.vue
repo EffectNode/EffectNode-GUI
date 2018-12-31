@@ -6,14 +6,16 @@
         <span v-if="currentMod.meta.length === 1">
           <span class="linker" @click="removeMeta(currentMod.meta[0])">Reset</span>
         </span>
+        <span class="linker" @click="timeMode = 'listen'">Play</span>
         <span v-if="currentMod.meta.length >= 1">
-          Total Length: <input type="text" :value="currentMod.meta[0].value.totalTime" @input="updateTime" />
+          Total Length: <input class="values" type="text" :value="currentMod.meta[0].value.totalTime" @input="updateTime" />
+          Zoom: <input class="values" type="text" v-model="baseWidth" @input="updateZoom" />
           <span class="linker" @click="removeAll">Remove all</span>
         </span>
       </div>
     </div>
     <div>
-      <Timeline v-if="currentMod" :currentMod="currentMod" :saveMeta="saveMeta" :outputs="outputs" @saveModule="saveModule" @removeMeta="removeMeta" :refresher="refresher" :meta="currentMod.meta" :win="portal.win">
+      <Timeline v-if="currentMod && refresher" :baseWidth="baseWidth" @timeMode="(v) => { timeMode = v }" :timeMode="timeMode" :currentMod="currentMod" :saveMeta="saveMeta" :outputs="outputs" @saveModule="saveModule" @removeMeta="removeMeta" :refresher="refresher" :meta="currentMod.meta" :win="portal.win">
       </Timeline>
     </div>
   </div>
@@ -33,10 +35,29 @@ export default {
   },
   data () {
     return {
+      baseWidth: 400,
+      timeMode: 'listen',
       refresher: true
     }
   },
+  mounted () {
+    window[this.currentMod.id + '-timeMode'] = this.timeMode
+  },
+  beforeDestroy () {
+    window[this.currentMod.id + '-timeMode'] = this.timeMode = 'listen'
+  },
+  watch: {
+    timeMode () {
+      window[this.currentMod.id + '-timeMode'] = this.timeMode
+    }
+  },
   methods: {
+    updateZoom () {
+      this.refresher = false
+      this.$nextTick(() => {
+        this.refresher = true
+      })
+    },
     updateTime (evt) {
       let val = evt.target.value
 
@@ -87,5 +108,8 @@ export default {
 }
 .adders{
   height: 30px;
+}
+.values{
+  width: 50px;
 }
 </style>
