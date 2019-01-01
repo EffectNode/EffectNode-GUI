@@ -158,12 +158,13 @@ hr{
   /* height: calc(90px - 10px * 2);
   width: calc(90px - 10px * 2); */
   /* border: rgb(248, 194, 194) solid 1px; */
-  padding: 15px;
+  padding: 13px;
   border-radius: 10px;
-  margin: 8px;
+  margin: 4px;
+  width: 80px;
 
   /* box-shadow: 0px 0px 50px 0px rgba(255, 255, 255, 0.623); */
-  font-size: 13px;
+  font-size: 12px;
   text-align: center;
   /* line-height: calc(90px - 10px * 2); */
   background-image: linear-gradient(9deg, #efd5ff 0%, #515ada 100%);
@@ -231,13 +232,13 @@ hr{
 .start-title-bar{
   border-radius: 18px 18px 0px 0px;
   background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%);
-  height: 60px;
-  line-height: 60px;
-  font-size: 19px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 13px;
   text-align: center;
-  font-family: Raleway, sans-serif;
+  font-family: Inconsolata, monospace;
   color: #4a4a4a;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 
 .start-content-div{

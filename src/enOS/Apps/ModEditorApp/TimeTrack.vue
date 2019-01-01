@@ -19,7 +19,7 @@
 
     <rect ref="timebox" class="grab" :fill="box.fill" :width="box.w" :height="box.h" :x="box.x" :y="box.y"></rect>
 
-    <rect class="grab" :fill="cursor.fill" :width="cursor.w" :height="cursor.h" :x="cursor.x" :y="cursor.y"></rect>
+    <rect :fill="cursor.fill" :width="cursor.w" :height="cursor.h" :x="cursor.x" :y="cursor.y"></rect>
 
     <circle ref="start" class="point" :fill="k1.fill" :r="k1.radius" :cx="k1.cx" :cy="k1.cy"></circle>
     <circle ref="end" class="point" :fill="k2.fill" :r="k2.radius" :cx="k2.cx" :cy="k2.cy"></circle>
@@ -346,7 +346,7 @@ export default {
   cursor: grab;
 }
 .point{
-  cursor: point;
+  cursor: pointer;
 }
 .linker{
   text-decoration: underline;

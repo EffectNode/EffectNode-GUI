@@ -7,6 +7,7 @@
       <span style="cursor: pointer; margin: 0px 6px; text-decoration: underline;" @click="view = 'inspect'">Insepctor</span>
       <span style="cursor: pointer; margin: 0px 6px; text-decoration: underline;" @click="view = 'remix'">Remixer</span>
       <span style="cursor: pointer; margin: 0px 6px; text-decoration: underline;" @click="view = 'code'">Code</span>
+      <span style="cursor: pointer; margin: 0px 6px; text-decoration: underline;" @click="view = 'template'">Template</span>
 
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
@@ -57,6 +58,41 @@
 
       </div>
 
+      <div v-show="view === 'template'" v-if="currentMod">
+        <div style="width: 90%; margin: 0px 5%;">
+          <h1>Module Templates</h1>
+          <div v-if="!templateModuleItem">
+            <strong>Status: Waiting for Submission</strong>
+            <button @click="cloneSubmitModule({ Doc: Doc, mod: currentMod })">
+              Clone to Template Database
+            </button>
+          </div>
+          <div v-if="templateModuleItem">
+            <h2>Name: {{ templateModuleItem.name }}</h2>
+            <h2>Status: Submitted as Template</h2>
+            Set as Publicly shared Template: <input type="checkbox" :value="templateModuleItem.isGallery" @input="toggleTemplatePublic" />
+            <br />
+            <br />
+            <button @click="removeTemplateBox({ mod: templateModuleItem, outputs: templateOutputs, inputs: templateInputs })">
+              Remove this clone from Template Database
+            </button>
+          </div>
+          <h1>Template Gallery</h1>
+          <div>
+            Search <input v-model="templateModuleQuery" />
+            <br />
+            <ul>
+              <li :key="tt.id" v-for="tt in templateModules.filter(tt => tt.name.toLowerCase().indexOf(templateModuleQuery.toLowerCase()) !== -1)">
+                {{ tt.name }}
+                <button @click="cloneModule({ Doc, mod: tt })">Clone Module</button>
+                <button v-if="tt.userID === Doc.userID" @click="removeTemplateBox({ mod: templateModuleItem, outputs: templateOutputs, inputs: templateInputs })">
+                  Remove my share
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
       <div v-show="view === 'inspect'">
         <div style="width: 90%; margin: 0px 5%;" v-if="currentMod && inputs && outputs">
@@ -177,6 +213,7 @@ export default {
     let self = this
 
     return {
+      templateModuleQuery: '',
       get view () {
         return self.portal.data.view || 'inspect'
       },
@@ -215,6 +252,12 @@ export default {
     }
   },
   methods: {
+    cloneSubmitModule ({ Doc, mod }) {
+      this.Data.cloneSubmitModule({ mod, Doc })
+    },
+    cloneModule ({ Doc, mod }) {
+      this.Data.cloneModule({ Doc, mod, connectors: this.templateConnectors.filter(c => c.modID === mod.id) })
+    },
     addSocket (currentMod, type) {
       if (type === 'input' || type === 'output') {
         this.Data.makeSocket({ Doc: this.Doc, idx: this.Data.getIDX(), type, modID: currentMod.id })
@@ -229,6 +272,30 @@ export default {
       let defaultView = this.currentMod.meta.length > 0 ? 'remix' : 'code'
       this.portal.data.view = this.portal.data.view || defaultView
     },
+    toggleTemplatePublic () {
+      if (this.templateModuleItem) {
+        this.templateModuleItem.isGallery = !this.templateModuleItem.isGallery
+        this.templateInputs.forEach((ttc) => {
+          ttc.isGallery = !ttc.isGallery
+        })
+        this.templateOutputs.forEach((ttc) => {
+          ttc.isGallery = !ttc.isGallery
+        })
+        this.saveTemplate()
+      }
+    },
+    saveTemplate () {
+      clearTimeout(this.metaDelay)
+      this.metaDelay = setTimeout(() => {
+        this.Data.template.modules.update(this.templateModuleItem)
+        this.templateInputs.forEach((ttc) => {
+          this.Data.template.connectors.update(ttc)
+        })
+        this.templateOutputs.forEach((ttc) => {
+          this.Data.template.connectors.update(ttc)
+        })
+      }, 500)
+    },
     saveModule () {
       this.Data.ts.modules.animate(this.currentMod)
       clearTimeout(this.metaDelay)
@@ -236,6 +303,11 @@ export default {
         this.Data.ts.modules.update(this.currentMod)
         this.realodIframe()
       }, 500)
+    },
+    removeTemplateBox ({ mod, outputs, inputs }) {
+      if (window.prompt('type yes to remove this template module and its connnections?') === 'yes') {
+        this.Data.removeTemplateBox({ mod, inputs, outputs })
+      }
     },
     saveMeta ({ m, mi }) {
       if (m.type === 'range') {
@@ -493,6 +565,37 @@ export default {
     }
   },
   computed: {
+    templateInputs () {
+      return this.templateConnectors.filter(tm => tm.oldID === this.currentMod._id).filter((c) => {
+        return c.type === 'input'
+      }).slice().sort((a, b) => {
+        return a.idx - b.idx
+      })
+    },
+    templateOutputs () {
+      return this.templateConnectors.filter(tm => tm.oldID === this.currentMod._id).filter((c) => {
+        return c.type === 'output'
+      }).slice().sort((a, b) => {
+        return a.idx - b.idx
+      })
+    },
+    templateModuleItem () {
+      return this.templateModules.find(tm => tm.oldID === this.currentMod._id)
+    },
+    templateConnectors () {
+      if (this.Doc.root.template && this.Doc.root.template.connectors) {
+        return this.Doc.root.template.connectors
+      } else {
+        return []
+      }
+    },
+    templateModules () {
+      if (this.Doc.root.template && this.Doc.root.template.modules) {
+        return this.Doc.root.template.modules
+      } else {
+        return []
+      }
+    },
     remixmode () {
       if (this.hasTimeTrack) {
         return 'timeline'

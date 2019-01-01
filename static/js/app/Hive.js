@@ -81,6 +81,7 @@ this.onClean = () => {
 
         Doc.projectID = api.projectID
         Doc.userID = api.userID
+        Data.template = {}
         Data.ts = {}
         Data.TableSync = api.TableSync
         Data.RT = api.RT
@@ -93,6 +94,9 @@ this.onClean = () => {
       let TableSync = Data.TableSync
       Data.ts.modules = new TableSync({ namespace: 'boxes', getArray: () => { return Doc.root.modules } })
       Data.ts.connectors = new TableSync({ namespace: 'connectors', getArray: () => { return Doc.root.connectors } })
+
+      Data.template.modules = new TableSync({ namespace: 'temp-boxes', getArray: () => { return Doc.root.template.modules } })
+      Data.template.connectors = new TableSync({ namespace: 'temp-connectors', getArray: () => { return Doc.root.template.connectors } })
       return new Promise((resolve) => {
         Data.RT.en.emit('open-hive', {
           projectID: Doc.projectID
@@ -101,11 +105,15 @@ this.onClean = () => {
           Doc.root.connectors = []
           Data.ts.modules.sync()
           Data.ts.connectors.sync()
+          Data.template.connectors.sync()
+          Data.template.modules.sync()
 
           console.log({ userID: Doc.userID, projectID: Doc.projectID })
           Data.ts.connectors.hydrate({ userID: Doc.userID, projectID: Doc.projectID })
           Data.ts.modules.hydrate({ userID: Doc.userID, projectID: Doc.projectID })
 
+          Data.template.connectors.hydrate({ projectID: 'template' })
+          Data.template.modules.hydrate({ projectID: 'template' })
           resolve()
         })
       })
@@ -197,7 +205,7 @@ this.onClean = () => {
       // Data.addSocketToDoc({ socket: ou4, Doc })
       return mod
     },
-    async cloneModule ({ Doc, mod }) {
+    async cloneModule ({ Doc, mod, connectors = Doc.root.connectors }) {
       let newMod = await Data.makeModule({
         Doc,
         name: mod.name,
@@ -209,12 +217,45 @@ this.onClean = () => {
         meta: JSON.parse(JSON.stringify(mod.meta || []))
       })
 
-      Doc.root.connectors.filter(c => c.modID === mod.id).sort((a, b) => { return a.idx - b.idx })
+      connectors.filter(c => c.modID === mod.id).sort((a, b) => { return a.idx - b.idx })
         .forEach((e, ii) => {
           Data.makeSocket({ Doc, idx: Data.getIDX(), color: e.color, type: e.type, name: e.name, modID: newMod.id })
         })
 
       return newMod
+    },
+    async cloneSubmitModule ({ Doc, mod }) {
+      let newMod = await Data.makeModule({
+        Service: Data.template,
+        Doc,
+        oldID: mod._id,
+        name: mod.name,
+        src: mod.src,
+        pos: {
+          x: mod.pos.x + 30,
+          y: mod.pos.y + 30
+        },
+        isTemplate: true,
+        isGallery: false,
+        projectID: 'template',
+        meta: JSON.parse(JSON.stringify(mod.meta || []))
+      })
+
+      Doc.root.connectors.filter(c => c.modID === mod.id).sort((a, b) => { return a.idx - b.idx })
+        .forEach((e, ii) => {
+          Data.makeSocket({ Service: Data.template, Doc, oldID: mod._id, idx: Data.getIDX(), color: e.color, type: e.type, name: e.name, modID: newMod.id, isTemplate: true, isGallery: false, projectID: 'template' })
+        })
+
+      return newMod
+    },
+    removeTemplateBox ({ mod, inputs, outputs }) {
+      Data.template.modules.remove(mod)
+      inputs.forEach((input) => {
+        Data.template.connectors.remove(input)
+      })
+      outputs.forEach((output) => {
+        Data.template.connectors.remove(output)
+      })
     },
     getAllSockets ({ Doc }) {
       return Doc.root.connectors.slice().sort((a, b) => { return a.idx - b.idx })
@@ -288,7 +329,11 @@ this.onClean = () => {
       return {
         root: {
           modules: [],
-          connectors: []
+          connectors: [],
+          template: {
+            modules: [],
+            connectors: []
+          }
         },
         versions: [
           // {
@@ -298,12 +343,15 @@ this.onClean = () => {
         ]
       }
     },
-    async makeSocket ({ Doc, idx = 0, type = 'input', color = '#e4e3e5', name = 'my socket', modID }) {
+    async makeSocket ({ Service = Data.ts, Doc, oldID = '', idx = 0, type = 'input', color = '#e4e3e5', name = 'my socket', modID, projectID = Doc.projectID, isTemplate = false, isGallery = false }) {
       let sID = getID(Doc.projectID + 'socket')
       let data = {
         userID: Doc.userID,
-        projectID: Doc.projectID,
+        projectID: projectID,
+        oldID,
         id: sID,
+        isTemplate,
+        isGallery,
         type,
         idx,
         name,
@@ -318,16 +366,19 @@ this.onClean = () => {
           to: ''
         }
       }
-      let resp = await Data.ts.connectors.add(data)
+      let resp = await Service.connectors.add(data)
       let obj = resp.data.results
       return obj
     },
-    async makeModule ({ Doc, src = '', name = '', pos, meta }) {
+    async makeModule ({ Service = Data.ts, Doc, oldID = '', src = '', name = '', pos, meta, projectID = Doc.projectID, isTemplate = false, isGallery = false }) {
       let modID = getID(Doc.projectID + 'module')
       let data = {
         userID: Doc.userID,
-        projectID: Doc.projectID,
+        projectID: projectID,
         id: modID,
+        isTemplate,
+        isGallery,
+        oldID,
         meta: meta || [],
         bg: '',
         name: name,
@@ -342,7 +393,7 @@ this.onClean = () => {
         src: src
       }
 
-      let resp = await Data.ts.modules.add(data)
+      let resp = await Service.modules.add(data)
       let obj = resp.data.results
       return obj
     }// ,
