@@ -232,8 +232,8 @@ this.onClean = () => {
         name: mod.name,
         src: mod.src,
         pos: {
-          x: mod.pos.x + 30,
-          y: mod.pos.y + 30
+          x: 30,
+          y: 30
         },
         isTemplate: true,
         isGallery: false,

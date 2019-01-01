@@ -248,7 +248,7 @@
                     Resources,
                     Signal,
                     getMeta: (key) => {
-                      return (this.mod.meta.find(e => e.label === key) || {}).value
+                      return ((this.mod.meta.find(e => e.label === key) || { value: { var: 0 } }).value)
                     },
                     box: this.mod,
                     sockets: this.sockets,

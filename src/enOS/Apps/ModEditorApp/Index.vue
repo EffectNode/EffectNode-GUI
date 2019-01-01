@@ -77,17 +77,23 @@
               Remove this clone from Template Database
             </button>
           </div>
-          <h1>Template Gallery</h1>
+          <h1>Templates</h1>
           <div>
             Search <input v-model="templateModuleQuery" />
             <br />
             <ul>
-              <li :key="tt.id" v-for="tt in templateModules.filter(tt => tt.name.toLowerCase().indexOf(templateModuleQuery.toLowerCase()) !== -1)">
+              <li :key="tt.id" v-for="tt in templateModules.filter(tt => tt.userID === Doc.userID).filter(tt => tt.name.toLowerCase().indexOf(templateModuleQuery.toLowerCase()) !== -1)">
                 {{ tt.name }}
                 <button @click="cloneModule({ Doc, mod: tt })">Clone Module</button>
                 <button v-if="tt.userID === Doc.userID" @click="removeTemplateBox({ mod: templateModuleItem, outputs: templateOutputs, inputs: templateInputs })">
-                  Remove my share
+                  Remove this template
                 </button>
+              </li>
+            </ul>
+            <ul>
+              <li :key="tt.id" v-for="tt in templateModules.filter(tt => tt.userID !== Doc.userID).filter(tt => tt.name.toLowerCase().indexOf(templateModuleQuery.toLowerCase()) !== -1)">
+                {{ tt.name }}
+                <button @click="cloneModule({ Doc, mod: tt })">Clone Module</button>
               </li>
             </ul>
           </div>
