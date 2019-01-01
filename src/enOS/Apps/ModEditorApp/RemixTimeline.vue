@@ -8,9 +8,10 @@
         </span>
         <span class="linker" @click="timeMode = 'listen'">Play</span>
         <span v-if="currentMod.meta.length >= 1">
+          <span class="linker" @click="removeAll">Remove all</span>
           Total Length: <input class="values" type="text" :value="currentMod.meta[0].value.totalTime" @input="updateTime" />
           Zoom: <input class="values" type="text" v-model="baseWidth" @input="updateZoom" />
-          <span class="linker" @click="removeAll">Remove all</span>
+          Auto play:<input v-model="autoRestorePlay" type="checkbox" />
         </span>
       </div>
     </div>
@@ -35,6 +36,7 @@ export default {
   },
   data () {
     return {
+      autoRestorePlay: true,
       baseWidth: 400,
       timeMode: 'listen',
       refresher: true
@@ -47,8 +49,23 @@ export default {
     window[this.currentMod.id + '-timeMode'] = this.timeMode = 'listen'
   },
   watch: {
+    active () {
+      if (this.active === false && this.autoRestorePlay) {
+        window[this.currentMod.id + '-timeMode'] = this.timeMode = 'listen'
+      }
+    },
     timeMode () {
       window[this.currentMod.id + '-timeMode'] = this.timeMode
+    }
+  },
+  computed: {
+    active () {
+      if (this.portal && this.portal.win) {
+        console.log(this.portal.win.active)
+        return this.portal.win.active
+      } else {
+        return false
+      }
     }
   },
   methods: {

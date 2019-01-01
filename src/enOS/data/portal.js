@@ -34,11 +34,30 @@ export function organise (api) {
       ip.win.y = 30 * (idx + 1)
       ip.win.width = w > 600 ? 600 : w
       ip.win.height = h > 500 ? 500 : h
-      ip.win.minimised = true
       setTimeout(() => {
-        ip.win.minimised = false
-      }, 100 * idx)
+        ip.win.minimised = true
+      }, 10)
     })
+    let connectorApp = api.portals.find(a => a.app === 'ConnectorApp')
+    if (connectorApp) {
+      connectorApp.win.x = 20
+      connectorApp.win.y = 20
+      connectorApp.win.minimised = true
+      setTimeout(() => {
+        connectorApp.win.minimised = false
+      }, 10)
+    }
+    let previewApp = api.portals.find(a => a.app === 'ExecEnvApp')
+    if (previewApp) {
+      previewApp.win.width = 400
+      previewApp.win.height = 300
+      previewApp.win.x = window.innerWidth - previewApp.win.width - 20
+      previewApp.win.y = 20
+      previewApp.win.minimised = true
+      setTimeout(() => {
+        previewApp.win.minimised = false
+      }, 10)
+    }
   }
   temp.x = 30
   temp.y = 30
@@ -106,12 +125,15 @@ export function makePortal ({ type, appName = 'App', data = {} }) {
 }
 
 export function makeSample (api) {
-  api.portals.push(
-    makePortal({ type: 'connector', data: {} })
-  )
-  api.portals.push(
-    makePortal({ type: 'exec-env', data: {} })
-  )
+  // api.portals.push(
+  //   makePortal({ type: 'connector', data: {} })
+  // )
+  // api.portals.push(
+  //   makePortal({ type: 'exec-env', data: {} })
+  // )
+  api.addWindow({ data: {}, appName: 'Visual Effect Flow Editor', type: 'connector' })
+  api.addWindow({ data: {}, appName: 'Preview Window', type: 'exec-env' })
+  api.organise()
 }
 
 export function addWindow (api, args) {

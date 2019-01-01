@@ -198,7 +198,8 @@ export default {
 
             if (refID === 'afterStart') {
               this.metaItem.value.afterStart += delta
-              if (this.metaItem.value.afterStart < this.metaItem.value.start || this.metaItem.value.afterStart > this.metaItem.value.end) {
+              // if (this.metaItem.value.afterStart < this.metaItem.value.start || this.metaItem.value.afterStart > this.metaItem.value.end) {
+              if (this.metaItem.value.afterStart < this.metaItem.value.start) {
                 this.metaItem.value.afterStart -= delta
                 if (this.metaItem.value.afterStart > this.metaItem.value.totalTime) {
                   this.metaItem.value.afterStart += delta
@@ -208,7 +209,8 @@ export default {
 
             if (refID === 'beforeEnd') {
               this.metaItem.value.beforeEnd += delta
-              if (this.metaItem.value.beforeEnd < this.metaItem.value.start || this.metaItem.value.beforeEnd > this.metaItem.value.end) {
+              // if (this.metaItem.value.beforeEnd < this.metaItem.value.start || this.metaItem.value.beforeEnd > this.metaItem.value.end) {
+              if (this.metaItem.value.beforeEnd < this.metaItem.value.start) {
                 this.metaItem.value.beforeEnd -= delta
                 if (this.metaItem.value.beforeEnd > this.metaItem.value.totalTime) {
                   this.metaItem.value.beforeEnd += delta

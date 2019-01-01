@@ -1,7 +1,7 @@
 <template>
   <div class="full quotes-app">
     <TitleBar ref="title-bar" :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
-      Preview <span class="linker" @click="runIframe()">Reset</span> <span class="linker" @click="downloadFrame()">Download</span>
+      {{ portal.win.name }} <span class="linker" @click="runIframe()">Reset</span> <span class="linker" @click="downloadFrame()">Download</span>
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
       <iframe

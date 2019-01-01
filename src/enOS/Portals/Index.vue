@@ -4,7 +4,7 @@
       <vue-draggable-resizable
         :key="ip.id"
         v-if="!ip.win.minimised"
-        v-for="(ip) in uiAPI.portal.portals"
+        v-for="(ip, ipi) in uiAPI.portal.portals.slice().sort((a, b) => { return new Date(a.date) - new Date(b.date) })"
         :w="ip.win.width"
         :h="ip.win.height"
         :x="ip.win.x"
@@ -23,11 +23,11 @@
           onResize(x, y, w, h, ip)
         }"
 
-        :handles="['br', 'bl']"
+        :handles="['br', 'bl', 'tl']"
         :ref="'portals_' + ip.id"
         :active="true"
         @activated="onActivated(ip)"
-        :style="getWindowStyle(ip)"
+        :style="getWindowStyle(ip, ipi)"
         >
           <keep-alive>
             <Component
@@ -151,9 +151,13 @@ export default {
         })
       })
     },
-    getWindowStyle (ip) {
+    getWindowStyle (ip, ipi) {
+      // ipi = ip.win.z
+      // ipi = this.uiAPI.portal.portals.length - ipi
+      // let max = -this.uiAPI.portal.portals.length * 300
       return {
         transition: 'transform 0.5s',
+        // transform: this.uiAPI.portal.isIn3D() ? `translateZ(-500px) rotateX(-30deg) rotateY(30deg)` : ``
         transform: this.uiAPI.portal.isIn3D() ? `rotateX(-30deg) rotateY(30deg)` : ``
       }
     },
@@ -256,6 +260,23 @@ export default {
     transition: opacity 0.35s;
   }
   .handle.handle-bl:hover{
+    opacity: 1
+  }
+  .handle.handle-tl{
+    border: none !important;
+    /* background: linear-gradient(90deg, #FC466B 0%, cyan 100%) !important; */
+    background-image: linear-gradient( 135deg, #72EDF2 10%, #5151E5 100%) !important;
+    width: 25px !important;
+    height: 25px !important;
+    border-radius: 50% !important;
+    display: block !important;
+    /* bottom: -15px;
+    right: -15px; */
+    z-index: 1000 !important;
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .handle.handle-tl:hover{
     opacity: 1
   }
 </style>
