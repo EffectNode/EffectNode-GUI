@@ -64,29 +64,28 @@
           <div v-if="!templateModuleItem">
             <strong>Status: Waiting for Submission</strong>
             <button @click="cloneSubmitModule({ Doc: Doc, mod: currentMod })">
-              Clone to Template Database
+              Clone to Template Gallery
             </button>
           </div>
           <div v-if="templateModuleItem">
             <h2>Name: {{ templateModuleItem.name }}</h2>
             <h2>Status: Submitted as Template</h2>
-            Set as Publicly shared Template: <input type="checkbox" :value="templateModuleItem.isGallery" @input="toggleTemplatePublic" />
+            <!-- Set as Publicly shared Template: <input type="checkbox" :value="templateModuleItem.isGallery" @input="toggleTemplatePublic" /> -->
             <br />
             <br />
             <button @click="removeTemplateBox({ mod: templateModuleItem, outputs: templateOutputs, inputs: templateInputs })">
-              Remove this clone from Template Database
+              Remove clone from Template Gallery
             </button>
           </div>
           <h1>Templates</h1>
           <div>
             Search <input v-model="templateModuleQuery" />
-            <br />
             <ul>
               <li :key="tt.id" v-for="tt in templateModules.filter(tt => tt.userID === Doc.userID).filter(tt => tt.name.toLowerCase().indexOf(templateModuleQuery.toLowerCase()) !== -1)">
                 {{ tt.name }}
                 <button @click="cloneModule({ Doc, mod: tt })">Clone Module</button>
-                <button v-if="tt.userID === Doc.userID" @click="removeTemplateBox({ mod: templateModuleItem, outputs: templateOutputs, inputs: templateInputs })">
-                  Remove this template
+                <button v-if="tt.userID === Doc.userID" @click="removeTemplateBox({ mod: tt, outputs: templateOutputs, inputs: templateInputs })">
+                  Remove
                 </button>
               </li>
             </ul>
@@ -327,7 +326,7 @@ export default {
       this.metaDelay = setTimeout(() => {
         this.Data.ts.modules.update(this.currentMod)
         this.realodIframe()
-      }, 500)
+      }, 1500)
     },
     realodIframe () {
       window.dispatchEvent(new Event(`refresh-iframe`))
@@ -399,7 +398,7 @@ export default {
       this.modTimeout = setTimeout(() => {
         this.realodIframe()
         this.Data.ts.modules.update(this.currentMod)
-      }, 500)
+      }, 1000)
     },
     init () {
       let { Doc, Data } = this.uiAPI.hive

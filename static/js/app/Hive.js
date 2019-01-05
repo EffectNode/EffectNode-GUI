@@ -1,5 +1,6 @@
 (function () {
-  var getID = (prefix = '') => {
+  var getID = (prefix) => {
+    prefix = prefix || ''
     return '_hive_' + prefix + '_' + (1024 * 1024 * 1024 * 1024 * Math.random()).toFixed(0)
   }
   let DomModule = `/* global env */

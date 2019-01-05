@@ -8,6 +8,16 @@ var temp = {
   y: 30
 }
 
+export function square (api, currentWin) {
+  let avg = 360
+  currentWin.win.width = avg
+  currentWin.win.height = avg + 30
+  currentWin.win.minimised = true
+  setTimeout(() => {
+    currentWin.win.minimised = false
+  }, 100)
+}
+
 export function organise (api) {
   if (window.innerWidth <= 769) {
     let w = window.innerWidth - 40
@@ -249,6 +259,9 @@ export function init ({ projectID }) {
   }
   mod.activate = (current) => {
     activate(mod, current)
+  }
+  mod.square = (current) => {
+    square(mod, current)
   }
 
   mod.organise = () => {

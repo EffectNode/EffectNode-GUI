@@ -16,6 +16,7 @@
 
 /* eslint-disable */
 let loadNewCache = async () => await {
+  'https://cdn.jsdelivr.net/npm/whammy@0.0.1/whammy.min.js': await import('raw-loader!../../../static/js/lib/encoder/whammy.js'),
   'https://threejs.org/build/three.min.js': await import('raw-loader!../../../static/js/lib/ThreeJS/three.min.js'),
   'https://threejs.org/examples/js/controls/OrbitControls.js': await import('raw-loader!../../../static/js/lib/ThreeJS/examples/js/controls/OrbitControls.js'),
   'https://threejs.org/examples/js/postprocessing/EffectComposer.js': await import('raw-loader!../../../static/js/lib/ThreeJS/examples/js/postprocessing/EffectComposer.js'),
@@ -121,7 +122,7 @@ export const fromDocToHTMLProd = async ({ Doc }) => {
   htmlResp = htmlResp.replace('<!--=*+BODY_HTML+*=-->', `<div class="${injectClassName}"></div>`)
   htmlResp = htmlResp.replace('/*STYLE_HEAD*/', style)
   htmlResp = htmlResp.replace('/*VENDORS_HEAD*/', ``)
-  htmlResp = htmlResp.replace('/*SCRIPT_HEAD*/', `\n${globalCache}\n${vueResp}\n${execResp}`)
+  htmlResp = htmlResp.replace('/*SCRIPT_HEAD*/', `window.global = window;\n${globalCache}\n${vueResp}\n${execResp}`)
   htmlResp = htmlResp.replace('/*SCRIPT_BODY*/', `${runnerCode}`)
 
   // console.log(execResp, vueResp, htmlResp)
