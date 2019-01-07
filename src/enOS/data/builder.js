@@ -136,3 +136,8 @@ export const makeHTMLLink = ({ HTML }) => {
   let link = URL.createObjectURL(blob)
   return link
 }
+
+export const makeHTMLBase64 = ({ HTML }) => {
+  let dataURL = `data:text/html,utf8,${encodeURIComponent(HTML)}`
+  return dataURL
+}

@@ -74,7 +74,7 @@
           Share in Gallery? <input type="checkbox" v-model="prj.isGallery" @change="goUpdate({ project: prj })"  />
           <br />
           isFeatured ? <input type="checkbox" v-model="prj.isFeatured" @change="goUpdate({ project: prj })"  />
-
+          <input type="text" v-model="prj.author" @input="goUpdate({ project: prj })">
           <!-- <button @click="">Button</button> -->
           <WinWinSmall :project="prj" :enabled="prj.enabled"></WinWinSmall>
           <br />
@@ -138,7 +138,7 @@ export default {
       this.$router.push(`/enOS/${project._id}`)
     },
     cloneProject ({ project }) {
-      API.RT.en.emit('clone-project', { projectID: project._id, userID: API.myself._id }, (resp) => {
+      API.RT.en.emit('clone-project', { projectID: project._id, userID: API.myself._id, author: API.myself.name }, (resp) => {
         console.log(resp)
         if (resp.signal === 'ok') {
           this.loadProject({ project: resp.newProject })
@@ -159,6 +159,7 @@ export default {
       }
     },
     goUpdate ({ project }) {
+      project.author = API.myself.name
       this.ts.project.update(project)
     },
     showLogin () {
@@ -202,6 +203,7 @@ export default {
     async createProject () {
       this.ts.project.add({
         userID: API.myself._id,
+        author: this.API.myself.name,
         title: 'Project - ' + new Date(),
         desc: '',
         date: new Date()

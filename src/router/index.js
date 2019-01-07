@@ -10,6 +10,7 @@ import enOS from '@/enOS/enOS.vue'
 import * as API from '@/enOS/data/API.js'
 import MenuPage from '@/enOS/Misc/Menu.vue'
 import LandingPage from '@/enOS/Misc/Landing.vue'
+import MyHome from '@/enOS/Misc/MyHome.vue'
 
 // import Mindfulness from '@/components/pages/MindScene/Mindfulness.vue'
 // import MindScene from '@/components/pages/MindScene/MindScene.vue'
@@ -25,6 +26,10 @@ export default new Router({
   routes: [
     {
       path: '/',
+      component: LandingPage
+    },
+    {
+      path: '/hello',
       name: 'Hello',
       component: Hello
     },
@@ -43,15 +48,23 @@ export default new Router({
     },
     {
       path: '/profile',
-      component: MenuPage
+      beforeEnter: async (from, to, next) => {
+        if (await API.checkLogin()) {
+          next()
+        } else {
+          next({
+            path: '/auth',
+            query: {
+              redirect: from.fullPath
+            }
+          })
+        }
+      },
+      component: MyHome
     },
     {
       path: '/menu',
       component: MenuPage
-    },
-    {
-      path: '/landing',
-      component: LandingPage
     },
     {
       path: '/enOS',

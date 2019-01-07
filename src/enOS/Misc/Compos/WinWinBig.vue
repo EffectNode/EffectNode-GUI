@@ -2,8 +2,8 @@
   <div class="winwin">
     <img class="win-title" src="../img/win-title.svg" alt="" />
     <div class="win-iframe">
-      <PreviewBox class="iframer" :project="project" :enabled="enabled"></PreviewBox>
-      <div class="win-blocker"></div>
+      <PreviewBox class="iframer" ref="preview" :project="project" :enabled="enabled"></PreviewBox>
+      <div class="win-blocker" v-if="block"></div>
     </div>
   </div>
 </template>
@@ -16,6 +16,9 @@ export default {
     PreviewBox
   },
   props: {
+    block: {
+      default: true
+    },
     project: {},
     enabled: {}
   }
@@ -33,6 +36,7 @@ export default {
 
 .win-title{
   width: 100%;
+  height: 56.77px;
 }
 
 .win-iframe{

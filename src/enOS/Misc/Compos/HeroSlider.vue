@@ -2,10 +2,18 @@
   <div class="hero-slider">
     <!-- not so legit but kinda works -->
     <div class="caro-parent">
-      <Carousel class="caro" :per-page="1" :navigateTo="navTo">
-        <Slide :key="pj._id" v-for="pj in featuredProjects" class="slide-width">
-          <WinWinBig v-if="show === 'big'" :project="pj" :enabled="true"></WinWinBig>
-          <WinWinSmall v-if="show === 'small'" :project="pj" :enabled="true"></WinWinSmall>
+      <Carousel class="caro" :per-page="1" :navigateTo="navTo" @pageChange="(v) => { sliderAt = v }">
+        <Slide :key="pj._id" v-for="(pj, pi) in featuredProjects" class="slide-width">
+          <div>
+            <WinWinBig v-if="show === 'big'" :project="pj" :enabled="sliderAt >= (pi - 1) && sliderAt <= (pi + 1)" :block="true" :ref="pj._id"></WinWinBig>
+            <WinWinSmall v-if="show === 'small'" :project="pj" :enabled="true" :ref="pj._id"></WinWinSmall>
+            <p>
+              Title: {{ pj.title }}, by: {{ pj.author }}
+            </p>
+            <p>
+              <span class="linker" @click="viewFull(pj)">Fullscreen Interactive</span>
+            </p>
+          </div>
         </Slide>
       </Carousel>
     </div>
@@ -16,6 +24,7 @@
 
 <script>
 import * as API from '@/enOS/data/API'
+// import * as Builder from '@/enOS/data/builder'
 import WinWinSmall from './WinWinSmall.vue'
 import WinWinBig from './WinWinBig.vue'
 import { Carousel, Slide } from 'vue-carousel'
@@ -30,6 +39,7 @@ export default {
   },
   data () {
     return {
+      sliderAt: 1,
       featuredProjects: [],
       page: 0,
       API,
@@ -53,6 +63,17 @@ export default {
     }, false)
   },
   methods: {
+    async viewFull (project) {
+      try {
+        let compo = this.$refs[project._id][0]
+        let html = compo.$refs.preview.html
+        let win = window.open('about:blank')
+        win.document.write(html)
+      } catch (e) {
+        console.log(e)
+        console.log('cannot ref vue compos')
+      }
+    },
     loadLatest () {
       API.RT.en.emit('list-latest-featured', { skip: 8 * this.page, limit: 8 }, (data) => {
         if (data.signal === 'ok') {
@@ -81,6 +102,10 @@ export default {
 </style>
 
 <style scoped>
+.linker{
+  cursor: pointer;
+  text-decoration: underline;
+}
 .slider-items{
   display: inline-block;
 }

@@ -1,14 +1,20 @@
 <template>
   <div class="titlebar">
     <div class="maxi sys-constraint">
-      <div class="logo">
-        <img src="../img/en.svg" alt="Effect Node Logo">
+      <div class="left-side">
+        <div class="left-text">
+          <slot name="left"></slot>
+        </div>
       </div>
-      <div class="title">
-        <div class="brand-name">Effect Node</div>
+      <div class="center">
+        <div class="center-text">
+          <slot name="center"></slot>
+        </div>
       </div>
-      <div class="right-icon">
-        <div class="login">Login / Signup</div>
+      <div class="right-side">
+        <div class="right-text">
+          <slot name="right"></slot>
+        </div>
       </div>
     </div>
   </div>
@@ -16,7 +22,6 @@
 
 <script>
 export default {
-
 }
 </script>
 
@@ -31,47 +36,55 @@ export default {
   align-items: center;
   height: 57px;
 }
-.logo{
+.left-side{
   width: 141px;
   display: flex;
-  justify-items: center;
+  align-items: center;
 }
-.logo img{
+.left-side .left-text{
   height: 28px;
 }
-.title{
+
+.center{
   width: 150px;
   display: flex;
   justify-items: center;
 }
-.brand-name{
+.center-text{
+  width: 100%;
+  text-align: center;
   font-size: 18px;
   line-height: 28px;
 }
-.right-icon{
+.right-side{
   width: 141px;
   display: flex;
   justify-items: flex-end;
   align-items: center;
 }
-
-.login{
+.left-text,
+.right-text{
+  color: black;
   text-align: right;
   line-height: 28px;
   width: 100%;
 
   cursor: pointer;
 }
+.left-text{
+  text-align: left;
+}
 
-.login:hover{
+.right-text:hover{
   text-decoration: underline;
 }
 
 @media screen and (min-width: 500px) {
-  .brand-name{
+  .center-text{
     font-size: 23px;
   }
-  .login{
+  .left-text,
+  .right-text{
     font-size: 17px;
   }
 }

@@ -1,49 +1,55 @@
 <template>
   <div class="landing font">
-    <TitleBar></TitleBar>
+    <LandingBar></LandingBar>
     <HeroSlider></HeroSlider>
     <DescRow></DescRow>
+    <CTA></CTA>
+    <FeatureList></FeatureList>
     <FooterRow></FooterRow>
   </div>
 </template>
 
 <script>
 import HeroSlider from './Compos/HeroSlider.vue'
-import TitleBar from './Compos/TitleBar.vue'
+import LandingBar from './Compos/LandingBar.vue'
 import DescRow from './Compos/DescRow.vue'
 import FooterRow from './Compos/FooterRow.vue'
+import CTA from './Compos/CTA.vue'
+import FeatureList from './Compos/FeatureList.vue'
 
 export default {
   components: {
     HeroSlider,
-    TitleBar,
+    LandingBar,
     DescRow,
-    FooterRow
+    FooterRow,
+    CTA,
+    FeatureList
   }
 }
 </script>
 <style>
-  .sys-constraint {
+  .landing .sys-constraint {
     width: calc(100% - 15px * 2);
     margin: 0px auto;
   }
   @media screen and (min-width: 413px) {
-    .sys-constraint {
+    .landing .sys-constraint {
       width: calc(100% - 15px * 2);
     }
   }
   @media screen and (min-width: 767px) {
-    .sys-constraint {
+    .landing .sys-constraint {
       width: calc(700px);
     }
   }
   @media screen and (min-width: 959px) {
-    .sys-constraint {
+    .landing .sys-constraint {
       width: calc(850px);
     }
   }
   @media screen and (min-width: 1440px) {
-    .sys-constraint {
+    .landing .sys-constraint {
       width: calc(1200px);
     }
   }

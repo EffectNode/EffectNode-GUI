@@ -3,8 +3,17 @@
     <div class="sys-constraint content">
 
       <h1>
-        Thank you for visiting.
+        Inventor's Note
       </h1>
+      <p>
+        Effect Node is a good place to practice and share visual effect coding. All effect examples are based in MIT licnese.
+      </p>
+      <p>
+        Thank you internet for being an awesome place to share and co-author knowledge about technology.
+      </p>
+
+      <h1>Our Motto</h1>
+      <p>Not so legit, but kinda works.</p>
 
       <h2>
         SiteMap
@@ -15,6 +24,31 @@
         <li><a class="linker" href="/profile">My Profile</a></li>
       </ul>
 
+      <h2>
+        Social
+      </h2>
+      <ul>
+        <li><a class="linker" href="https://instagram.com/effectnode/">Effect Node IG</a></li>
+        <li><a class="linker" href="https://instagram.com/postervideo/">Our inventor, Wong Lok's IG</a></li>
+        <li><a class="linker" href="https://www.facebook.com/effectnode/">Effect Node FB</a></li>
+      </ul>
+
+      <h1>Contact</h1>
+      <p>
+        Made with love by <a class="linker" href="https://twitter.com/wonglok831/">@wonglok831</a>.
+      </p>
+
+      <h1>Credit</h1>
+      <ul>
+        <li>
+          <a class="linker" href="http://threejs.org">THREE.JS </a>
+        </li>
+        <li>
+          <a class="linker" href="http://vuejs.org">Vue.JS </a>
+        </li>
+      </ul>
+
+      <h2>Thank you for visiting us!</h2>
     </div>
   </div>
 </template>
@@ -27,7 +61,7 @@ export default {
 
 <style scoped>
 .footer{
-  margin-top: 100px;
+  margin-top: 75px;
   width: 100%;
   background-color: black;
   color: white;

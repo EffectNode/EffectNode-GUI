@@ -1,0 +1,49 @@
+<template>
+  <div class="myhome">
+    <HomeTitle></HomeTitle>
+    <MyProjects></MyProjects>
+  </div>
+</template>
+
+<script>
+import HomeTitle from './Compos/HomeTitle.vue'
+import MyProjects from './Compos/MyProjects.vue'
+
+export default {
+  components: {
+    HomeTitle,
+    MyProjects
+  }
+}
+</script>
+
+<style>
+  .myhome .sys-constraint {
+    width: calc(100% - 15px * 2);
+    margin: 0px auto;
+  }
+  @media screen and (min-width: 413px) {
+    .myhome .sys-constraint {
+      width: calc(100% - 15px * 2);
+    }
+  }
+  @media screen and (min-width: 767px) {
+    .myhome .sys-constraint {
+      width: calc(700px);
+    }
+  }
+  @media screen and (min-width: 959px) {
+    .myhome .sys-constraint {
+      width: calc(850px);
+    }
+  }
+  @media screen and (min-width: 1440px) {
+    .myhome .sys-constraint {
+      width: calc(1200px);
+    }
+  }
+</style>
+
+<style scoped>
+
+</style>

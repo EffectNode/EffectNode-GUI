@@ -2,7 +2,7 @@
   <div class="winwin">
     <img class="win-title" src="../img/win-title.svg" alt="" />
     <div class="win-iframe">
-      <PreviewBox class="iframer" :project="project" :enabled="enabled"></PreviewBox>
+      <PreviewBox class="iframer" ref="preview" :project="project" :enabled="enabled"></PreviewBox>
       <div class="win-blocker"></div>
     </div>
   </div>

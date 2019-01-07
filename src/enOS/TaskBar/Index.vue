@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     goMenu () {
-      window.location.assign('/menu')
+      window.location.assign('/profile')
     },
     oragnise () {
       this.uiAPI.portal.organise()
