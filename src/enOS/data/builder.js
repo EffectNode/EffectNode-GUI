@@ -26,6 +26,7 @@ let loadNewCache = async () => await {
   'https://threejs.org/examples/js/shaders/LuminosityHighPassShader.js': await import('raw-loader!../../../static/js/lib/ThreeJS/examples/js/shaders/LuminosityHighPassShader.js'),
   'https://threejs.org/examples/js/postprocessing/UnrealBloomPass.js': await import('raw-loader!../../../static/js/lib/ThreeJS/examples/js/postprocessing/UnrealBloomPass.js')
 }
+
 /* eslint-enable */
 let jsCahce = {}
 loadNewCache().then((newCahce) => {

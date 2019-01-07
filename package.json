@@ -53,6 +53,7 @@
     "uglify-js": "^3.3.10",
     "uglifyjs-browser": "^1.0.0",
     "vue": "^2.5.2",
+    "vue-carousel": "^0.17.0",
     "vue-codemirror": "^4.0.6",
     "vue-drag-and-drop": "^3.0.0",
     "vue-draggable-resizable": "^1.7.5",

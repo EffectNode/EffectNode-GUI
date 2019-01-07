@@ -1,8 +1,13 @@
 <template>
   <div class="div">
-    <div class="taskbar">
+    <div class="taskbar" :class="{ disconnected: isDisconnected }">
       <div class="taskbar-content">
-
+        <div class="taskbar-icon disconnected" v-if="isDisconnected">
+          Offline
+        </div>
+        <div class="taskbar-icon home" @click="goMenu()">
+          My Projects
+        </div>
         <div class="taskbar-icon home" @click="startMenu = true">
           Open App
         </div>
@@ -83,6 +88,11 @@ export default {
       }
     }
   },
+  computed: {
+    isDisconnected () {
+      return this.uiAPI.RT.en.disconnected
+    }
+  },
   data () {
     return {
       startMenu: false,
@@ -90,6 +100,9 @@ export default {
     }
   },
   methods: {
+    goMenu () {
+      window.location.assign('/menu')
+    },
     oragnise () {
       this.uiAPI.portal.organise()
     },
@@ -115,9 +128,12 @@ export default {
   bottom: 0px;
   left: 0px;
   width: 100%;
-
   background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.0784313725490196), rgba(255, 255, 255, 0.5215686274509804));
 }
+.taskbar.disconnected{
+  background-image: linear-gradient(0deg, rgba(255, 101, 101, 0.87), rgb(255, 197, 211));
+}
+
 
 hr{
   margin-top: 1rem;
@@ -152,6 +168,11 @@ hr{
   background-size: 200% 200%;
   background-position: left bottom;
   transition: background-position 0.3s;
+}
+
+.taskbar-icon.disconnected{
+  background-color: rgb(252, 142, 142);
+  background-image: linear-gradient(62deg, rgb(252, 142, 142) 0%, rgb(252, 229, 195) 100%);
 }
 .app-icon{
   display: inline-block;

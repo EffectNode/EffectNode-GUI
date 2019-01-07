@@ -8,7 +8,8 @@ import Hello from '@/components/Hello'
 // import Login from '@/components/pages/Login/Login.vue'
 import enOS from '@/enOS/enOS.vue'
 import * as API from '@/enOS/data/API.js'
-import MenuPage from '@/enOS/menu.vue'
+import MenuPage from '@/enOS/Misc/Menu.vue'
+import LandingPage from '@/enOS/Misc/Landing.vue'
 
 // import Mindfulness from '@/components/pages/MindScene/Mindfulness.vue'
 // import MindScene from '@/components/pages/MindScene/MindScene.vue'
@@ -37,8 +38,20 @@ export default new Router({
     //   component: Login
     // },
     {
+      path: '/auth',
+      component: MenuPage
+    },
+    {
+      path: '/profile',
+      component: MenuPage
+    },
+    {
       path: '/menu',
       component: MenuPage
+    },
+    {
+      path: '/landing',
+      component: LandingPage
     },
     {
       path: '/enOS',

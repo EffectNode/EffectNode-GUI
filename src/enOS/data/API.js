@@ -24,7 +24,7 @@ var baseURL = 'http://localhost:3003/'
 
 // console.log(process.env.NODE_ENV)
 // debug
-baseURL = `https://effectnode-heroku.herokuapp.com/`
+// baseURL = `https://effectnode-heroku.herokuapp.com/`
 
 if (process.env.NODE_ENV === 'production') {
   baseURL = 'https://effectnode-heroku.herokuapp.com/'
@@ -33,6 +33,13 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export const PROXY_URL = baseURL + 'yo/proxy'
+
+export const StartLoading = () => {
+  NProgress.start()
+}
+export const EndLoading = () => {
+  NProgress.done()
+}
 
 var makeAxios = () => {
   let config = {
@@ -85,12 +92,18 @@ var makeSocket = (path) => {
   window.addEventListener('focus', () => {
     socket.connect()
   })
+  setInterval(() => {
+    if (socket.disconnected) {
+      socket.connect()
+    }
+  }, 1000)
   return socket
 }
 
 export const RT = {
   en: makeSocket('effect-node')
 }
+
 var iAXIOS = makeAxios()
 
 export let myself = false

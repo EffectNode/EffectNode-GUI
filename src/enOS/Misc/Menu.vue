@@ -18,6 +18,9 @@
           <textarea disabled type="text" v-model="prj.desc" />
           <br />
           <button @click="cloneProject({ project: prj })">Clone Project</button>
+
+          <button @click="getPreviewOfProject({ project: prj, others: gallery })">preview</button>
+          <iframe v-if="prj.link" :src="prj.link" frameborder="0"></iframe>
         </li>
       </ul>
     </div>
@@ -39,6 +42,8 @@
           <textarea disabled type="text" v-model="prj.desc" />
           <br />
           <button @click="cloneProject({ project: prj })">Clone Template</button>
+          <button @click="getPreviewOfProject({ project: prj, others: templates })">Preview</button>
+          <iframe v-if="prj.link" :src="prj.link" frameborder="0"></iframe>
         </li>
       </ul>
     </div>
@@ -57,7 +62,7 @@
       <button @click="createProject">Make one project</button>
       <h2 v-if="popagaiting === 'projects'">Loaidng Projects</h2>
       <ul>
-        <li :key="prj._id" v-for="prj in projects.slice().reverse()">
+        <li :key="prj._id" v-for="prj in projects.slice().reverse()" @mouseenter="enablePreview({ project: prj })">
           Title: <br />
           <textarea type="text" v-model="prj.title" @input="goUpdate({ project: prj })" />
           <br />
@@ -67,13 +72,18 @@
           Set as my Template? <input type="checkbox" v-model="prj.isTemplate" @change="goUpdate({ project: prj })"  />
           <br />
           Share in Gallery? <input type="checkbox" v-model="prj.isGallery" @change="goUpdate({ project: prj })"  />
+          <br />
+          isFeatured ? <input type="checkbox" v-model="prj.isFeatured" @change="goUpdate({ project: prj })"  />
 
+          <!-- <button @click="">Button</button> -->
+          <WinWinSmall :project="prj" :enabled="prj.enabled"></WinWinSmall>
           <br />
           <button @click="loadProject({ project: prj })">Load Project</button>
           <button v-if="!(prj.isTemplate || prj.isGallery)" @click="removeProject({ project: prj })">Remove Project</button>
         </li>
       </ul>
     </div>
+
     <div class="full loading" v-if="mode === 'login'">
       <h2>Login........</h2>
       <input type="text" v-model="auth.username" />
@@ -89,7 +99,11 @@
 <script>
 import * as API from '@/enOS/data/API'
 
+import WinWinSmall from './Compos/WinWinSmall.vue'
 export default {
+  components: {
+    WinWinSmall
+  },
   data () {
     return {
       popagaiting: false,
@@ -112,6 +126,10 @@ export default {
     await this.reload()
   },
   methods: {
+    enablePreview ({ project }) {
+      project.enabled = true
+      this.$forceUpdate()
+    },
     loadProject ({ project }) {
       window.location.assign(`/enOS/${project._id}`)
       // this.$router.push(`/enOS/${project._id}`)

@@ -1,0 +1,95 @@
+
+<svg width="948px" height="90px" viewBox="0 0 948 90" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="12.5 0 12.5 6 6.5 6"></polygon>
+        <linearGradient x1="71.292436%" y1="50%" x2="0%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <pattern id="pattern-3" patternUnits="objectBoundingBox" x="0%" width="100%" height="100%">
+            <use xlink:href="#image-4" transform="scale(0.333333333,0.333333333)"></use>
+        </pattern>
+        <image id="image-4" width="48" height="48" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAEGWlDQ1BrQ0dDb2xvclNwYWNlR2VuZXJpY1JHQgAAOI2NVV1oHFUUPrtzZyMkzlNsNIV0qD8NJQ2TVjShtLp/3d02bpZJNtoi6GT27s6Yyc44M7v9oU9FUHwx6psUxL+3gCAo9Q/bPrQvlQol2tQgKD60+INQ6Ium65k7M5lpurHeZe58853vnnvuuWfvBei5qliWkRQBFpquLRcy4nOHj4g9K5CEh6AXBqFXUR0rXalMAjZPC3e1W99Dwntf2dXd/p+tt0YdFSBxH2Kz5qgLiI8B8KdVy3YBevqRHz/qWh72Yui3MUDEL3q44WPXw3M+fo1pZuQs4tOIBVVTaoiXEI/MxfhGDPsxsNZfoE1q66ro5aJim3XdoLFw72H+n23BaIXzbcOnz5mfPoTvYVz7KzUl5+FRxEuqkp9G/Ajia219thzg25abkRE/BpDc3pqvphHvRFys2weqvp+krbWKIX7nhDbzLOItiM8358pTwdirqpPFnMF2xLc1WvLyOwTAibpbmvHHcvttU57y5+XqNZrLe3lE/Pq8eUj2fXKfOe3pfOjzhJYtB/yll5SDFcSDiH+hRkH25+L+sdxKEAMZahrlSX8ukqMOWy/jXW2m6M9LDBc31B9LFuv6gVKg/0Szi3KAr1kGq1GMjU/aLbnq6/lRxc4XfJ98hTargX++DbMJBSiYMIe9Ck1YAxFkKEAG3xbYaKmDDgYyFK0UGYpfoWYXG+fAPPI6tJnNwb7ClP7IyF+D+bjOtCpkhz6CFrIa/I6sFtNl8auFXGMTP34sNwI/JhkgEtmDz14ySfaRcTIBInmKPE32kxyyE2Tv+thKbEVePDfW/byMM1Kmm0XdObS7oGD/MypMXFPXrCwOtoYjyyn7BV29/MZfsVzpLDdRtuIZnbpXzvlf+ev8MvYr/Gqk4H/kV/G3csdazLuyTMPsbFhzd1UabQbjFvDRmcWJxR3zcfHkVw9GfpbJmeev9F08WW8uDkaslwX6avlWGU6NRKz0g/SHtCy9J30o/ca9zX3Kfc19zn3BXQKRO8ud477hLnAfc1/G9mrzGlrfexZ5GLdn6ZZrrEohI2wVHhZywjbhUWEy8icMCGNCUdiBlq3r+xafL549HQ5jH+an+1y+LlYBifuxAvRN/lVVVOlwlCkdVm9NOL5BE4wkQ2SMlDZU97hX86EilU/lUmkQUztTE6mx1EEPh7OmdqBtAvv8HdWpbrJS6tJj3n0CWdM6busNzRV3S9KTYhqvNiqWmuroiKgYhshMjmhTh9ptWhsF7970j/SbMrsPE1suR5z7DMC+P/Hs+y7ijrQAlhyAgccjbhjPygfeBTjzhNqy28EdkUh8C+DU9+z2v/oyeH791OncxHOs5y2AtTc7nb/f73TWPkD/qwBnjX8BoJ98VQNcC+8AAAFFSURBVGgF7djbDYMwDAXQBjEMYqyqY1WMxTppLiJIQIA8ariWkp8IPuweO60am67r7MstY8wwjuPH7dMz3uUua63p+/7r9rePIRW/9QmQzCV9ub0YgSIgzhxvQkjFb1EZBAdEKolkfJTqtnb7bv/zOJm58moRE0AzYgFoRawAGhE7gDZEEKAJcQjQgjgFaEBcAtgRUQBmRDSAFZEEYEQkA9gQWQAmRDaABVEEYEAUAx5H4EaGOyw+SMl66mbXzNOD4k6gCPNUY/CFwF1YOn5zRxJJRINqaUbUuZA/79sd3wm3xIdbdS60rXzo2XVCbO60/HxKJgFKKv4CkEziuyKBWAE0InYAbYggQBPiEKAFcQrQgLgEsCOiAMyIaAArIgnAiEgGsCGyAEyIbAALogjAgCgGPI7AX9w6F3JtqHMhnMWLFSrSD9jOnakVHpZYAAAAAElFTkSuQmCC"></image>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD" transform="translate(-137.000000, -186.000000)">
+            <g id="Group-2" transform="translate(137.000000, 186.000000)">
+                <g id="Group-3">
+                    <rect id="Rectangle" fill="#DEE1E6" x="0" y="0" width="948" height="28"></rect>
+                    <g id="Group" transform="translate(0.000000, 16.000000)">
+                        <g id="Google-Chrome-Desktop">
+                            <rect id="Rectangle" fill="#DEE1E6" fill-rule="nonzero" x="0" y="0" width="950" height="38.8101266"></rect>
+                            <path d="M251.640592,38.8101266 L950,38.8101266 L950,73 L2.11744603e-13,73 L2.11744603e-13,38.8101266 L4.35940809,38.8101266 C6.550916,37.3831126 7.99981647,34.9113869 7.99981647,32.1012589 L8,14.1012589 C8,9.68298085 11.581722,6.10125885 16,6.10125885 L240,6.10125885 C244.418278,6.10125885 248,9.68298085 248,14.1012589 L248.000184,32.1012589 C248.000184,34.9113869 249.449084,37.3831126 251.640592,38.8101266 Z" id="Combined-Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+                            <rect id="Rectangle-6" fill="#F1F3F4" fill-rule="nonzero" x="108" y="42.5063291" width="749" height="25.8734177" rx="12.9367089"></rect>
+                            <path d="M873.5,47.943038 L873.5,62.943038" id="Line-2" stroke="#CFD0D1" stroke-width="1" stroke-linecap="square" fill-rule="nonzero"></path>
+                            <path d="M0,72.7689873 L950,72.7689873" id="Line" stroke="#B6B4B6" stroke-width="0.5" stroke-linecap="square" fill-rule="nonzero"></path>
+                            <g id="Icons/-Triple-Dot" transform="translate(920.000000, 47.443038)" fill="#707070" fill-rule="nonzero">
+                                <path d="M8,9.52173913 C7.17157288,9.52173913 6.5,8.84043331 6.5,8 C6.5,7.15956669 7.17157288,6.47826087 8,6.47826087 C8.82842712,6.47826087 9.5,7.15956669 9.5,8 C9.5,8.84043331 8.82842712,9.52173913 8,9.52173913 Z M8,4.04347826 C7.17157288,4.04347826 6.5,3.36217245 6.5,2.52173913 C6.5,1.68130582 7.17157288,1 8,1 C8.82842712,1 9.5,1.68130582 9.5,2.52173913 C9.5,3.36217245 8.82842712,4.04347826 8,4.04347826 Z M8,15 C7.17157288,15 6.5,14.3186942 6.5,13.4782609 C6.5,12.6378276 7.17157288,11.9565217 8,11.9565217 C8.82842712,11.9565217 9.5,12.6378276 9.5,13.4782609 C9.5,14.3186942 8.82842712,15 8,15 Z" id="Combined-Shape"></path>
+                            </g>
+                            <g id="Icons/-Profile" transform="translate(886.000000, 45.443038)">
+                                <rect id="Rectangle-7" fill="#7C7C7C" fill-rule="nonzero" x="0" y="0" width="20" height="20" rx="10"></rect>
+                                <text id="EN" font-family="Roboto-Regular, Roboto" font-size="9" font-weight="normal" fill="#FFFFFF">
+                                    <tspan x="4.234375" y="13">EN</tspan>
+                                </text>
+                            </g>
+                            <text id="URL" font-family="Roboto-Regular, Roboto" font-size="14" font-weight="normal" fill="#202124">
+                                <tspan x="142" y="60.443038">https://effectnode.com</tspan>
+                            </text>
+                            <g id="Icons/-Lock" transform="translate(118.000000, 47.905063)" fill-rule="evenodd" stroke-width="1">
+                                <g id="Group" transform="translate(4.000000, 2.500000)">
+                                    <rect id="Rectangle-3" fill="#606369" fill-rule="nonzero" x="0" y="3.5" width="8" height="7" rx="2"></rect>
+                                    <rect id="Rectangle-7" stroke="#606369" fill-rule="nonzero" x="2" y="0.5" width="4" height="6" rx="2"></rect>
+                                </g>
+                            </g>
+                            <g id="Icons/-Refresh" transform="translate(78.500000, 46.981013)" fill-rule="evenodd" stroke-width="1">
+                                <g id="Group" transform="translate(2.000000, 1.500000)">
+                                    <g id="Rectangle-3" fill-rule="nonzero">
+                                        <use fill="#606369" fill-rule="evenodd" xlink:href="#path-1"></use>
+                                        <path stroke="#606369" stroke-width="1" d="M12,1.20710678 L7.70710678,5.5 L12,5.5 L12,1.20710678 Z"></path>
+                                    </g>
+                                    <path d="M9.28576773,3.0102516 C8.29967439,2.07426807 6.96690094,1.5 5.5,1.5 C2.46243388,1.5 0,3.96243388 0,7 C0,10.0375661 2.46243388,12.5 5.5,12.5 C7.86091784,12.5 9.87439714,11.0124388 10.654289,8.92346532" id="Oval-3" stroke="#606369" stroke-width="1.5" stroke-linecap="round" fill-rule="nonzero"></path>
+                                </g>
+                            </g>
+                            <g id="Icons/-Arrow" opacity="0.491852679" transform="translate(54.000000, 55.443038) scale(-1, 1) translate(-54.000000, -55.443038) translate(46.000000, 47.443038)" fill-rule="evenodd" stroke="#606369" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+                                <g id="Group" transform="translate(2.500000, 2.500000)">
+                                    <path d="M11,5.25 L0,5.25" id="Line-3" stroke-width="1.5" fill-rule="nonzero"></path>
+                                    <polyline id="Line-5" stroke-width="1.5" fill-rule="nonzero" points="5 10.6112022 0 5.30560112 5 0"></polyline>
+                                </g>
+                            </g>
+                            <g id="Icons/-Arrow" transform="translate(14.000000, 47.443038)" fill-rule="evenodd" stroke="#606369" stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+                                <g id="Group" transform="translate(2.500000, 2.500000)">
+                                    <path d="M11,5.25 L0,5.25" id="Line-3" stroke-width="1.5" fill-rule="nonzero"></path>
+                                    <polyline id="Line-5" stroke-width="1.5" fill-rule="nonzero" points="5 10.6112022 0 5.30560112 5 0"></polyline>
+                                </g>
+                            </g>
+                            <g id="Icons/-Plus" transform="translate(262.000000, 15.101266)" fill-rule="evenodd" stroke="#606369" stroke-linecap="round" stroke-width="1">
+                                <g id="Group" transform="translate(3.000000, 2.500000)">
+                                    <path d="M5,0 L5,11" id="Line-3" stroke-width="2" fill-rule="nonzero"></path>
+                                    <path d="M10,5.5 L0,5.5" id="Line-3" stroke-width="2" fill-rule="nonzero"></path>
+                                </g>
+                            </g>
+                            <g id="Icons/-Cross" transform="translate(224.000000, 15.101266)" fill-rule="evenodd" stroke="#5C6063" stroke-linecap="round" stroke-width="1">
+                                <g id="Group" transform="translate(4.000000, 4.000000)">
+                                    <path d="M0.5,0.5 L7.5,7.5" id="Line-4" stroke-width="1.5" fill-rule="nonzero"></path>
+                                    <path d="M0.5,7.5 L7.5,0.5" id="Line-3" stroke-width="1.5" fill-rule="nonzero"></path>
+                                </g>
+                            </g>
+                            <text id="Tab-Title" font-family="Roboto-Regular, Roboto" font-size="12" font-weight="normal" fill="#202124">
+                                <tspan x="44" y="27.1012658">EffectNode.com</tspan>
+                            </text>
+                            <rect id="Rectangle-2-Copy-9" fill="url(#linearGradient-2)" fill-rule="nonzero" x="205" y="17.556962" width="21" height="11.0886076"></rect>
+                            <g id="Icons/-Favicon" transform="translate(20.000000, 15.101266)" fill="url(#pattern-3)" fill-rule="nonzero">
+                                <rect id="Rectangle-8" x="0" y="0" width="16" height="16" rx="2"></rect>
+                            </g>
+                        </g>
+                    </g>
+                    <circle id="Oval" fill="#7ED321" cx="924" cy="23" r="7"></circle>
+                    <circle id="Oval-Copy-4" fill="#D3B121" cx="903" cy="23" r="7"></circle>
+                    <circle id="Oval-Copy-6" fill="#D32121" cx="881" cy="23" r="7"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
