@@ -41,14 +41,19 @@
       <h1>Credit</h1>
       <ul>
         <li>
-          <a class="linker" href="http://threejs.org">THREE.JS </a>
+          <a class="linker" target="_blank" href="http://threejs.org">THREE.JS </a>
         </li>
         <li>
-          <a class="linker" href="http://vuejs.org">Vue.JS </a>
+          <a class="linker" target="_blank" href="http://vuejs.org">Vue.JS </a>
         </li>
       </ul>
 
       <h2>Thank you for visiting us!</h2>
+
+      <h2>Open Jar for Donations. ❤️ </h2>
+      <p>
+        <a class="linker" href="https://paypal.me/wonglok" target="_blank">PayPal.me/wonglok</a>
+      </p>
     </div>
   </div>
 </template>
