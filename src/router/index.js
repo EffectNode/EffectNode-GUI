@@ -11,6 +11,7 @@ import * as API from '@/enOS/data/API.js'
 import MenuPage from '@/enOS/Misc/Menu.vue'
 import LandingPage from '@/enOS/Misc/Landing.vue'
 import MyHome from '@/enOS/Misc/MyHome.vue'
+import OOBE from '@/enOS/Misc/OOBE.vue'
 
 // import Mindfulness from '@/components/pages/MindScene/Mindfulness.vue'
 // import MindScene from '@/components/pages/MindScene/MindScene.vue'
@@ -44,7 +45,7 @@ export default new Router({
     // },
     {
       path: '/auth',
-      component: MenuPage
+      component: OOBE
     },
     {
       path: '/profile',

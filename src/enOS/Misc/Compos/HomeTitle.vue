@@ -8,7 +8,7 @@
         My Home
       </div>
       <div slot="right">
-        Logout
+        <span @click="logout">Logout</span>
       </div>
     </SharedTitle>
   </div>
@@ -31,6 +31,7 @@ export default {
   methods: {
     logout () {
       API.logout()
+      window.location.assign('/')
     }
   }
 }

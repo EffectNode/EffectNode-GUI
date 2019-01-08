@@ -2,21 +2,15 @@
   <div class="sys-constraint">
     <div class="left-right">
       <div>
-        <div >
+        <div>
           <span class="title">
-            <input type="text" placeholder="Search..." class="texter-search" v-model="search" @input="() => { viewFor = 'all' }" />
+            <input type="text" placeholder="Search Gallery..." class="texter-search" v-model="search">
           </span>
-
           <span>
             <br />
-            Filter:
-            <span class="btn-next" @click="viewFor = 'all'">All</span>
-            /
-            <span class="btn-next" @click="viewFor = 'template'">My Templates</span>
-            /
-            <span class="btn-next" @click="viewFor = 'gallery'">At Gallery</span>
-            /
-            <span class="btn-next" @click="viewFor = 'featured'">Featured</span>
+            Create: <span class="btn-next" @click="createProject">Empty Project</span>
+            or...
+            Clone from below
           </span>
         </div>
       </div>
@@ -31,23 +25,27 @@
     <div class="my-projects">
       <!-- not so legit but kinda works -->
       <div :key="pr._id" v-for="(pr, pi) in pageProject" class="box">
-        <span class="linker" @click="enterProject({ project: pr })">
+        <span class="linker" @click="cloneProject({ project: pr })">
           <WinWinSmall :project="pr" :enabled="activeAt[pi]" :ref="pr._id"></WinWinSmall>
         </span>
         <p>
-          <input class="texter" type="text" v-model="pr.title" @input="prjUpdate({ project: pr })">
+          <input disabled class="texter" type="text" v-model="pr.title" @input="prjUpdate({ project: pr })">
           <br />
-          <textarea class="desc" cols="30" rows="10" v-model="pr.desc" @input="prjUpdate({ project: pr })"></textarea>
+          <textarea disabled class="desc" cols="30" rows="10" v-model="pr.desc" @input="prjUpdate({ project: pr })"></textarea>
+          <span v-if="pr.author">
+            <br />
+            Author: {{ pr.author }}
+          </span>
           <br />
           <span class="updated-at">{{ moment(pr.updatedAt) }}</span>
           <br />
           <span class="linker" @click="cloneProject({ project: pr })">Clone</span>
-          <span v-if="!(pr.isTemplate || pr.isGallery || pr.isFeatured)" class="linker" @click="removeProject({ project: pr })">Remove</span>
+          <!-- <span v-if="!(pr.isTemplate || pr.isGallery || pr.isFeatured)" class="linker" @click="removeProject({ project: pr })">Remove</span> -->
 
-          <br />
-          <label :for="pr.id + '_template'">Template? <input :id="pr.id + '_template'" type="checkbox" class="yesno" v-model="pr.isTemplate" @change="prjUpdate({ project: pr })" /></label>
-          <label :for="pr.id + '_gallery'">Gallery? <input :id="pr.id + '_gallery'" type="checkbox" class="yesno" v-model="pr.isGallery" @change="prjUpdate({ project: pr })" /></label>
-          <label :for="pr.id + '_featured'">Be Featured? <input :id="pr.id + '_featured'" type="checkbox" class="yesno" v-model="pr.isFeatured" @change="prjUpdate({ project: pr })" /></label>
+          <!-- <br />
+          <label :for="pr.id + '_template'">isTemplate? <input :id="pr.id + '_template'" type="checkbox" class="yesno" v-model="pr.isTemplate" @change="prjUpdate({ project: pr })" /></label>
+          <label :for="pr.id + '_gallery'">isGallery? <input :id="pr.id + '_gallery'" type="checkbox" class="yesno" v-model="pr.isGallery" @change="prjUpdate({ project: pr })" /></label>
+          <label :for="pr.id + '_featured'">isFeatured? <input :id="pr.id + '_featured'" type="checkbox" class="yesno" v-model="pr.isFeatured" @change="prjUpdate({ project: pr })" /></label> -->
         </p>
       </div>
       <!-- not so legit but kinda works -->
@@ -83,30 +81,12 @@ export default {
       API,
       search: '',
       projects: [],
-      viewFor: 'all', // template or all
       winWidth: window.innerWidth
     }
   },
   computed: {
     pageProject () {
-      return this.projects.slice().filter((p) => {
-        if (this.viewFor === 'all') {
-          return true
-        } else if (this.viewFor === 'template') {
-          return p.isTemplate
-        } else if (this.viewFor === 'gallery') {
-          return p.isGallery
-        } else if (this.viewFor === 'featured') {
-          return p.isFeatured
-        } else {
-          return true
-        }
-      }).filter((p) => {
-        if (!this.search) {
-          return true
-        }
-        return p.title.toLowerCase().indexOf(this.search.toLowerCase()) !== -1 || p.desc.toLowerCase().indexOf(this.search.toLowerCase()) !== -1
-      }).sort((a, b) => {
+      return this.projects.slice().sort((a, b) => {
         let timeA = (new Date(b.updated_at)).getTime() || 1
         let timeB = (new Date(a.updated_at)).getTime() || 0
         if (timeA > timeB) {
@@ -116,22 +96,34 @@ export default {
         } else {
           return 0
         }
+      }).sort((a, b) => {
+        let valA = a.isFeatured ? 1 : -1
+        let valB = b.isFeatured ? 1 : -1
+        if (valA > valB) {
+          return -1
+        } else if (valA < valB) {
+          return 1
+        } else {
+          return 0
+        }
+      }).filter((p) => {
+        if (!this.search) {
+          return true
+        }
+        return p.title.toLowerCase().indexOf(this.search.toLowerCase()) !== -1 || p.desc.toLowerCase().indexOf(this.search.toLowerCase()) !== -1
       }).filter((p, pi) => {
         return pi < (this.atPage + 1) * this.perPageItem && pi >= (this.atPage) * this.perPageItem
       })
     }
   },
   watch: {
-    viewFor () {
-      this.search = ''
-    },
     search () {
       this.activeAt.map(e => false)
       this.atPage = 0
     }
   },
   async mounted () {
-    this.ts.project = new API.TableSync({ namespace: 'project', getArray: () => { return this.projects } })
+    this.ts.project = new API.TableSync({ namespace: 'project', getArray: () => { return [] } })
     this.ts.project.sync()
     this.listProject()
   },
@@ -141,8 +133,13 @@ export default {
     },
     listProject () {
       this.projects = []
-      this.ts.project.hydrate({ userID: API.myself._id })
-      this.loopActivate()
+      API.RT.en.emit('list-latest-gallery', { search: this.search, skip: this.atPage * 100, limit: 100 }, (resp) => {
+        if (resp.signal === 'ok') {
+          this.projects = resp.projects
+          this.loopActivate()
+        }
+      })
+      // this.ts.project.hydrate({ isGallery: true })
     },
     enterProject ({ project }) {
       window.location.assign(`/enOS/${project._id}`)
@@ -198,9 +195,11 @@ export default {
       this.ts.project.add({
         userID: API.myself._id,
         author: this.API.myself.name,
-        title: 'Project - ' + new Date(),
-        desc: '',
+        title: 'new Empty Project',
+        desc: 'empty',
         date: new Date()
+      }).then((v) => {
+        this.enterProject({ project: v })
       })
     }
   }
@@ -246,12 +245,18 @@ label{
   user-select: none;
 }
 .texter-search{
-  width: 150px;
+  width: 150;
   border: none;
   outline: none;
   appearance: none;
   border-bottom: black solid 1px;
-  border-radius: 0px;
+}
+.texter-search{
+  width: 150;
+  border: none;
+  outline: none;
+  appearance: none;
+  border-bottom: black solid 1px;
 }
 .btn-next{
   border: none;

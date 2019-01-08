@@ -3,15 +3,15 @@
     <!-- not so legit but kinda works -->
     <div class="caro-parent">
       <Carousel class="caro" :per-page="1" :navigateTo="navTo" @pageChange="(v) => { sliderAt = v }">
-        <Slide :key="pj._id" v-for="(pj, pi) in featuredProjects" class="slide-width">
+        <Slide :key="pj._id" v-for="(pj) in featuredProjects" class="slide-width">
           <div>
-            <WinWinBig v-if="show === 'big'" :project="pj" :enabled="sliderAt >= (pi - 1) && sliderAt <= (pi + 1)" :block="true" :ref="pj._id"></WinWinBig>
+            <WinWinBig v-if="show === 'big'" :project="pj" :enabled="true" :block="false" :ref="pj._id"></WinWinBig>
             <WinWinSmall v-if="show === 'small'" :project="pj" :enabled="true" :ref="pj._id"></WinWinSmall>
             <p>
-              Title: {{ pj.title }}, by: {{ pj.author }}
-            </p>
-            <p>
-              <span class="linker" @click="viewFull(pj)">Fullscreen Interactive</span>
+              Title: {{ pj.title }},
+              <br />by @{{ pj.author }}
+              <br />Desc: {{ pj.desc }}
+              <br /><span class="linker" @click="viewFull(pj)">Fullscreen Interactive</span>
             </p>
           </div>
         </Slide>
@@ -78,10 +78,18 @@ export default {
       API.RT.en.emit('list-latest-featured', { skip: 8 * this.page, limit: 8 }, (data) => {
         if (data.signal === 'ok') {
           console.log(data)
-          this.featuredProjects = data.projects.slice().reverse()
-          if (this.featuredProjects.length >= 2) {
-            this.navTo = 1
-          }
+          this.featuredProjects = data.projects.slice().sort((a, b) => {
+            if (a.title < b.title) {
+              return -1
+            } else if (a.title > b.title) {
+              return 1
+            } else {
+              return 0
+            }
+          })
+          // if (this.featuredProjects.length >= 2) {
+          //   this.navTo = 1
+          // }
         }
       })
     }

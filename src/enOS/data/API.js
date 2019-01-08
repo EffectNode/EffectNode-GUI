@@ -127,7 +127,13 @@ export const getMe = () => {
 }
 
 export const register = (data) => {
-  return iAXIOS.post('/register', data)
+  return iAXIOS.post('/en/register', data)
+    .then((resp) => {
+      window.localStorage.setItem('jwt_remember_me', resp.data.token)
+      iAXIOS = makeAxios()
+      RT.en = makeSocket('effect-node')
+      return resp
+    })
 }
 
 export const login = (data) => {

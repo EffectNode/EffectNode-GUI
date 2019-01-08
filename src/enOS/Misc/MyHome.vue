@@ -1,18 +1,32 @@
 <template>
   <div class="myhome">
     <HomeTitle></HomeTitle>
-    <MyProjects></MyProjects>
+    <NavMenu :mode="mode" @mode="(v) => { mode = v }"></NavMenu>
+    <MyProjects v-if="mode === 'myprojects'"></MyProjects>
+    <NewProjects v-if="mode === 'newprojects'"></NewProjects>
+    <MyHomeFooter></MyHomeFooter>
   </div>
 </template>
 
 <script>
 import HomeTitle from './Compos/HomeTitle.vue'
 import MyProjects from './Compos/MyProjects.vue'
+import NewProjects from './Compos/NewProjects.vue'
+import NavMenu from './Compos/NavMenu.vue'
+import MyHomeFooter from './Compos/MyHomeFooter.vue'
 
 export default {
   components: {
     HomeTitle,
-    MyProjects
+    MyProjects,
+    MyHomeFooter,
+    NewProjects,
+    NavMenu
+  },
+  data () {
+    return {
+      mode: 'myprojects'
+    }
   }
 }
 </script>
