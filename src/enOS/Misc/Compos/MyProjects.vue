@@ -10,13 +10,13 @@
           <span>
             <br />
             Filter:
-            <span class="btn-next" @click="viewFor = 'all'">All</span>
+            <span class="btn-next" :class="{ active: viewFor === 'all' }" @click="viewFor = 'all'">All</span>
             /
-            <span class="btn-next" @click="viewFor = 'template'">My Templates</span>
+            <span class="btn-next" :class="{ active: viewFor === 'template' }" @click="viewFor = 'template'">My Templates</span>
             /
-            <span class="btn-next" @click="viewFor = 'gallery'">At Gallery</span>
+            <span class="btn-next" :class="{ active: viewFor === 'gallery' }" @click="viewFor = 'gallery'">At Gallery</span>
             /
-            <span class="btn-next" @click="viewFor = 'featured'">Featured</span>
+            <span class="btn-next" :class="{ active: viewFor === 'featured' }" @click="viewFor = 'featured'">Featured</span>
           </span>
         </div>
       </div>
@@ -141,7 +141,12 @@ export default {
     },
     listProject () {
       this.projects = []
-      this.ts.project.hydrate({ userID: API.myself._id })
+      this.ts.project.hydrate({ userID: API.myself._id }).then((resp) => {
+        // if there's no items then go to new project page
+        if (resp.data && resp.data.results && resp.data.results.length === 0) {
+          this.$emit('mode', 'newprojects')
+        }
+      })
       this.loopActivate()
     },
     enterProject ({ project }) {
@@ -259,6 +264,10 @@ label{
   border-bottom: black solid 1px;
   padding-bottom: 1px;
   outline: none;
+}
+.btn-next.active{
+  color: #31b593;
+  border-bottom: #31b593 solid 1px;
 }
 .btn-prev{
   border: none;

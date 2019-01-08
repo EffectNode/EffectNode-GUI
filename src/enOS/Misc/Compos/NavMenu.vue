@@ -17,6 +17,7 @@ export default {
 
 <style scoped>
 .linker{
+  display: inline-block;
   cursor: pointer;
   color: grey;
 }

@@ -2,7 +2,7 @@
   <div class="myhome">
     <HomeTitle></HomeTitle>
     <NavMenu :mode="mode" @mode="(v) => { mode = v }"></NavMenu>
-    <MyProjects v-if="mode === 'myprojects'"></MyProjects>
+    <MyProjects v-if="mode === 'myprojects'"  @mode="(v) => { mode = v }"></MyProjects>
     <NewProjects v-if="mode === 'newprojects'"></NewProjects>
     <MyHomeFooter></MyHomeFooter>
   </div>
