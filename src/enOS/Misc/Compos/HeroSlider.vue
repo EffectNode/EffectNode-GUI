@@ -3,10 +3,10 @@
     <!-- not so legit but kinda works -->
     <div class="caro-parent">
       <Carousel class="caro" :per-page="1" :navigateTo="navTo" @pageChange="(v) => { sliderAt = v }">
-        <Slide :key="pj._id" v-for="(pj) in featuredProjects" class="slide-width">
+        <Slide :key="pj._id" v-for="(pj, pi) in featuredProjects" class="slide-width">
           <div>
-            <WinWinBig v-if="show === 'big'" :project="pj" :enabled="true" :block="false" :ref="pj._id"></WinWinBig>
-            <WinWinSmall v-if="show === 'small'" :project="pj" :enabled="true" :ref="pj._id"></WinWinSmall>
+            <WinWinBig v-if="show === 'big'" :project="pj" :enabled="sliderAt === pi" :block="false" :ref="pj._id"></WinWinBig>
+            <WinWinSmall v-if="show === 'small'" :project="pj" :enabled="sliderAt === pi" :ref="pj._id"></WinWinSmall>
             <p>
               Title: {{ pj.title }},
               <br />by @{{ pj.author }}
@@ -39,7 +39,7 @@ export default {
   },
   data () {
     return {
-      sliderAt: 1,
+      sliderAt: 0,
       featuredProjects: [],
       page: 0,
       API,
