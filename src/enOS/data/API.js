@@ -28,7 +28,7 @@ var baseURL = 'http://localhost:3003/'
 
 if (process.env.NODE_ENV === 'production') {
   baseURL = 'https://effectnode-heroku.herokuapp.com/'
-} else if (window.location.host.indexOf('192') !== -1) {
+} else if (window.location.hostname.indexOf('192') !== -1) {
   baseURL = 'http://' + window.location.hostname + ':3003/'
 }
 

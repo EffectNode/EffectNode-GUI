@@ -75,7 +75,7 @@ export default {
 .auth-form{
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg, #e3ffe7 0%, #d9e7ff 100%);
+  /* background: linear-gradient(45deg, #e3ffe7 0%, #d9e7ff 100%); */
 }
 
 .form-area{
@@ -87,10 +87,8 @@ export default {
 }
 
 .scene {
-  width: 40%;
-  height: 40%;
-  min-width: 350px;
-  min-height: 250px;
+  width: 320px;
+  height: 320px;
   perspective: 600px;
 }
 
@@ -113,7 +111,7 @@ export default {
   height: 100%;
   backface-visibility: hidden;
   border-radius: 16px;
-  box-shadow: 0px 0px 30px 0px #cccccc;
+  box-shadow: 0px 0px 30px 0px #001c45;
 }
 
 .card__face--front {

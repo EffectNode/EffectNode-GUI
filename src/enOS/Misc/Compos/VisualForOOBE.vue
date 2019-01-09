@@ -84,6 +84,6 @@ export default {
   height: 100%;
 }
 .oobe-visual{
-  background: linear-gradient(45deg, grey, white);
+  background: linear-gradient(45deg, #eeeeee, white);
 }
 </style>

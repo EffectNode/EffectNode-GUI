@@ -8,10 +8,10 @@
             <WinWinBig v-if="show === 'big'" :project="pj" :enabled="sliderAt === pi" :block="false" :ref="pj._id"></WinWinBig>
             <WinWinSmall v-if="show === 'small'" :project="pj" :enabled="sliderAt === pi" :ref="pj._id"></WinWinSmall>
             <p>
-              Title: {{ pj.title }},
+              {{ pj.title }}
               <br />by @{{ pj.author }}
               <br />Desc: {{ pj.desc }}
-              <br /><span class="linker" @click="viewFull(pj)">Fullscreen Interactive</span>
+              <br /><span class="linker" @click="viewFull(pj)">Fullscreen</span>
             </p>
           </div>
         </Slide>

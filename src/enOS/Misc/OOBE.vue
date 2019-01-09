@@ -1,5 +1,14 @@
 <template>
-  <div class="left-right">
+  <div class="unified">
+    <div class="layer">
+      <VisualForOOBE>
+      </VisualForOOBE>
+    </div>
+    <div class="layer">
+      <AuthForm></AuthForm>
+    </div>
+  </div>
+  <!-- <div class="left-right">
     <div class="left">
       <AuthForm></AuthForm>
     </div>
@@ -7,7 +16,7 @@
       <VisualForOOBE>
       </VisualForOOBE>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -22,6 +31,19 @@ export default {
 </script>
 
 <style scoped>
+.unified{
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.layer{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
 .left-right{
   width: 100%;
   height: 100%;
@@ -29,7 +51,6 @@ export default {
   justify-content: center;
   align-items: space-between;
   flex-direction: column;
-
 }
 .left, .right{
   width: 100%;
