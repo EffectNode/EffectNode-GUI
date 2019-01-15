@@ -3,6 +3,78 @@ export function getID () {
   return '_' + (Math.random() * 100000000).toFixed(0)
 }
 
+export const AppList = () => {
+  return [
+    {
+      windowTitle: 'Quotes',
+      compoName: 'QuotesApp',
+      App: require('@/enOS/Apps/QuotesApp/Index.vue').default,
+      typeCode: 'quotes'
+    },
+    {
+      windowTitle: 'Animation',
+      compoName: 'AnimationApp',
+      App: require('@/enOS/Apps/AnimationApp/Index.vue').default,
+      typeCode: 'animation'
+    },
+    {
+      windowTitle: 'Dimensional',
+      compoName: 'DimensionalApp',
+      App: require('@/enOS/Apps/DimensionalApp/Index.vue').default,
+      typeCode: 'dimensional'
+    },
+    {
+      windowTitle: 'ParticleSea',
+      compoName: 'ParticleSeaApp',
+      App: require('@/enOS/Apps/ParticleSeaApp/Index.vue').default,
+      typeCode: 'particle-sea'
+    },
+    {
+      windowTitle: 'Volumetric',
+      compoName: 'VolumetricApp',
+      App: require('@/enOS/Apps/VolumetricApp/Index.vue').default,
+      typeCode: 'volumetric'
+    },
+    {
+      windowTitle: 'Visual Effect Flow Editor',
+      compoName: 'ConnectorApp',
+      App: require('@/enOS/Apps/ConnectorApp/Index.vue').default,
+      typeCode: 'connector'
+    },
+    {
+      windowTitle: 'ExecEnv',
+      compoName: 'ExecEnvApp',
+      App: require('@/enOS/Apps/ExecEnvApp/Index.vue').default,
+      typeCode: 'exec-env'
+    },
+    {
+      windowTitle: 'ModEditor',
+      compoName: 'ModEditorApp',
+      App: require('@/enOS/Apps/ModEditorApp/Index.vue').default,
+      typeCode: 'mod-editor'
+    },
+    {
+      windowTitle: 'Help',
+      compoName: 'HelpApp',
+      App: require('@/enOS/Apps/HelpApp/Index.vue').default,
+      typeCode: 'docs'
+    }
+  ]
+}
+
+export const Apps = () => AppList().reduce((c, ii) => {
+  c[ii.compoName] = ii.App
+  return c
+}, {})
+
+export const TypeFilter = (type) => {
+  return (AppList().find(tc => tc.typeCode === type) || {}).compoName
+}
+
+export const StartMenu = () => {
+  return AppList().slice()
+}
+
 var temp = {
   x: 30,
   y: 30
@@ -107,23 +179,27 @@ export function makePortal ({ type, appName = 'App', data = {} }) {
   let id = getID()
   let win = makeWin(id, appName)
   let app = 'QuotesApp'
-  if (type === 'animation') {
-    app = 'AnimationApp'
-  } else if (type === 'quotes') {
-    app = 'QuotesApp'
-  } else if (type === 'dimensional') {
-    app = 'DimensionalApp'
-  } else if (type === 'particle-sea') {
-    app = 'ParticleSeaApp'
-  } else if (type === 'volumetric') {
-    app = 'VolumetricApp'
-  } else if (type === 'connector') {
-    app = 'ConnectorApp'
-  } else if (type === 'exec-env') {
-    app = 'ExecEnvApp'
-  } else if (type === 'mod-editor') {
-    app = 'ModEditorApp'
-  }
+  // if (type === 'animation') {
+  //   app = 'AnimationApp'
+  // } else if (type === 'quotes') {
+  //   app = 'QuotesApp'
+  // } else if (type === 'dimensional') {
+  //   app = 'DimensionalApp'
+  // } else if (type === 'particle-sea') {
+  //   app = 'ParticleSeaApp'
+  // } else if (type === 'volumetric') {
+  //   app = 'VolumetricApp'
+  // } else if (type === 'connector') {
+  //   app = 'ConnectorApp'
+  // } else if (type === 'exec-env') {
+  //   app = 'ExecEnvApp'
+  // } else if (type === 'mod-editor') {
+  //   app = 'ModEditorApp'
+  // } else if (type === 'docs') {
+  //   app = 'HelpApp'
+  // }
+
+  app = TypeFilter(type) || app
 
   return {
     id,
@@ -142,6 +218,7 @@ export function makeSample (api) {
   //   makePortal({ type: 'exec-env', data: {} })
   // )
   api.addWindow({ data: {}, appName: 'Visual Effect Flow Editor', type: 'connector' })
+  api.addWindow({ data: {}, appName: 'Documentation', type: 'docs' })
   api.addWindow({ data: {}, appName: 'Preview Window', type: 'exec-env' })
   api.organise()
 }
@@ -267,6 +344,7 @@ export function init ({ projectID }) {
   mod.organise = () => {
     organise(mod)
   }
+  mod.startMenuItems = StartMenu()
 
   return new Promise((resolve) => {
     setTimeout(() => {

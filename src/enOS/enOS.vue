@@ -10,8 +10,8 @@ import * as Services from '@/enOS/data/services.js'
 import Vue from 'vue'
 import VueDraggableResizable from 'vue-draggable-resizable'
 import 'web-animations-js'
-import Screen from '@/enOS/Screen'
-import Portals from '@/enOS/Portals'
+import Screen from '@/enOS/Screen/Index.vue'
+import Portals from '@/enOS/Portals/Index.vue'
 import * as API from '@/enOS/data/API'
 
 Vue.component('vue-draggable-resizable', VueDraggableResizable)

@@ -44,14 +44,21 @@
             Roll
           </div> -->
 
-          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: 'Visual Effect Flow Editor', type: 'connector' })">
+          <!-- <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: 'Visual Effect Flow Editor', type: 'connector' })">
             Visual Effect Flow Editor
           </div>
           <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: 'Preview Window', type: 'exec-env' })">
             Preview Window
           </div>
+          <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: 'Documentation', type: 'docs' })">
+            Documentation
+          </div> -->
 
-          <hr />
+          <div :key="smii + smi.compoName" v-for="(smi, smii) in startMenuItems" class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: smi.windowTitle, type: smi.typeCode })">
+            {{ smi.windowTitle }}
+          </div>
+
+          <!-- <hr />
 
           <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: 'Space & Dimension', type: 'dimensional' })">
             Space & Dimension
@@ -61,7 +68,7 @@
           </div>
           <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: 'Volumetric Rendering', type: 'volumetric' })">
             Volumetric Rendering
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -95,6 +102,7 @@ export default {
   },
   data () {
     return {
+      startMenuItems: this.uiAPI.portal.startMenuItems,
       startMenu: false,
       toggle3D: false
     }

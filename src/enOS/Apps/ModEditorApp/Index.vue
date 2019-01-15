@@ -161,7 +161,7 @@
 
 <script>
 // import { codemirror } from 'vue-codemirror'
-import TitleBar from '../TitleBar'
+import TitleBar from '../TitleBar/Index.vue'
 // import 'codemirror/mode/javascript/javascript.js'
 import * as brace from 'brace'
 import 'brace/mode/javascript'

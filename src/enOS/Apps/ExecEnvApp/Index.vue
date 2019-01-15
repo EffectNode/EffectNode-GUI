@@ -34,7 +34,7 @@
 
 <script>
 // import axios from 'axios'
-import TitleBar from '../TitleBar'
+import TitleBar from '../TitleBar/Index.vue'
 // import SVGArea from '../../SVGArea/Index.vue'
 // import nlp from 'compromise'
 // import csv from 'csvtojson'

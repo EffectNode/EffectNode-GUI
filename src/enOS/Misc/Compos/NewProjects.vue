@@ -199,7 +199,9 @@ export default {
         desc: 'empty',
         date: new Date()
       }).then((v) => {
-        this.enterProject({ project: v })
+        window.alert('project created.')
+        // console.log(v)
+        this.enterProject({ project: v.data.results })
       })
     }
   }

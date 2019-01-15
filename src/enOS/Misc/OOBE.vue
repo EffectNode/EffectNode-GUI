@@ -1,5 +1,5 @@
 <template>
-  <div class="unified">
+  <!-- <div class="unified">
     <div class="layer">
       <VisualForOOBE>
       </VisualForOOBE>
@@ -7,8 +7,8 @@
     <div class="layer">
       <AuthForm></AuthForm>
     </div>
-  </div>
-  <!-- <div class="left-right">
+  </div> -->
+  <div class="left-right">
     <div class="left">
       <AuthForm></AuthForm>
     </div>
@@ -16,7 +16,7 @@
       <VisualForOOBE>
       </VisualForOOBE>
     </div>
-  </div> -->
+  </div>
 </template>
 
 <script>
@@ -57,7 +57,7 @@ export default {
   height: 50%;
 }
 .left{
-  /* background: linear-gradient(0deg, #c7f8cf 0%, #bbd2fa 100%); */
+  background: linear-gradient(0deg, #c7f8cf 0%, #bbd2fa 100%);
 }
 .right{
   /* background: linear-gradient(45deg, #e3ffe7 0%, #d9e7ff 100%); */

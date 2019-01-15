@@ -22,11 +22,11 @@
 
 <script>
 // import axios from 'axios'
-import TitleBar from '../TitleBar'
-import Flipper from './Flipper'
-import Tower from './Tower'
-import Deck from './Deck'
-import Messages from './Messages'
+import TitleBar from '../TitleBar/Index.vue'
+import Flipper from './Flipper/Index.vue'
+import Tower from './Tower/Index.vue'
+import Deck from './Deck/Index.vue'
+import Messages from './Messages/Index.vue'
 
 export default {
   props: {

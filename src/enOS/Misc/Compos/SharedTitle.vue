@@ -37,7 +37,7 @@ export default {
   height: 57px;
 }
 .left-side{
-  width: 141px;
+  width: 170px;
   display: flex;
   align-items: center;
 }
@@ -57,7 +57,7 @@ export default {
   line-height: 28px;
 }
 .right-side{
-  width: 141px;
+  width: 170px;
   display: flex;
   justify-items: flex-end;
   align-items: center;

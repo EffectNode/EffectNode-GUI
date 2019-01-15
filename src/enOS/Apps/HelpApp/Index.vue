@@ -1,10 +1,10 @@
 <template>
   <div class="full quotes-app" >
-    <TitleBar :portal="portal"  @click="$emit('activated')" :uiAPI="uiAPI">
-      Particle Sea
+    <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
+      Documentation
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
-      <ParticleSea ref="dimesnion"></ParticleSea>
+      <iframe class="iframe" src="https://docs.effectnode.com" frameborder="0"></iframe>
     </div>
   </div>
 </template>
@@ -12,7 +12,7 @@
 <script>
 // import axios from 'axios'
 import TitleBar from '../TitleBar/Index.vue'
-import ParticleSea from './ParticleSea/Index.vue'
+// import Dimension from './Dimension/Index.vue'
 
 export default {
   props: {
@@ -20,8 +20,8 @@ export default {
     portal: {}
   },
   components: {
-    TitleBar,
-    ParticleSea
+    TitleBar
+    // Dimension
   },
   data () {
     return {
@@ -42,7 +42,8 @@ export default {
 @import url(../../jot.css);
 
 .quotes-app{
-  background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+  background: white;
+  /* background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%); */
   box-sizing: border-box;
   border-radius: 10px 10px 10px 10px;
   color: white;
@@ -59,5 +60,10 @@ export default {
 
 .quotes-list{
   margin: 20px;
+}
+
+.iframe{
+  width: 100%;
+  height: calc(100%);
 }
 </style>

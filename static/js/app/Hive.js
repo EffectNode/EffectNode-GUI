@@ -10,8 +10,10 @@ let {
   Resources,
   sockets,
   box,
-  inputs,
-  outputs
+  IO,
+  Input,
+  Output,
+  OutputAll
 } = env
 /* esltint-enable */
 console.log('Environment is ready for you!::', box.id)
@@ -30,14 +32,14 @@ let h = {
   }
 }
 
-Signal.$on(inputs[0].id, (progress) => {
-  h.fillBackground(progress);
+var i = 0;
+Input(0, () => {
+  h.fillBackground(i / 100);
+  i++
+  i = i % 100;
 });
+`
 
-this.onClean = () => {
-  console.log('onClean', box.id)
-}
-  `
   let MainLoopModule = `/* global env */
 /* eslint-disable */
 let {
@@ -45,35 +47,36 @@ let {
   Resources,
   sockets,
   box,
-  inputs,
-  outputs
+  IO,
+  Input,
+  Output,
+  OutputAll
 } = env
 /* esltint-enable */
-console.log('Environment is ready for you!::', box.id)
+console.log('========' + 'box.name' + 'is Ready.  ========')
 // sender
 
-box.name = 'Main Loop Module'
-
-console.log('onReady')
-
-let send = (output) => {
-  let inc = Math.floor((Date.now() * 0.01) % 100) / 100;
-  Signal.$emit(output.id, inc);
-}
+let startTime = performance.now();
 
 let rAFID = 0
+let event = {}
 let rAF = () => {
   rAFID = window.requestAnimationFrame(rAF);
-  outputs.forEach(send)
+
+  event.time = performance.now();
+
+  OutputAll(event);
 }
 rAFID = window.requestAnimationFrame(rAF);
 
+Input('onClock', (evt) => {
+  OutputAll(evt);
+}, () => {
+  // cancenl the loop for the recorder
+  cancelAnimationFrame(rAFID);
+})
 
-this.onClean = () => {
-  window.cancelAnimationFrame(rAFID);
-  console.log('onClean', box.id)
-}
-`
+  `
 
   let Data = window.HiveData = {
     init: (api) => {

@@ -8,6 +8,7 @@
         Effect Node
       </div>
       <div slot="right">
+        <a href="https://docs.effectnode.com" target="_blank" class="docs">Docs</a>
         <a v-if="!myself" href="/auth" class="login">Login / Signup</a>
         <a v-if="myself" href="/profile" class="login">My Home</a>
       </div>
@@ -70,4 +71,11 @@ export default {
   }
 }
 
+.docs{
+  color: black;
+  text-align: right;
+  line-height: 28px;
+  width: 100%;
+  cursor: pointer;
+}
 </style>

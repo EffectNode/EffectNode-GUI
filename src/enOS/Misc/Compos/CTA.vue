@@ -1,7 +1,9 @@
 <template>
   <div class="sys-constraint">
     <hr>
-    <div @click="gogo" class="cta">Get Started to Remix and Code Visual Effects</div>
+    <div @click="goLogin" class="cta">Get Started to Remix and Code Visual Effects</div>
+    <br />
+    <a href="https://docs.effectnode.com" target="_blank"><div class="cta cta2">Learn more at our Documentation Site</div></a>
     <hr>
   </div>
 </template>
@@ -9,7 +11,7 @@
 <script>
 export default {
   methods: {
-    gogo () {
+    goLogin () {
       window.location.assign('/profile')
     }
   }
@@ -30,6 +32,13 @@ export default {
   cursor: pointer;
 }
 
+a,
+a:visited,
+a:active{
+  text-decoration: none;
+  color: white;
+}
+
 .cta{
   font-size: 13px;
 }
@@ -47,5 +56,9 @@ export default {
   .cta{
     font-size: 24px;
   }
+}
+
+.cta2{
+  transform: scale(0.8)
 }
 </style>

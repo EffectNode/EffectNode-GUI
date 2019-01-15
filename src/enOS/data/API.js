@@ -281,8 +281,8 @@ export class TableSync {
   }
   doRemote ({ data, method }) {
     return new Promise((resolve) => {
-      console.log(`${this.namespace}::up::${method}`, data)
       this.socket.emit(`${this.namespace}::up::${method}`, data, (v) => {
+        console.log(`${this.namespace}::up::${method}`, data)
         resolve(v)
       })
     })

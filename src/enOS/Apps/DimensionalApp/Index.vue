@@ -13,7 +13,7 @@
 
 <script>
 // import axios from 'axios'
-import TitleBar from '../TitleBar'
+import TitleBar from '../TitleBar/Index.vue'
 import Dimension from './Dimension/Index.vue'
 
 export default {
