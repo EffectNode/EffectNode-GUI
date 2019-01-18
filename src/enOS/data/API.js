@@ -80,7 +80,7 @@ var makeAxios = () => {
   return iAXIOS
 }
 
-var makeSocket = (path) => {
+export const makeSocket = (path) => {
   // return io(`${baseURL}/${path}`, { transports: ['websocket'] })
   // let socket = io(`${baseURL}${path}`)
   let rememberMe = window.localStorage.getItem('jwt_remember_me')
@@ -96,12 +96,13 @@ var makeSocket = (path) => {
     if (socket.disconnected) {
       socket.connect()
     }
-  }, 1000)
+  }, 500)
   return socket
 }
 
 export const RT = {
-  en: makeSocket('effect-node')
+  en: makeSocket('effect-node'),
+  shareDB: makeSocket('shareDB')
 }
 
 var iAXIOS = makeAxios()

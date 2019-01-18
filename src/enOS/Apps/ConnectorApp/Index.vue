@@ -21,6 +21,7 @@
       <div class="buttons bottom-left" v-if="hasSvg">
         <span class="linker" @click="makePulseMod">Add Main Loop</span>
         <span class="linker" @click="makeDomMod">Add Dom Updater</span>
+        <span class="linker" @click="openModuleGallery">Module Gallery</span>
       </div>
       <div class="tools top-left" v-if="hasSvg">
         <span class="linker" @click="scrollHome">Home View</span>
@@ -118,6 +119,21 @@ export default {
             userID: box.userID,
             projectID: box.projectID,
             boxUUID: box.id
+          }
+        })
+      }
+    },
+    openModuleGallery () {
+      let found = this.uiAPI.portal.portals.find(p => p.app === 'ModuleGalleryApp')
+      if (found) {
+        this.$nextTick(() => {
+          this.uiAPI.portal.activate(found)
+        })
+      } else {
+        this.uiAPI.portal.addWindow({
+          type: 'mod-gallery',
+          appName: 'Module Gallery',
+          data: {
           }
         })
       }

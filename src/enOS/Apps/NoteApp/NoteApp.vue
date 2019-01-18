@@ -1,10 +1,13 @@
 <template>
   <div class="full quotes-app" >
     <TitleBar :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
-      Module Gallery
+      NotePad
+      <span class="warn" v-if="disconnected">
+        Disconnected, reconnecting
+      </span>
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
-
+      <Note ref="note" :uiAPI="uiAPI" :collection="'rich-text-for-projects'" :noteID="uiAPI.projectID"></Note>
     </div>
   </div>
 </template>
@@ -12,25 +15,30 @@
 <script>
 // import axios from 'axios'
 import TitleBar from '../TitleBar/Index.vue'
-// import Dimension from './Dimension/Index.vue'
-
+import Note from './Note'
 export default {
   props: {
     uiAPI: {},
     portal: {}
   },
   components: {
-    TitleBar
+    TitleBar,
+    Note
     // Dimension
   },
   data () {
     return {
     }
   },
-  watch: {
+  computed: {
+    disconnected () {
+      return this.uiAPI.RT.shareDB.disconnected
+    }
   },
   mounted () {
-
+    this.uiAPI.RT.shareDB.emit('up/create-doc-for-project', { projectID: this.uiAPI.projectID }, () => {
+      console.log('ready rich text')
+    })
   },
   methods: {
 
@@ -40,6 +48,10 @@ export default {
 
 <style scoped>
 @import url(../../jot.css);
+
+.warn{
+  color: red;
+}
 
 .quotes-app{
   background: white;

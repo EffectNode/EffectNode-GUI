@@ -13,6 +13,7 @@ export const loadProject = ({ projectID, userID }) => {
     let $uiAPI = {
       projectID,
       userID,
+      API,
       RT: API.RT,
       TableSync: API.TableSync,
       Builder: Builder

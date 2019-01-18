@@ -4,6 +4,7 @@
       {{ portal.win.name }} <span class="linker" @click="runIframe()">Reset</span> <span class="linker" @click="setSquare(portal)">Square</span> <span class="linker" @click="downloadFrame()">Download</span>
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
+      <keep-alive>
       <iframe
       sandbox="allow-same-origin allow-scripts allow-forms"
       :src="iframe.src"
@@ -11,9 +12,9 @@
       :width="portal.win.width"
       :height="portal.win.height - 30"
       :style="{ width: portal.win.width + 'px', height: (portal.win.height - 30) + 'px' }"
-      v-if="iframe.enabled" frameborder="0"></iframe>
-
-      <div ref="dragger-prevent-loss-mouse" class="full" style="position: absolute; top: 30px; left: 0px; height: calc(100% - 30px);" v-show="isDown">
+      frameborder="0"></iframe>
+      </keep-alive>
+      <div  @click="$emit('activated')" ref="dragger-prevent-loss-mouse" class="full" style="position: absolute; top: 30px; left: 0px; height: calc(100% - 30px);" v-show="isDown">
       </div>
       <!--
       <h1>Inputs</h1>
@@ -105,8 +106,12 @@ export default {
       let html = await this.uiAPI.Builder.fromDocToHTMLProd({ Doc: this.Doc })
       let link = this.uiAPI.Builder.makeHTMLLink({ HTML: html })
       this.iframe.src = link
-      this.iframe.srcdoc = html
+      // this.iframe.srcdoc = html
       this.iframe.enabled = true
+      // if (this.$refs.iframe) {
+      //   this.$refs.iframe.src = 'about:blank'
+      //   this.$refs.iframe.contentWindow.document.write(html)
+      // }
       if (this.iframe.postMessage) {
         window.removeEventListener('iframe-post-message', this.iframe.postMessage)
       }

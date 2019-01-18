@@ -2,9 +2,21 @@
   <div class="full ll-perspective dont-move">
     <div tag="div" class="full ll-cam" name="zoomba" :style="getGroupCSS()">
       <vue-draggable-resizable
-        :key="ip.id"
         v-if="!ip.win.minimised"
-        v-for="(ip, ipi) in uiAPI.portal.portals.slice().sort((a, b) => { return new Date(a.date) - new Date(b.date) })"
+        :key="ip.id"
+        v-for="(ip, ipi) in uiAPI.portal.portals.slice()
+          .sort((a, b) => {
+            let da = Date.parse(a.date)
+            let db = Date.parse(b.date)
+            if (da > db) {
+              return -1
+            } else if (da === db) {
+              return 0
+            } {
+              return 1
+            }
+          })
+        "
         :w="ip.win.width"
         :h="ip.win.height"
         :x="ip.win.x"
@@ -29,20 +41,18 @@
         @activated="onActivated(ip)"
         :style="getWindowStyle(ip, ipi)"
         >
-          <keep-alive>
-            <Component
-              v-if="!ip.win.minimised"
-              :ref="`p-compo-${ip.id}`"
-              @mouseenter="() => { ip.win.active = true; }"
-              @mouseout="() => { ip.win.active = true; }"
-              @activated="onActivated(ip)"
-              class="full"
-              @click="onActivated(ip)"
-              :uiAPI="uiAPI"
-              :is="ip.app"
-              :portal="ip"
-            ></Component>
-          </keep-alive>
+          <Component
+            v-if="!ip.win.minimised"
+            :ref="`p-compo-${ip.id}`"
+            @mouseenter="() => { ip.win.active = true; }"
+            @mouseout="() => { ip.win.active = true; }"
+            @activated="onActivated(ip)"
+            class="full"
+            @click="onActivated(ip)"
+            :uiAPI="uiAPI"
+            v-bind:is="ip.app"
+            :portal="ip"
+          ></Component>
       </vue-draggable-resizable>
     </div>
 
@@ -103,6 +113,12 @@ export default {
   mounted () {
     this.loadLS()
     this.loadResizer()
+
+    this.uiAPI.portal.portals.forEach(current => {
+      if (!Portals.AppList().find(al => al.compoName === current.app)) {
+        this.uiAPI.portal.removeWindow(current)
+      }
+    })
   },
   watch: {
     metasJSON () {
@@ -198,7 +214,6 @@ export default {
     onActivated (ip) {
       // console.log(ip)
       this.uiAPI.portal.activate(ip)
-
       this.$forceUpdate()
 
       // this.shouldSave()

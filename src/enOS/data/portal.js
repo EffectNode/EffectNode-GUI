@@ -6,58 +6,89 @@ export function getID () {
 export const AppList = () => {
   return [
     {
+      tags: [],
       windowTitle: 'Quotes',
       compoName: 'QuotesApp',
       App: require('@/enOS/Apps/QuotesApp/Index.vue').default,
       typeCode: 'quotes'
     },
     {
+      tags: [],
       windowTitle: 'Animation',
       compoName: 'AnimationApp',
       App: require('@/enOS/Apps/AnimationApp/Index.vue').default,
       typeCode: 'animation'
     },
     {
+      startMenu: true,
+      tags: ['demo'],
       windowTitle: 'Dimensional',
       compoName: 'DimensionalApp',
       App: require('@/enOS/Apps/DimensionalApp/Index.vue').default,
       typeCode: 'dimensional'
     },
     {
+      startMenu: true,
+      tags: ['demo'],
       windowTitle: 'ParticleSea',
       compoName: 'ParticleSeaApp',
       App: require('@/enOS/Apps/ParticleSeaApp/Index.vue').default,
       typeCode: 'particle-sea'
     },
     {
+      startMenu: true,
+      tags: ['demo'],
       windowTitle: 'Volumetric',
       compoName: 'VolumetricApp',
       App: require('@/enOS/Apps/VolumetricApp/Index.vue').default,
       typeCode: 'volumetric'
     },
     {
+      startMenu: true,
+      tags: ['effect'],
       windowTitle: 'Visual Effect Flow Editor',
       compoName: 'ConnectorApp',
       App: require('@/enOS/Apps/ConnectorApp/Index.vue').default,
       typeCode: 'connector'
     },
     {
-      windowTitle: 'ExecEnv',
+      startMenu: true,
+      tags: ['effect'],
+      windowTitle: 'Preview Window',
       compoName: 'ExecEnvApp',
       App: require('@/enOS/Apps/ExecEnvApp/Index.vue').default,
       typeCode: 'exec-env'
     },
     {
+      tags: [],
       windowTitle: 'ModEditor',
       compoName: 'ModEditorApp',
       App: require('@/enOS/Apps/ModEditorApp/Index.vue').default,
       typeCode: 'mod-editor'
     },
     {
+      startMenu: true,
+      tags: [],
       windowTitle: 'Help',
       compoName: 'HelpApp',
       App: require('@/enOS/Apps/HelpApp/Index.vue').default,
       typeCode: 'docs'
+    },
+    {
+      startMenu: true,
+      tags: ['effect'],
+      windowTitle: 'Module Gallery',
+      compoName: 'ModuleGalleryApp',
+      App: require('@/enOS/Apps/ModuleGalleryApp/Index.vue').default,
+      typeCode: 'mod-gallery'
+    },
+    {
+      startMenu: true,
+      tags: ['effect'],
+      windowTitle: 'Note App',
+      compoName: 'NoteApp',
+      App: require('@/enOS/Apps/NoteApp/NoteApp.vue').default,
+      typeCode: 'note'
     }
   ]
 }
@@ -72,7 +103,7 @@ export const TypeFilter = (type) => {
 }
 
 export const StartMenu = () => {
-  return AppList().slice()
+  return AppList().slice().filter(a => a.startMenu)
 }
 
 var temp = {
@@ -179,6 +210,7 @@ export function makePortal ({ type, appName = 'App', data = {} }) {
   let id = getID()
   let win = makeWin(id, appName)
   let app = 'QuotesApp'
+
   // if (type === 'animation') {
   //   app = 'AnimationApp'
   // } else if (type === 'quotes') {
@@ -259,14 +291,20 @@ export function fixOverflow (api) {
 }
 
 export function sortWinZ (api, current) {
-  let idx = api.portals.findIndex(p => p.id === current.id)
-  api.portals.splice(idx, 1)
-  api.portals.push(current)
+  // let idx = api.portals.findIndex(p => p.id === current.id)
+  // api.portals.splice(idx, 1)
+  // api.portals.push(current)
   makeZList(api)
 }
 
 export function makeZList (api) {
-  api.portals.filter(e => !e.win.minimised).forEach((i, ii) => {
+  api.portals.slice().sort((a, b) => {
+    if (a.win.active) {
+      return 1
+    } else {
+      return -1
+    }
+  }).forEach((i, ii) => {
     i.win.z = ii
   })
 }
@@ -296,6 +334,7 @@ export function activate (api, current) {
   })
   current.win.active = true
   current.win.minimised = false
+
   sortWinZ(api, current)
 }
 
@@ -340,7 +379,6 @@ export function init ({ projectID }) {
   mod.square = (current) => {
     square(mod, current)
   }
-
   mod.organise = () => {
     organise(mod)
   }

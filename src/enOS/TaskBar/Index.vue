@@ -6,7 +6,7 @@
           Offline
         </div>
         <div class="taskbar-icon home" @click="goMenu()">
-          My Projects
+          Home
         </div>
         <div class="taskbar-icon home" @click="startMenu = true">
           Open App
@@ -21,9 +21,21 @@
           🎩 Organise
         </div>
         <div
-        class="taskbar-icon win" :key="ipk"
+        class="taskbar-icon win" :key="ip._id"
         :class="{ 'is-on': ip.win.minimised }"
-        v-for="(ip, ipk) in uiAPI.portal.portals.slice().sort((a, b) => { return new Date(a.date) - new Date(b.date) })"
+        v-for="(ip) in uiAPI.portal.portals
+          .slice()
+          .sort((a, b) => {
+            let da = Date.parse(a.date)
+            let db = Date.parse(b.date)
+            if (da > db) {
+              return -1
+            } else if (da === db) {
+              return 0
+            } {
+              return 1
+            }
+          })"
 
           @touchstart="$emit('activated', { portal: ip })"
           @click="$emit('activated', { portal: ip })"
@@ -54,10 +66,13 @@
             Documentation
           </div> -->
 
-          <div :key="smii + smi.compoName" v-for="(smi, smii) in startMenuItems" class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: smi.windowTitle, type: smi.typeCode })">
+          <div :key="smii + smi.compoName" v-for="(smi, smii) in startMenuItems.filter(a => a.tags.includes('effect'))" class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: smi.windowTitle, type: smi.typeCode })">
             {{ smi.windowTitle }}
           </div>
-
+          <hr />
+          <div :key="smii + smi.compoName" v-for="(smi, smii) in startMenuItems.filter(a => a.tags.includes('demo'))" class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: smi.windowTitle, type: smi.typeCode })">
+            {{ smi.windowTitle }}
+          </div>
           <!-- <hr />
 
           <div class="app-icon adder" @click="closeMenu(); uiAPI.portal.addWindow({ data: {}, appName: 'Space & Dimension', type: 'dimensional' })">

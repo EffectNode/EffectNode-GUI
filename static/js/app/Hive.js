@@ -112,12 +112,12 @@ Input('onClock', (evt) => {
           Data.template.connectors.sync()
           Data.template.modules.sync()
 
-          console.log({ userID: Doc.userID, projectID: Doc.projectID })
+          // console.log({ userID: Doc.userID, projectID: Doc.projectID })
           Data.ts.connectors.hydrate({ userID: Doc.userID, projectID: Doc.projectID })
           Data.ts.modules.hydrate({ userID: Doc.userID, projectID: Doc.projectID })
 
-          Data.template.connectors.hydrate({ projectID: 'template' })
-          Data.template.modules.hydrate({ projectID: 'template' })
+          Data.template.connectors.hydrate({ userID: Doc.userID, projectID: 'template' })
+          Data.template.modules.hydrate({ userID: Doc.userID, projectID: 'template' })
           resolve()
         })
       })
