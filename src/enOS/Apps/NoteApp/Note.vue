@@ -179,6 +179,6 @@ export default {
 .editor{
   color: black;
   width: 100%;
-  height: calc(100% - 52px);
+  height: calc(100% - 42px);
 }
 </style>

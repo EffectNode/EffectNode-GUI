@@ -47,8 +47,14 @@ export default {
     this.load()
   },
   methods: {
-    clone () {
-      window.alert('still making clone feature')
+    clone (mm) {
+      this.uiAPI.RT.en.emit('get-clone-module-data', { moduleID: mm._id }, (data) => {
+        if (data.signal === 'ok') {
+          this.uiAPI.hive.Data.cloneModule({ Doc: this.uiAPI.hive.Doc, mod: data.box, connectors: data.connectors, pos: { x: 20, y: 20 } })
+          window.alert('successfully cloned~')
+        }
+      })
+      // window.alert('still making clone feature')
     },
     load () {
       this.uiAPI.RT.en.emit('load-module-gallery', { search: this.searchTerm, skip: this.skip, limit: 100 }, (resp) => {

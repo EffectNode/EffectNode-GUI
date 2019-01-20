@@ -209,12 +209,12 @@ Input('onClock', (evt) => {
       // Data.addSocketToDoc({ socket: ou4, Doc })
       return mod
     },
-    async cloneModule ({ Doc, mod, connectors = Doc.root.connectors }) {
+    async cloneModule ({ Doc, mod, connectors = Doc.root.connectors, pos = false }) {
       let newMod = await Data.makeModule({
         Doc,
         name: mod.name,
         src: mod.src,
-        pos: {
+        pos: pos || {
           x: mod.pos.x + 30,
           y: mod.pos.y + 30
         },

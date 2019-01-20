@@ -133,6 +133,7 @@ export const register = (data) => {
       window.localStorage.setItem('jwt_remember_me', resp.data.token)
       iAXIOS = makeAxios()
       RT.en = makeSocket('effect-node')
+      RT.shareDB = makeSocket('shareDB')
       return resp
     })
 }
@@ -143,6 +144,7 @@ export const login = (data) => {
       window.localStorage.setItem('jwt_remember_me', resp.data.token)
       iAXIOS = makeAxios()
       RT.en = makeSocket('effect-node')
+      RT.shareDB = makeSocket('shareDB')
       return resp
     })
 }

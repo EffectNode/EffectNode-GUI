@@ -1,7 +1,7 @@
 <template>
   <div class="landing font">
     <LandingBar></LandingBar>
-    <HeroSlider></HeroSlider>
+    <HeroSliderLarge></HeroSliderLarge>
     <DescRow></DescRow>
     <CTA></CTA>
     <FeatureList></FeatureList>
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import HeroSlider from './Compos/HeroSlider.vue'
+import HeroSliderLarge from './Compos/HeroSliderLarge.vue'
 import LandingBar from './Compos/LandingBar.vue'
 import DescRow from './Compos/DescRow.vue'
 import FooterRow from './Compos/FooterRow.vue'
@@ -19,7 +19,7 @@ import FeatureList from './Compos/FeatureList.vue'
 
 export default {
   components: {
-    HeroSlider,
+    HeroSliderLarge,
     LandingBar,
     DescRow,
     FooterRow,
