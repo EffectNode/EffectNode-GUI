@@ -1,8 +1,10 @@
 <template>
   <div>
     <SharedTitle>
-      <div slot="left">
-        <a href="/"><img class="logo" src="../img/en.svg" alt=""></a>
+      <div class="middle" slot="left">
+        <router-link to="/"><img class="logo" src="../img/en.svg" alt=""></router-link>
+        <router-link to="/blog"  class="link docs">Blog</router-link>
+        <a href="https://docs.effectnode.com" target="_blank" class="link docs">Docs</a>
       </div>
       <div slot="center">
         My Home
@@ -40,5 +42,21 @@ export default {
 <style scoped>
 .logo{
   height: 28px;
+}
+.middle{
+  display: flex;
+  align-items: center;
+}
+
+.docs{
+  color: black;
+  text-align: right;
+  line-height: 28px;
+  width: 100%;
+  cursor: pointer;
+}
+.link.docs{
+  display: inline-block;
+  height: 37px;
 }
 </style>

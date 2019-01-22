@@ -8,9 +8,9 @@
 
             <div class="auth-inner-form">
               <div class="title">Login</div>
-              <input class="texter-input" type="text" v-model="auth.username" />
-              <input class="texter-input" type="password" v-model="auth.password">
-              <span class="button-submit" @click="login">Login</span>
+              <input class="texter-input" placeholder="username" type="text" v-model="auth.username" />
+              <input class="texter-input" placeholder="password" type="password" v-model="auth.password">
+              <span class="button-submit" @click="login">Submit</span>
 
 
               <div class="switcher" @click="flip = !flip">Switch to Sign up</div>
@@ -21,9 +21,9 @@
           <div class="card__face card__face--back">
             <div class="auth-inner-form">
               <div class="title">Sign up</div>
-              <input class="texter-input" type="text" v-model="auth.username" />
-              <input class="texter-input" type="password" v-model="auth.password">
-              <span class="button-submit" @click="register">Sign up</span>
+              <input class="texter-input" placeholder="username" type="text" v-model="auth.username" />
+              <input class="texter-input" placeholder="password" type="password" v-model="auth.password">
+              <span class="button-submit" @click="register">Submit</span>
 
               <div class="switcher" @click="flip = !flip">Switch to Login</div>
             </div>
@@ -43,7 +43,7 @@ import * as API from '@/enOS/data/API'
 export default {
   data () {
     return {
-      flip: false,
+      flip: true,
       auth: {
         username: '',
         password: ''

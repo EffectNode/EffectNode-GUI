@@ -1,16 +1,17 @@
 <template>
   <div>
     <SharedTitle>
-      <div slot="left">
-        <a href="/"><img class="logo" src="../img/en.svg" alt=""></a>
+      <div class="middle" slot="left">
+        <router-link to="/"><img class="logo" src="../img/en.svg" alt=""></router-link>
+        <router-link to="/blog"  class="link docs">Blog</router-link>
+        <a href="https://docs.effectnode.com" target="_blank" class="link docs">Docs</a>
       </div>
       <div slot="center">
         Effect Node
       </div>
       <div slot="right">
-        <a href="https://docs.effectnode.com" target="_blank" class="docs">Docs</a>
-        <a v-if="!myself" href="/auth" class="login">Login / Signup</a>
-        <a v-if="myself" href="/profile" class="login">My Home</a>
+        <router-link v-if="!myself" to="/auth" class="login">Login / Signup</router-link>
+        <router-link v-if="myself" to="/profile" class="login">My Home</router-link>
       </div>
     </SharedTitle>
   </div>
@@ -45,6 +46,10 @@ export default {
 </script>
 
 <style scoped>
+.middle{
+  display: flex;
+  align-items: center;
+}
 .logo{
   height: 28px;
 }
@@ -77,5 +82,9 @@ export default {
   line-height: 28px;
   width: 100%;
   cursor: pointer;
+}
+.link.docs{
+  display: inline-block;
+  height: 37px;
 }
 </style>

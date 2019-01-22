@@ -1,6 +1,6 @@
 <template>
   <div class="padder">
-    <h1><router-link class="linker" tag="span" to="/">Effect Node</router-link> / <router-link class="linker" tag="span" to="/blog">Blog Home</router-link></h1>
+    <h1><router-link class="linker" tag="span" to="/">Effect Node</router-link> / <router-link class="linker" tag="span" to="/blog">Blog</router-link></h1>
     <div v-if="blog" >
       <h1 class="title" v-if="blog">
         {{ blog.title }}

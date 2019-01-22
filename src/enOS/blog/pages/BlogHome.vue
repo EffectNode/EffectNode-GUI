@@ -99,7 +99,7 @@ export default {
   align-items: space-between;
   flex-direction: column;
 
-  background: linear-gradient(90deg, #bababa, silver); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(45deg, #4F00BC, #29ABE2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 .left, .right{
   width: 100%;
@@ -126,7 +126,8 @@ export default {
     width: 50%;
     height: 100%;
   }
-  .left{
+  .right{
+    /* order: -1; */
     /* border-right: grey solid 1px;
     border-bottom: none; */
   }

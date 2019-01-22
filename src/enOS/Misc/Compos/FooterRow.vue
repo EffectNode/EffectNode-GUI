@@ -19,11 +19,11 @@
         SiteMap
       </h2>
       <ul>
-
         <li><a class="linker" href="/">Home</a></li>
+        <li><a class="linker" href="https://docs.effectnode.com">Docs</a></li>
         <li><router-link tag="a" class="linker" to="/blog">Blog</router-link></li>
-        <li><a class="linker" href="/auth">Login / Register</a></li>
-        <li><a class="linker" href="/profile">My Profile</a></li>
+        <li><router-link tag="a" class="linker" to="/auth">Login / Register</router-link></li>
+        <li><router-link tag="a" class="linker" to="/profile">My Profile</router-link></li>
       </ul>
 
       <h2>

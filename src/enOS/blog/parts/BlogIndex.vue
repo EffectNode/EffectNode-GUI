@@ -2,7 +2,10 @@
   <div class="area">
     <div class="padder">
       <div class="title">
-        Effect Node Blog
+        <router-link tag="span" class="linker" to="/">Effect Node</router-link> / Blog
+
+        <br />
+
         <span v-if="isMe && !workingDoc" class="adder linker" @click="addBlog">Add</span>
         <span v-if="isMe && workingDoc && uploadTimer === 0" class="adder linker" @click="workingDoc = false; view = 'list'">Close</span>
         <span v-if="isMe && workingDoc" class="adder linker" @click="removeDoc(workingDoc)">Remove</span>
@@ -32,7 +35,7 @@
 
             <span class="linker" v-if="isMe" @click="editBlog(blog)">Edit</span>
             <span class="linker" v-if="isMe" @click="removeDoc(blog)">Remove</span>
-            <input class="published-edit" type="checkbox" v-model="blog.published" @change="doUpload(blog)">
+            <input class="published-edit" v-if="isMe" type="checkbox" v-model="blog.published" @change="doUpload(blog)">
           </div>
         </div>
       </div>
@@ -141,10 +144,9 @@ export default {
 .area{
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.2);
 }
 .title{
-  font-size: 40px;
+  font-size: 30px;
   color: white;
 }
 .linker{
