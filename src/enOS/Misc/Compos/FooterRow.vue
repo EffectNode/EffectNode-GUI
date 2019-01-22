@@ -19,7 +19,9 @@
         SiteMap
       </h2>
       <ul>
+
         <li><a class="linker" href="/">Home</a></li>
+        <li><router-link tag="a" class="linker" to="/blog">Blog</router-link></li>
         <li><a class="linker" href="/auth">Login / Register</a></li>
         <li><a class="linker" href="/profile">My Profile</a></li>
       </ul>

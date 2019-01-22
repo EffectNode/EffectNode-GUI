@@ -13,6 +13,9 @@ import LandingPage from '@/enOS/Misc/Landing.vue'
 import MyHome from '@/enOS/Misc/MyHome.vue'
 import OOBE from '@/enOS/Misc/OOBE.vue'
 
+import BlogHome from '@/enOS/blog/pages/BlogHome.vue'
+import BlogDetail from '@/enOS/blog/pages/BlogDetail.vue'
+
 // import Mindfulness from '@/components/pages/MindScene/Mindfulness.vue'
 // import MindScene from '@/components/pages/MindScene/MindScene.vue'
 // import UglyLightHouse from '@/components/pages/MindScene/UglyLightHouse.vue'
@@ -28,6 +31,14 @@ export default new Router({
     {
       path: '/',
       component: LandingPage
+    },
+    {
+      path: '/blog',
+      component: BlogHome
+    },
+    {
+      path: '/blog/:slug',
+      component: BlogDetail
     },
     {
       path: '/hello',

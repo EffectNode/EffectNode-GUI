@@ -22,15 +22,17 @@ export default {
 <style>
 @import url(./normalise.css);
 @import url(./skeleton.css);
+@import url(./assets/geomanist/stylesheet.css);
 
-@font-face {
+
+/* @font-face {
   font-family: 'InterUI';
   src: url('./assets/interui-font/Inter-UI-Regular.woff');
 }
 @font-face {
   font-family: 'InterUI-Bold';
   src: url('./assets/interui-font/Inter-UI-Bold.woff');
-}
+} */
 
 @font-face {
   font-family: 'Inconsolata';
@@ -137,7 +139,7 @@ export default {
 }
 
 body {
-  font-family: 'Inconsolata';
+  font-family: 'geomanistregular', 'Inconsolata';
 }
 .fade-enter-active, .fade-leave-active {
   position: fixed;
@@ -154,7 +156,7 @@ body {
   opacity: 0;
 }
 #app {
-  font-family: 'Inconsolata', 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'geomanistregular', 'Inconsolata', 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 13px;

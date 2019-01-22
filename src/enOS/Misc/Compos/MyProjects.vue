@@ -39,7 +39,7 @@
           <br />
           <textarea class="desc" cols="30" rows="10" v-model="pr.desc" @input="prjUpdate({ project: pr })"></textarea>
           <br />
-          <span class="updated-at">{{ moment(pr.updatedAt) }}</span>
+          <span class="updated-at">Updated at {{ moment(pr.updated_at) }}</span>
           <br />
           <span class="linker" @click="cloneProject({ project: pr })">Clone</span>
           <span v-if="!(pr.isTemplate || pr.isGallery || pr.isFeatured)" class="linker" @click="removeProject({ project: pr })">Remove</span>
@@ -89,7 +89,7 @@ export default {
   },
   computed: {
     pageProject () {
-      return this.projects.slice().filter((p) => {
+      return this.projects.slice().reverse().filter((p) => {
         if (this.viewFor === 'all') {
           return true
         } else if (this.viewFor === 'template') {
@@ -106,16 +106,6 @@ export default {
           return true
         }
         return p.title.toLowerCase().indexOf(this.search.toLowerCase()) !== -1 || p.desc.toLowerCase().indexOf(this.search.toLowerCase()) !== -1
-      }).sort((a, b) => {
-        let timeA = (new Date(b.updated_at)).getTime() || 1
-        let timeB = (new Date(a.updated_at)).getTime() || 0
-        if (timeA > timeB) {
-          return 1
-        } else if (timeA < timeB) {
-          return -1
-        } else {
-          return 0
-        }
       }).filter((p, pi) => {
         return pi < (this.atPage + 1) * this.perPageItem && pi >= (this.atPage) * this.perPageItem
       })
@@ -124,6 +114,7 @@ export default {
   watch: {
     viewFor () {
       this.search = ''
+      this.atPage = 0
     },
     search () {
       this.activeAt.map(e => false)
@@ -137,7 +128,7 @@ export default {
   },
   methods: {
     moment (date) {
-      return moment(date).fromNow()
+      return moment(date).calendar()
     },
     listProject () {
       this.projects = []

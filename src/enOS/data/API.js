@@ -32,6 +32,8 @@ if (process.env.NODE_ENV === 'production') {
   baseURL = 'http://' + window.location.hostname + ':3003/'
 }
 
+export const baseRoot = baseURL
+
 export const PROXY_URL = baseURL + 'yo/proxy'
 
 export const StartLoading = () => {
@@ -152,6 +154,10 @@ export const login = (data) => {
 export const logout = (data) => {
   window.localStorage.removeItem('jwt_remember_me')
   return iAXIOS.post('/logout', data)
+}
+
+export const signS3 = (data) => {
+  return iAXIOS.post('/en/signS3', data)
 }
 
 export class TableSync {

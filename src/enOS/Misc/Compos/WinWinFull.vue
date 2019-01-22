@@ -37,7 +37,7 @@ export default {
   min-width: calc(100vw);
   width: 100%;
   margin-top: -6px;
-  background-color: rgb(187, 187, 187);
+  /* background-color: rgb(187, 187, 187); */
   position: relative;
 }
 
