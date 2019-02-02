@@ -1,7 +1,8 @@
 <template>
   <div class="landing font">
     <LandingBar></LandingBar>
-    <HeroSliderLarge></HeroSliderLarge>
+    <ENOSArea v-if="ww >= 767"></ENOSArea>
+    <HeroSliderLarge v-if="ww <= 767"></HeroSliderLarge>
     <DescRow></DescRow>
     <CTA></CTA>
     <FeatureList></FeatureList>
@@ -15,6 +16,7 @@ import LandingBar from './Compos/LandingBar.vue'
 import DescRow from './Compos/DescRow.vue'
 import FooterRow from './Compos/FooterRow.vue'
 import CTA from './Compos/CTA.vue'
+import ENOSArea from './Compos/ENOSArea.vue'
 import FeatureList from './Compos/FeatureList.vue'
 
 export default {
@@ -24,7 +26,18 @@ export default {
     DescRow,
     FooterRow,
     CTA,
-    FeatureList
+    FeatureList,
+    ENOSArea
+  },
+  data () {
+    return {
+      ww: window.innerWidth
+    }
+  },
+  mounted () {
+    window.addEventListener('resize', () => {
+      this.ww = window.innerWidth
+    })
   }
 }
 </script>
@@ -55,6 +68,5 @@ export default {
   }
 </style>
 <style scoped>
-
 
 </style>

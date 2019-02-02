@@ -2,18 +2,19 @@
   <div class="area">
     <div class="padder">
       <div class="title">
-        <router-link tag="span" class="linker" to="/">Effect Node</router-link> / <span :class="{ linker: (isMe && workingDoc) }" @click="view = 'list'; workingDoc = false;">Inventor's Blog</span>  <span v-if="isMe && workingDoc"> / </span><span v-if="isMe && workingDoc">{{ workingDoc.title }}</span>
+        <router-link tag="span" class="linker" to="/">Effect Node</router-link> / <span :class="{ linker: (isMe && workingDoc) }" @click="$router.push('/blog')">Inventor's Blog</span>  <span v-if="isMe && workingDoc"> / </span><span v-if="isMe && workingDoc">{{ workingDoc.title }}</span>
 
         <br />
 
-        <span v-if="isMe && !workingDoc" class="adder linker" @click="addBlog">Add</span>
+        <!--
+        <span v-if="isMe && !workingDoc" class="adder linker" @click="addBlog">Add</span> -->
         <span v-if="isMe && workingDoc" class="adder linker" @click="removeDoc(workingDoc)">Remove</span>
         <span v-if="uploadTimer !== 0" class="loading">
           Saving / Loading....
         </span>
         <span v-if="status === 'uploading'" class="loading">Uploading....</span>
       </div>
-      <!-- <div class="editor" v-if="view === 'editor'">
+      <div class="editor" v-if="view === 'editor'">
         <div v-if="!workingDoc">Loading</div>
         <div v-else>
           <input class="title-edit" type="text" v-model="workingDoc.title" @input="uploadDoc(workingDoc, { slug: workingDoc.title })">
@@ -21,25 +22,8 @@
           <input class="published-edit" type="checkbox" v-model="workingDoc.published" @change="uploadDoc(workingDoc)">
           <QuillEditor class="maxer" v-if="workingDoc" @status="(v) => { status = v }" :initText="workingDoc.contents" @change="(v) => { uploadDoc(workingDoc, { contents: v.ops }) }"></QuillEditor>
         </div>
-      </div> -->
-      <div class="content" v-if="view === 'list'">
-        <div>
-          <div :key="blog._id" v-for="blog in blogs">
-            <router-link class="subtitle" :to="`/blog/${blog.slug}`">
-              {{ blog.title }} <br />
-            </router-link>
-            <span>  Created:
-              {{ moment(blog.created_at) }}
-            </span>
-
-            <span class="linker" v-if="isMe" @click="editBlog(blog)">Edit</span>
-            <span class="linker" v-if="isMe" @click="removeDoc(blog)">Remove</span>
-            <input class="published-edit" v-if="isMe" type="checkbox" v-model="blog.published" @change="doUpload(blog)">
-          </div>
-        </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -49,8 +33,6 @@ import PreviewBox from '../../Misc/Compos/PreviewBox.vue'
 import QuillEditor from '../elements/QuillEditor.vue'
 import moment from 'moment'
 
-let BLOG_CACHE = []
-
 export default {
   components: {
     QuillEditor,
@@ -58,11 +40,12 @@ export default {
   },
   data () {
     return {
+      blogID: this.$route.params.blogID,
       status: false,
       workingDoc: false,
       isMe: false,
-      view: 'list',
-      blogs: BLOG_CACHE,
+      view: 'editor',
+      blogs: [],
       page: 0,
       uploadTimer: 0
     }
@@ -72,14 +55,6 @@ export default {
     this.loadLatest()
   },
   watch: {
-    blogs () {
-      BLOG_CACHE = this.blogs
-    },
-    view () {
-      if (this.view === 'list') {
-        this.loadLatest()
-      }
-    }
   },
   methods: {
     goBlog (blog) {
@@ -91,10 +66,9 @@ export default {
     removeDoc (doc) {
       if (window.confirm('remove blog?')) {
         API.RT.en.emit('remove-working-blog', doc, () => {
-          this.loadLatest()
+          // this.loadLatest()
         })
-        this.view = 'list'
-        this.workingDoc = false
+        this.$router.push('/blog')
       }
     },
     doUpload (workingDoc) {
@@ -115,11 +89,8 @@ export default {
       }, 1300)
     },
     editBlog (v) {
-      // this.view = 'editor'
-      // this.workingDoc = v
-      this.$router.push({
-        path: `/blog/editor/${v._id}`
-      })
+      this.view = 'editor'
+      this.workingDoc = v
     },
     async addBlog () {
       this.view = 'editor'
@@ -129,20 +100,21 @@ export default {
       API.RT.en.emit('provide-working-blog', { userID, author, title: window.prompt('title?') || 'new blog' }, (data) => {
         if (data.signal === 'ok') {
           this.workingDoc = data.blog
-          // this.loadLatest()
-          this.editBlog(this.workingDoc)
+          this.loadLatest()
         }
       })
     },
     loadLatest () {
       let exp = { userID: '5c1daecd6168c20017eec65e' }
-      if (!this.isMe) {
-        exp.published = true
-      }
-      API.RT.en.emit('list-blog-titles', { exp, skip: 8 * this.page, limit: 150 }, (data) => {
+      exp._id = this.blogID
+      // if (!this.isMe) {
+      //   exp.published = true
+      // }
+
+      API.RT.en.emit('list-latest-blogs', { exp, skip: 8 * this.page, limit: 50 }, (data) => {
         if (data.signal === 'ok') {
           console.log(data)
-          this.blogs = data.blogs
+          this.workingDoc = data.blogs[0]
         }
       })
     }

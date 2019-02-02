@@ -1,7 +1,7 @@
 <template>
   <div class="full quotes-app">
     <TitleBar ref="title-bar" :portal="portal" @click="$emit('activated')" :uiAPI="uiAPI">
-      {{ portal.win.name }} <span class="linker" @click="runIframe()">Reset</span> <span class="linker" @click="setSquare(portal)">Square</span> <span class="linker" @click="downloadFrame()">Download</span>
+      {{ portal.win.name }} <span class="linker" @click="runIframe()">Reset</span> <span class="linker" @click="setSquare(portal)">Square</span> <span class="linker" @click="downloadFrame()">HTML</span> <span class="linker" @click="downloadJSON()">JSON</span>
     </TitleBar>
     <div class="content-div" @click="$emit('activated')">
       <keep-alive>
@@ -92,6 +92,14 @@ export default {
     setSquare () {
       this.uiAPI.portal.square(this.portal)
       this.$forceUpdate()
+    },
+    async downloadJSON () {
+      let json = await this.uiAPI.Builder.fromDocToJSON({ Doc: this.Doc })
+      let link = this.uiAPI.Builder.makeJSONLink({ json })
+      var a = document.createElement('a')
+      a.href = link
+      a.download = 'EffectNode.json'
+      a.click()
     },
     async downloadFrame () {
       let html = await this.uiAPI.Builder.fromDocToHTMLProd({ Doc: this.Doc })

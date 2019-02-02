@@ -131,8 +131,18 @@ export const fromDocToHTMLProd = async ({ Doc }) => {
   return htmlResp
 }
 
+export const fromDocToJSON = ({ Doc }) => {
+  return JSON.stringify(Doc, null, '  ')
+}
+
 export const makeHTMLLink = ({ HTML }) => {
   let blob = new Blob([HTML], { type: 'text/html' })
+  let link = URL.createObjectURL(blob)
+  return link
+}
+
+export const makeJSONLink = ({ json }) => {
+  let blob = new Blob([json], { type: 'application/json' })
   let link = URL.createObjectURL(blob)
   return link
 }

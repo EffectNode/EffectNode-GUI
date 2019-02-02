@@ -3,8 +3,7 @@
     <SharedTitle>
       <div class="middle" slot="left">
         <router-link to="/"><img class="logo" src="../img/en.svg" alt=""></router-link>
-        <router-link to="/blog"  class="link docs">Blog</router-link>
-        <a href="https://docs.effectnode.com" target="_blank" class="link docs">Docs</a>
+        <a href="https://docs.effectnode.com" target="_blank" class="link docs">API & Docs</a>
       </div>
       <div slot="center">
         My Home

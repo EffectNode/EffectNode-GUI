@@ -5,11 +5,12 @@
 </template>
 
 <script>
+import Quill from 'quill'
 import * as API from '@/enOS/data/API'
 // import 'highlight.js'
 // import 'highlight.js/styles/monokai-sublime.css'
 import 'quill/dist/quill.snow.css'
-var Quill = require('quill')
+
 window.hljs.configure({ // optionally configure hljs
   languages: ['javascript', 'glsl', 'php']
 })
@@ -67,10 +68,14 @@ export default {
       //   connection.bindToSocket(socket);
       // };
       // Create local Doc instance mapped to 'examples' collection document with id 'richtext'
+
       let options = {
+        bounds: this.$refs['editor'],
         theme: 'snow',
         modules: {
-          syntax: true
+          syntax: true// ,
+          // blotFormatter: {
+          // }
         }
       }
       if (!this.toolbar) {
@@ -78,16 +83,22 @@ export default {
         options.readOnly = true
       } else {
         options.modules.toolbar = [
-          [{ header: [1, 2, false] }],
-          ['bold', 'italic', 'underline'],
-          [
-            { 'list': 'ordered' },
-            { 'list': 'bullet' }
-          ],
-          ['image', 'code-block']
+          [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+          ['align', 'bold', 'italic', 'underline', 'strike'], // toggled buttons
+          [{ 'color': [] }, { 'background': [] }], // dropdown with defaults from theme
+
+          ['image', 'link'],
+
+          ['blockquote', 'code-block'],
+
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          [{ 'indent': '-1' }, { 'indent': '+1' }], // outdent/indent
+
+          ['clean']
         ]
       }
       this.quill = new Quill(this.$refs['editor'], options)
+
       if (this.toolbar) {
         let editor = this.quill
         let selectLocalImage = () => {
@@ -150,7 +161,7 @@ export default {
           const range = editor.getSelection()
 
           editor.insertEmbed(range.index, 'image', `https://ik.imagekit.io/effectnode/${filename}`)
-          editor.formatText(range.index, 1, 'width', '300px')
+          editor.formatText(range.index, 1, 'width', window.prompt('width css size?') || '100%')
         }
         this.quill.getModule('toolbar').addHandler('image', () => {
           selectLocalImage()

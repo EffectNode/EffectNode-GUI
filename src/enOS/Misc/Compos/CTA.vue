@@ -3,7 +3,7 @@
     <hr>
     <div @click="goLogin" class="cta">Get Started to Remix and Code Visual Effects</div>
     <br />
-    <a href="https://docs.effectnode.com" target="_blank"><div class="cta cta2">Learn more at our Documentation Site</div></a>
+    <a href="https://docs.effectnode.com/guide" target="_blank"><div class="cta cta2">Video Guide & Documentation Site</div></a>
     <hr>
   </div>
 </template>

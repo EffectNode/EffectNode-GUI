@@ -16,6 +16,9 @@ import OOBE from '@/enOS/Misc/OOBE.vue'
 import BlogHome from '@/enOS/blog/pages/BlogHome.vue'
 import BlogDetail from '@/enOS/blog/pages/BlogDetail.vue'
 
+import BlogIndex from '@/enOS/blog/parts/BlogIndex.vue'
+import BlogEditor from '@/enOS/blog/parts/BlogEditor.vue'
+
 // import Mindfulness from '@/components/pages/MindScene/Mindfulness.vue'
 // import MindScene from '@/components/pages/MindScene/MindScene.vue'
 // import UglyLightHouse from '@/components/pages/MindScene/UglyLightHouse.vue'
@@ -34,7 +37,17 @@ export default new Router({
     },
     {
       path: '/blog',
-      component: BlogHome
+      component: BlogHome,
+      children: [
+        {
+          path: '',
+          component: BlogIndex
+        },
+        {
+          path: 'editor/:blogID',
+          component: BlogEditor
+        }
+      ]
     },
     {
       path: '/blog/:slug',

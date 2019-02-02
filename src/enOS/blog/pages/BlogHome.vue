@@ -5,7 +5,8 @@
         <BlogMeta></BlogMeta>
       </div>
       <div class="right">
-        <BlogIndex></BlogIndex>
+        <!-- <BlogIndex></BlogIndex> -->
+        <router-view></router-view>
       </div>
     </div>
   </div>

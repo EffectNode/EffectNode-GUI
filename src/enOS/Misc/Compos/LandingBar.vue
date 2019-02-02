@@ -3,15 +3,15 @@
     <SharedTitle>
       <div class="middle" slot="left">
         <router-link to="/"><img class="logo" src="../img/en.svg" alt=""></router-link>
-        <router-link to="/blog"  class="link docs">Blog</router-link>
-        <a href="https://docs.effectnode.com" target="_blank" class="link docs">Docs</a>
+        <router-link to="/blog"  class="link docs">Inventor's Blog</router-link>
       </div>
       <div slot="center">
         Effect Node
       </div>
       <div slot="right">
+        <a href="https://docs.effectnode.com" target="_blank" class="login"> Docs </a> &
         <router-link v-if="!myself" to="/auth" class="login">Login / Signup</router-link>
-        <router-link v-if="myself" to="/profile" class="login">My Home</router-link>
+        <router-link v-if="myself" to="/profile" class="login">Profile</router-link>
       </div>
     </SharedTitle>
   </div>
