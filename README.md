@@ -2,6 +2,7 @@
 
 > Effect Node
 
+![Image of Effect Node Nomination](https://raw.githubusercontent.com/EffectNode/EffectNode-GUI/master/src/enOS/Misc/img/roadblock-thumb.png)
 ## Build Setup
 
 ``` bash
