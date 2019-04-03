@@ -5,6 +5,7 @@
     <HeroSliderLarge v-if="ww <= 767"></HeroSliderLarge>
     <DescRow></DescRow>
     <CTA></CTA>
+    <Webby></Webby>
     <FeatureList></FeatureList>
     <FooterRow></FooterRow>
   </div>
@@ -18,6 +19,7 @@ import FooterRow from './Compos/FooterRow.vue'
 import CTA from './Compos/CTA.vue'
 import ENOSArea from './Compos/ENOSArea.vue'
 import FeatureList from './Compos/FeatureList.vue'
+import Webby from './Compos/Webby.vue'
 
 export default {
   components: {
@@ -27,7 +29,8 @@ export default {
     FooterRow,
     CTA,
     FeatureList,
-    ENOSArea
+    ENOSArea,
+    Webby
   },
   data () {
     return {
