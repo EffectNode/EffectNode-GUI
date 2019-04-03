@@ -2,7 +2,7 @@
   <div class="">
     <div class="webbys">
       <a href="http://wbby.co/vote-web16" target="_blank">
-        <img src="../img/roadblock-thumb.png" alt="Effect Node is nominated by Webbys Awards">
+        <img class="maxer" src="../img/roadblock-thumb.png" alt="Effect Node is nominated by Webbys Awards">
       </a>
 
       <h2>Thank you so much for your support!!</h2>
@@ -25,5 +25,8 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+.maxer{
+  max-width: 100%;
 }
 </style>
