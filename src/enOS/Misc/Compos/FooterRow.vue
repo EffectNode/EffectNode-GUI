@@ -31,7 +31,7 @@
       </h2>
       <ul>
         <li><a class="linker" href="https://instagram.com/effectnode/">Effect Node IG</a></li>
-        <li><a class="linker" href="https://instagram.com/postervideo/">Our inventor, Wong Lok's IG</a></li>
+        <li><a class="linker" href="https://instagram.com/wonglok831/">Our inventor, Wong Lok's IG</a></li>
         <li><a class="linker" href="https://www.facebook.com/effectnode/">Effect Node FB</a></li>
       </ul>
 
