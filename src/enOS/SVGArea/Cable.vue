@@ -169,7 +169,5 @@ export default {
   animation: dash 30s linear infinite;
   animation-play-state: paused;
   stroke-dasharray: 8;
-
-
 }
 </style>

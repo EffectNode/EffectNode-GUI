@@ -7,6 +7,7 @@
     <CTA></CTA>
     <Webby></Webby>
     <FeatureList></FeatureList>
+    <iGraph></iGraph>
     <FooterRow></FooterRow>
   </div>
 </template>
@@ -20,9 +21,11 @@ import CTA from './Compos/CTA.vue'
 import ENOSArea from './Compos/ENOSArea.vue'
 import FeatureList from './Compos/FeatureList.vue'
 import Webby from './Compos/Webby.vue'
+import iGraph from './Compos/iGraph.vue'
 
 export default {
   components: {
+    iGraph,
     HeroSliderLarge,
     LandingBar,
     DescRow,
