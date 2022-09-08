@@ -41,7 +41,7 @@
     "highlight.js": "^9.13.1",
     "idb-keyval": "^3.0.2",
     "imports-loader": "^0.8.0",
-    "jszip": "^3.1.5",
+    "jszip": "^3.7.0",
     "localforage": "^1.7.2",
     "lodash": "^4.17.5",
     "marked": "^0.4.0",
